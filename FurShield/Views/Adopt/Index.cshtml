@@ -1,0 +1,127 @@
+@model IEnumerable<FurShield.Data.AdoptionListing>
+@{
+    ViewData["Title"] = "Adopt a Pet | FurShield Shelter Network";
+}
+
+<!-- Dark Hero Card -->
+<section class="py-4 py-md-5">
+    <div class="container">
+        <div class="dark-hero-card d-flex flex-column flex-lg-row align-items-center justify-content-between">
+            <div>
+                <div class="breadcrumb" style="color:rgba(255,255,255,0.7);font-size:14px;margin-bottom:12px;">
+                    <a asp-controller="Home" asp-action="Index" style="color:rgba(255,255,255,0.7);text-decoration:none;">Home</a> / Adoption
+                </div>
+                <div class="eyebrow" style="color:#ff85a2;letter-spacing:1.5px;font-size:13px;font-weight:700;margin-bottom:16px;">SHELTER NETWORK</div>
+                <h1 style="color:#fff;font-size:clamp(36px,5vw,56px);font-weight:700;line-height:1.15;margin-bottom:18px;">
+                    Find Your New<br><span style="color:#ff85a2">Best Friend Today.</span>
+                </h1>
+                <p style="color:rgba(255,255,255,0.85);font-size:1.05rem;max-width:520px;margin-bottom:0;">
+                    Every rescue pet deserves a safe, loving home. Browse verified shelter listings, review health profiles, and apply to adopt.
+                </p>
+            </div>
+            <div class="dark-hero-img-wrap mt-4 mt-lg-0" style="position:relative;width:240px;height:240px;border-radius:50%;overflow:hidden;border:4px solid rgba(255,255,255,0.2);box-shadow:0 12px 30px rgba(0,0,0,0.3);flex-shrink:0;">
+                <img src="https://images.unsplash.com/photo-1535930891776-0c2dfb7fda1a?auto=format&fit=crop&w=600&q=85"
+                     alt="Adorable rescue dog looking for home" style="width:100%;height:100%;object-fit:cover;" />
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Adoption Search & Filter Bar -->
+<section class="section">
+    <div class="container">
+        <div class="d-flex flex-column flex-md-row justify-content-between align-items-md-center gap-3 mb-4">
+            <div>
+                <h2 class="fw-bold mb-1" style="font-family:'Baloo 2',sans-serif;">Pets Waiting for a Loving Home</h2>
+                <p class="text-muted small mb-0">Filter by species, breed or sort by age to find your companion</p>
+            </div>
+            @if (User.IsInRole("PetOwner"))
+            {
+                <a asp-action="MyInterests" class="btn btn-outline">
+                    <i class="fa-solid fa-clipboard-check me-2 text-danger"></i> My Adoption Requests
+                </a>
+            }
+        </div>
+
+        <form method="get" class="card border-0 shadow-sm rounded-4 p-3 mb-5" style="background:#fff;">
+            <div class="row g-3 align-items-center">
+                <div class="col-md-5">
+                    <div class="input-group">
+                        <span class="input-group-text bg-white border-end-0"><i class="fa-solid fa-magnifying-glass text-muted"></i></span>
+                        <input type="text" name="searchString" value="@Context.Request.Query["searchString"]"
+                               class="form-control border-start-0" placeholder="Search by pet name, breed, species..." />
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <select name="species" class="form-select">
+                        <option value="">All Species</option>
+                        @foreach (var sp in ViewBag.Species as List<string> ?? new List<string>())
+                        {
+                            <option value="@sp" selected="@(Context.Request.Query["species"] == sp)">@sp</option>
+                        }
+                    </select>
+                </div>
+                <div class="col-md-2">
+                    <select name="sort" class="form-select" onchange="this.form.submit()">
+                        <option value="newest" selected="@(string.IsNullOrEmpty((string)ViewBag.CurrentSort) || ViewBag.CurrentSort == "newest")">Newest</option>
+                        <option value="age_asc" selected="@(ViewBag.CurrentSort == "age_asc")">Age: Youngest</option>
+                        <option value="age_desc" selected="@(ViewBag.CurrentSort == "age_desc")">Age: Oldest</option>
+                        <option value="name" selected="@(ViewBag.CurrentSort == "name")">Name: A-Z</option>
+                    </select>
+                </div>
+                <div class="col-md-2">
+                    <button type="submit" class="btn btn-primary w-100">
+                        <i class="fa-solid fa-filter me-1"></i> Filter
+                    </button>
+                </div>
+            </div>
+        </form>
+
+        <!-- Pet Cards Grid -->
+        <div class="row row-cols-1 row-cols-md-3 g-4">
+            @if (Model != null && Model.Any())
+            {
+                @foreach (var pet in Model)
+                {
+                    <div class="col">
+                        <div class="card h-100 border-0 shadow-sm rounded-4 overflow-hidden bg-white" style="transition: transform .3s ease, box-shadow .3s ease;">
+                            <div style="height: 240px; overflow:hidden; position:relative; background:#f5f3ec;">
+                                <img src="@(string.IsNullOrEmpty(pet.ImageUrl) ? "https://images.unsplash.com/photo-1548199973-03cce0bbc87b?auto=format&fit=crop&w=600&q=80" : pet.ImageUrl)"
+                                     class="w-100 h-100" style="object-fit: cover; transition: transform .5s ease;" alt="@pet.PetName" />
+                                <span class="badge position-absolute top-0 end-0 m-3 px-3 py-2 rounded-pill bg-success text-white shadow-sm">
+                                    <i class="fa-solid fa-heart me-1"></i> Ready to Meet
+                                </span>
+                            </div>
+                            <div class="card-body p-4 d-flex flex-column">
+                                <h4 class="fw-bold mb-1" style="font-family:'Baloo 2',sans-serif;">@pet.PetName</h4>
+                                <p class="text-muted small mb-2">
+                                    <i class="fa-solid fa-paw text-danger me-1"></i> @pet.Species &middot; @pet.Breed &middot; @pet.Age yrs
+                                </p>
+                                <p class="text-muted small mb-3">
+                                    <i class="fa-solid fa-house-chimney-heart text-success me-1"></i> Listed by: <strong>@(pet.Shelter?.ShelterName ?? "Verified Shelter")</strong>
+                                </p>
+                                <div class="mt-auto">
+                                    <a asp-action="Details" asp-route-id="@pet.AdoptionListingId"
+                                       class="btn btn-primary w-100">
+                                        View Profile &amp; Adopt <i class="fa-solid fa-arrow-right ms-1"></i>
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                }
+            }
+            else
+            {
+                <div class="col-12 text-center py-5">
+                    <div class="p-5 bg-white rounded-4 shadow-sm d-inline-block">
+                        <i class="fa-solid fa-paw fs-1 text-muted mb-2"></i>
+                        <h4 class="fw-bold mt-2">No pets found</h4>
+                        <p class="text-muted mb-0">Try changing your search terms or filter selection.</p>
+                    </div>
+                </div>
+            }
+        </div>
+    </div>
+</section>
+

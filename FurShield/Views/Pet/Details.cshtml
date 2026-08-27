@@ -1,0 +1,316 @@
+@model FurShield.Data.Pet
+
+@{
+    Layout = "_PetOwnerLayout";
+    ViewData["Title"] = Model.Name + " - Details";
+    var activeTab = Context.Request.Query["tab"].ToString();
+    if (string.IsNullOrEmpty(activeTab)) activeTab = "overview";
+}
+
+<div class="d-flex justify-content-between align-items-center mb-3">
+    <h2 class="fw-bold mb-0"><i class="bi bi-paw text-primary me-2"></i>@Model.Name</h2>
+    <div>
+        <a asp-action="Edit" asp-route-id="@Model.PetId" class="btn btn-warning">
+            <i class="bi bi-pencil"></i> Edit
+        </a>
+        <a asp-action="Index" class="btn btn-outline-secondary">
+            <i class="bi bi-arrow-left"></i> Back to My Pets
+        </a>
+    </div>
+</div>
+<hr />
+
+@if (TempData["SuccessMessage"] != null)
+{
+    <div class="alert alert-success">@TempData["SuccessMessage"]</div>
+}
+@if (TempData["ErrorMessage"] != null)
+{
+    <div class="alert alert-danger">@TempData["ErrorMessage"]</div>
+}
+
+<div class="row">
+    <!-- Pet Summary Card (left) -->
+    <div class="col-md-3 mb-4">
+        <div class="card shadow-sm border-0">
+            @if (!string.IsNullOrEmpty(Model.ImageUrl))
+            {
+                <img src="~/@Model.ImageUrl" class="card-img-top" alt="@Model.Name" style="height: 220px; object-fit: cover;">
+            }
+            else
+            {
+                <div class="bg-light text-center py-5">
+                    <i class="bi bi-paw text-muted" style="font-size: 3rem;"></i>
+                </div>
+            }
+            <div class="card-body text-center">
+                <h5 class="fw-bold mb-1">@Model.Name</h5>
+                <span class="badge bg-primary mb-2">@Model.Species</span>
+                <ul class="list-unstyled small text-muted mt-2 mb-0 text-start">
+                    <li class="mb-1"><strong>Breed:</strong> @(Model.Breed ?? "N/A")</li>
+                    <li class="mb-1"><strong>Age:</strong> @Model.Age years</li>
+                    <li class="mb-1"><strong>Gender:</strong> @(Model.Gender ?? "N/A")</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <!-- Tabbed Content (right) -->
+    <div class="col-md-9">
+        <ul class="nav nav-tabs" id="petTabs" role="tablist">
+            <li class="nav-item" role="presentation">
+                <button class="nav-link @(activeTab == "overview" ? "active" : "")" data-bs-toggle="tab" data-bs-target="#overview" type="button">
+                    <i class="bi bi-info-circle"></i> Overview
+                </button>
+            </li>
+            <li class="nav-item" role="presentation">
+                <button class="nav-link @(activeTab == "health" ? "active" : "")" data-bs-toggle="tab" data-bs-target="#health" type="button">
+                    <i class="bi bi-file-earmark-medical"></i> Health Records
+                    <span class="badge bg-secondary rounded-pill">@(Model.HealthRecords?.Count ?? 0)</span>
+                </button>
+            </li>
+            <li class="nav-item" role="presentation">
+                <button class="nav-link @(activeTab == "appointments" ? "active" : "")" data-bs-toggle="tab" data-bs-target="#appointments" type="button">
+                    <i class="bi bi-calendar-check"></i> Appointments
+                    <span class="badge bg-secondary rounded-pill">@(Model.Appointments?.Count ?? 0)</span>
+                </button>
+            </li>
+            <li class="nav-item" role="presentation">
+                <button class="nav-link @(activeTab == "documents" ? "active" : "")" data-bs-toggle="tab" data-bs-target="#documents" type="button">
+                    <i class="bi bi-folder2-open"></i> Documents
+                    <span class="badge bg-secondary rounded-pill">@(Model.Documents?.Count ?? 0)</span>
+                </button>
+            </li>
+            <li class="nav-item" role="presentation">
+                <button class="nav-link @(activeTab == "gallery" ? "active" : "")" data-bs-toggle="tab" data-bs-target="#gallery" type="button">
+                    <i class="bi bi-images"></i> Photo Gallery
+                    <span class="badge bg-secondary rounded-pill">@(Model.Images?.Count ?? 0)</span>
+                </button>
+            </li>
+        </ul>
+
+        <div class="tab-content border border-top-0 rounded-bottom p-4 bg-white shadow-sm">
+
+            <!-- Overview Tab -->
+            <div class="tab-pane fade @(activeTab == "overview" ? "show active" : "")" id="overview">
+                <h6 class="text-primary fw-bold text-uppercase small mb-3">Medical & Insurance Info</h6>
+                <dl class="row mb-0">
+                    <dt class="col-sm-4 text-muted">Medical History</dt>
+                    <dd class="col-sm-8">@(string.IsNullOrEmpty(Model.MedicalHistory) ? "None recorded" : Model.MedicalHistory)</dd>
+
+                    <dt class="col-sm-4 text-muted">Allergies</dt>
+                    <dd class="col-sm-8">
+                        @if (string.IsNullOrEmpty(Model.Allergies))
+                        {
+                            <span class="text-muted">None recorded</span>
+                        }
+                        else
+                        {
+                            <span class="badge bg-danger">@Model.Allergies</span>
+                        }
+                    </dd>
+
+                    <dt class="col-sm-4 text-muted">Insurance Policy #</dt>
+                    <dd class="col-sm-8">@(string.IsNullOrEmpty(Model.InsurancePolicyNumber) ? "None" : Model.InsurancePolicyNumber)</dd>
+
+                    <dt class="col-sm-4 text-muted">Insurance Details</dt>
+                    <dd class="col-sm-8">@(string.IsNullOrEmpty(Model.InsuranceDetails) ? "None" : Model.InsuranceDetails)</dd>
+                </dl>
+            </div>
+
+            <!-- Health Records Tab -->
+            <div class="tab-pane fade @(activeTab == "health" ? "show active" : "")" id="health">
+                <div class="d-flex justify-content-between align-items-center mb-3">
+                    <h6 class="text-primary fw-bold text-uppercase small mb-0">Health Records</h6>
+                    <a asp-controller="HealthRecord" asp-action="Create" asp-route-petId="@Model.PetId" class="btn btn-sm btn-primary">
+                        <i class="bi bi-plus-lg"></i> Add Record
+                    </a>
+                </div>
+                @if (Model.HealthRecords != null && Model.HealthRecords.Any())
+                {
+                    <div class="table-responsive">
+                        <table class="table table-hover align-middle mb-0">
+                            <thead class="table-light">
+                                <tr>
+                                    <th>Visit Date</th>
+                                    <th>Diagnosis</th>
+                                    <th>Added By</th>
+                                    <th class="text-end">Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach (var h in Model.HealthRecords.OrderByDescending(x => x.VisitDate))
+                                {
+                                    <tr>
+                                        <td>@h.VisitDate.ToString("dd MMM yyyy")</td>
+                                        <td>@(string.IsNullOrEmpty(h.Diagnosis) ? "N/A" : h.Diagnosis)</td>
+                                        <td>
+                                            @if (h.AddedByOwner)
+                                            {
+                                                <span class="badge bg-info text-dark">You</span>
+                                            }
+                                            else
+                                            {
+                                                <span class="badge bg-success">Dr. @(h.Veterinarian?.User?.FullName ?? h.Veterinarian?.User?.UserName ?? "Vet")</span>
+                                            }
+                                        </td>
+                                        <td class="text-end">
+                                            <a asp-controller="HealthRecord" asp-action="Details" asp-route-id="@h.HealthRecordId" class="btn btn-sm btn-outline-primary">
+                                                <i class="bi bi-eye"></i> View
+                                            </a>
+                                        </td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+                }
+                else
+                {
+                    <div class="text-center text-muted py-5">
+                        <i class="bi bi-journal-x display-5 text-secondary d-block mb-2"></i>
+                        No health records yet.
+                    </div>
+                }
+            </div>
+
+            <!-- Appointments Tab -->
+            <div class="tab-pane fade @(activeTab == "appointments" ? "show active" : "")" id="appointments">
+                <div class="d-flex justify-content-between align-items-center mb-3">
+                    <h6 class="text-primary fw-bold text-uppercase small mb-0">Appointments</h6>
+                    <a asp-controller="Appointment" asp-action="Create" asp-route-petId="@Model.PetId" class="btn btn-sm btn-primary">
+                        <i class="bi bi-plus-lg"></i> Book Appointment
+                    </a>
+                </div>
+                @if (Model.Appointments != null && Model.Appointments.Any())
+                {
+                    <div class="table-responsive">
+                        <table class="table table-hover align-middle mb-0">
+                            <thead class="table-light">
+                                <tr>
+                                    <th>Date</th>
+                                    <th>Veterinarian</th>
+                                    <th>Status</th>
+                                    <th>Reason</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach (var a in Model.Appointments.OrderByDescending(x => x.AppointmentDate))
+                                {
+                                    <tr>
+                                        <td>@a.AppointmentDate.ToString("dd MMM yyyy, hh:mm tt")</td>
+                                        <td>Dr. @(a.Veterinarian?.User?.FullName ?? a.Veterinarian?.User?.UserName ?? "N/A")</td>
+                                        <td>
+                                            <span class="badge @(a.Status == "Approved" ? "bg-success" : a.Status == "Cancelled" ? "bg-danger" : a.Status == "Rescheduled" ? "bg-primary" : a.Status == "Completed" ? "bg-info text-dark" : "bg-warning text-dark")">
+                                                @a.Status
+                                            </span>
+                                        </td>
+                                        <td>@(string.IsNullOrEmpty(a.Reason) ? "—" : a.Reason)</td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+                }
+                else
+                {
+                    <div class="text-center text-muted py-5">
+                        <i class="bi bi-calendar-x display-5 text-secondary d-block mb-2"></i>
+                        No appointments booked yet.
+                    </div>
+                }
+            </div>
+
+            <!-- Documents Tab -->
+            <div class="tab-pane fade @(activeTab == "documents" ? "show active" : "")" id="documents">
+                <div class="d-flex justify-content-between align-items-center mb-3">
+                    <h6 class="text-primary fw-bold text-uppercase small mb-0">Medical Documents</h6>
+                    <a asp-controller="PetDocument" asp-action="Upload" asp-route-petId="@Model.PetId" class="btn btn-sm btn-primary">
+                        <i class="bi bi-cloud-upload"></i> Upload Document
+                    </a>
+                </div>
+                @if (Model.Documents != null && Model.Documents.Any())
+                {
+                    <div class="table-responsive">
+                        <table class="table table-hover align-middle mb-0">
+                            <thead class="table-light">
+                                <tr>
+                                    <th>Title</th>
+                                    <th>Uploaded</th>
+                                    <th class="text-end">Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach (var d in Model.Documents.OrderByDescending(x => x.UploadedDate))
+                                {
+                                    <tr>
+                                        <td><i class="bi bi-file-earmark-text text-danger me-2"></i>@d.Title</td>
+                                        <td>@d.UploadedDate.ToString("dd MMM yyyy")</td>
+                                        <td class="text-end">
+                                            <a href="@d.FilePath" target="_blank" class="btn btn-sm btn-outline-success">
+                                                <i class="bi bi-download"></i> View
+                                            </a>
+                                        </td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+                }
+                else
+                {
+                    <div class="text-center text-muted py-5">
+                        <i class="bi bi-file-earmark-x display-5 text-secondary d-block mb-2"></i>
+                        No documents uploaded yet.
+                    </div>
+                }
+            </div>
+
+            <!-- Photo Gallery Tab -->
+            <div class="tab-pane fade @(activeTab == "gallery" ? "show active" : "")" id="gallery">
+                <h6 class="text-primary fw-bold text-uppercase small mb-3">Photo Gallery</h6>
+
+                <form asp-controller="PetImage" asp-action="Upload" method="post" enctype="multipart/form-data" class="row g-2 align-items-center mb-4">
+                    <input type="hidden" name="petId" value="@Model.PetId" />
+                    <div class="col-md-8">
+                        <input type="file" name="image" class="form-control" accept="image/*" required />
+                    </div>
+                    <div class="col-md-4">
+                        <button type="submit" class="btn btn-primary w-100">
+                            <i class="bi bi-upload"></i> Upload Photo
+                        </button>
+                    </div>
+                </form>
+
+                @if (Model.Images != null && Model.Images.Any())
+                {
+                    <div class="row row-cols-2 row-cols-md-4 g-3">
+                        @foreach (var img in Model.Images.OrderByDescending(x => x.UploadedDate))
+                        {
+                            <div class="col">
+                                <div class="card shadow-sm h-100">
+                                    <img src="~/@img.ImageUrl" class="card-img-top" style="height: 140px; object-fit: cover;" alt="Pet photo" />
+                                    <div class="card-body p-2 text-center">
+                                        <form asp-controller="PetImage" asp-action="Delete" asp-route-id="@img.PetImageId" method="post" onsubmit="return confirm('Delete this photo?');">
+                                            <button type="submit" class="btn btn-sm btn-outline-danger w-100">
+                                                <i class="bi bi-trash"></i> Delete
+                                            </button>
+                                        </form>
+                                    </div>
+                                </div>
+                            </div>
+                        }
+                    </div>
+                }
+                else
+                {
+                    <div class="text-center text-muted py-5">
+                        <i class="bi bi-images display-5 text-secondary d-block mb-2"></i>
+                        No photos yet — upload the first one above.
+                    </div>
+                }
+            </div>
+
+        </div>
+    </div>
+</div>

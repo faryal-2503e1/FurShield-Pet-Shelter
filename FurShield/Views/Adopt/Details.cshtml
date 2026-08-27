@@ -1,0 +1,186 @@
+@model FurShield.Data.AdoptionListing
+@{
+    ViewData["Title"] = Model.PetName + " - Adoption Profile";
+    var existingInterest = ViewBag.ExistingInterest as FurShield.Data.AdoptionInterest;
+}
+
+<section class="section">
+    <div class="container">
+        <!-- Back Button & Alerts -->
+        <div class="mb-4 d-flex justify-content-between align-items-center">
+            <a asp-action="Index" class="btn btn-outline btn-sm">
+                <i class="fa-solid fa-arrow-left me-1"></i> Back to Adoption Listings
+            </a>
+            <span class="badge bg-@(Model.Status == "Available" ? "success" : "secondary") px-3 py-2 rounded-pill fs-6">
+                <i class="fa-solid fa-circle-check me-1"></i> @Model.Status
+            </span>
+        </div>
+
+        @if (TempData["SuccessMessage"] != null)
+        {
+            <div class="alert alert-success alert-dismissible fade show rounded-4 shadow-sm p-3 mb-4" role="alert">
+                <i class="fa-solid fa-circle-check me-2"></i> @TempData["SuccessMessage"]
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+        }
+
+        <!-- 2-Column Product/Pet Details Layout -->
+        <div class="row g-5 align-items-start">
+            <!-- Left Column: Gallery Image -->
+            <div class="col-lg-6">
+                <div class="gallery-main rounded-4 overflow-hidden shadow-sm" style="background:#f5f3ec; position:relative;">
+                    <img src="@(string.IsNullOrEmpty(Model.ImageUrl) ? "https://images.unsplash.com/photo-1548199973-03cce0bbc87b?auto=format&fit=crop&w=800&q=85" : Model.ImageUrl)"
+                         class="w-100" style="height: 480px; object-fit: cover;"
+                         alt="@Model.PetName" />
+                </div>
+            </div>
+
+            <!-- Right Column: Specs & Shelter Details & Action -->
+            <div class="col-lg-6">
+                <div class="info-card">
+                    <div class="eyebrow">Rescue Profile</div>
+                    <h1 class="fw-bold mb-2" style="font-family:'Baloo 2',sans-serif;font-size:38px;">@Model.PetName</h1>
+                    <p class="text-muted mb-4">
+                        <i class="fa-solid fa-paw text-danger me-1"></i> @Model.Species &middot; @(Model.Breed ?? "Mixed Breed") &middot; @Model.Age years old
+                    </p>
+
+                    <!-- Pet Specs Grid -->
+                    <div class="row g-2 mb-4 p-3 rounded-4" style="background:var(--fs-cream);">
+                        <div class="col-6 col-sm-4">
+                            <small class="text-uppercase fw-bold text-muted" style="font-size:11px;">Species</small>
+                            <div class="fw-bold text-dark">@Model.Species</div>
+                        </div>
+                        <div class="col-6 col-sm-4">
+                            <small class="text-uppercase fw-bold text-muted" style="font-size:11px;">Breed</small>
+                            <div class="fw-bold text-dark">@(Model.Breed ?? "N/A")</div>
+                        </div>
+                        <div class="col-6 col-sm-4">
+                            <small class="text-uppercase fw-bold text-muted" style="font-size:11px;">Age</small>
+                            <div class="fw-bold text-dark">@Model.Age yrs</div>
+                        </div>
+                        <div class="col-6 col-sm-4 mt-2">
+                            <small class="text-uppercase fw-bold text-muted" style="font-size:11px;">Gender</small>
+                            <div class="fw-bold text-dark">@(Model.Gender ?? "N/A")</div>
+                        </div>
+                        <div class="col-6 col-sm-8 mt-2">
+                            <small class="text-uppercase fw-bold text-muted" style="font-size:11px;">Health Status</small>
+                            <div class="fw-bold text-dark">
+                                <i class="fa-solid fa-heart-pulse text-success me-1"></i> @(Model.HealthStatus ?? "Vaccinated & Healthy")
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Shelter Information Card -->
+                    <div class="p-3 mb-4 rounded-4 border" style="background:#fff;">
+                        <h6 class="fw-bold mb-1" style="color:var(--fs-sage-dark);">
+                            <i class="fa-solid fa-house-chimney-heart me-1"></i> Listing Shelter
+                        </h6>
+                        <div class="fw-bold text-dark">@(Model.Shelter?.ShelterName ?? "FurShield Rescue Partner")</div>
+                        <small class="text-muted d-block mt-1">
+                            <i class="fa-solid fa-location-dot me-1 text-danger"></i> @(Model.Shelter?.Address ?? "Karachi")
+                            @if (!string.IsNullOrEmpty(Model.Shelter?.Phone))
+                            {
+                                <span>&middot; <i class="fa-solid fa-phone me-1 text-danger"></i> @Model.Shelter?.Phone</span>
+                            }
+                        </small>
+                    </div>
+
+                    <!-- Adoption Form / Request State -->
+                    <div class="pt-2">
+                        @if (!User.Identity.IsAuthenticated)
+                        {
+                            <div class="alert alert-info rounded-4 border-0 shadow-sm p-3">
+                                <i class="fa-solid fa-circle-info me-2"></i>
+                                <a asp-area="Identity" asp-page="/Account/Login" class="fw-bold text-decoration-none">Log in</a> as a Pet Owner to express interest in adopting @Model.PetName.
+                            </div>
+                        }
+                        else if (!User.IsInRole("PetOwner"))
+                        {
+                            <div class="alert alert-secondary rounded-4 border-0 p-3">
+                                <i class="fa-solid fa-shield-halved me-2"></i> Only Pet Owner accounts can submit adoption applications.
+                            </div>
+                        }
+                        else if (Model.Status != "Available")
+                        {
+                            <div class="alert alert-secondary rounded-4 border-0 p-3">
+                                <i class="fa-solid fa-circle-xmark me-2"></i> This pet is no longer available for adoption.
+                            </div>
+                        }
+                        else if (existingInterest != null && existingInterest.Status == "Pending")
+                        {
+                            <div class="alert alert-warning rounded-4 border-0 shadow-sm p-3">
+                                <h6 class="fw-bold mb-1"><i class="fa-solid fa-hourglass-half me-1"></i> Application Under Review</h6>
+                                Your adoption request is currently being reviewed by the shelter.
+                                @if (!string.IsNullOrEmpty(existingInterest.Message))
+                                {
+                                    <div class="mt-2 p-2 bg-white rounded-3 border text-muted small">
+                                        <strong>Your Note:</strong> "@existingInterest.Message"
+                                    </div>
+                                }
+                            </div>
+                        }
+                        else if (existingInterest != null && existingInterest.Status == "Approved")
+                        {
+                            <div class="alert alert-success rounded-4 border-0 shadow-sm p-3">
+                                <h6 class="fw-bold mb-1"><i class="fa-solid fa-circle-check me-1"></i> Application Approved!</h6>
+                                Congratulations! The shelter has approved your request to adopt @Model.PetName.
+                                @if (!string.IsNullOrEmpty(existingInterest.ShelterResponse))
+                                {
+                                    <div class="mt-2 p-2 bg-white rounded-3 border text-muted small">
+                                        <strong>Shelter Message:</strong> "@existingInterest.ShelterResponse"
+                                    </div>
+                                }
+                            </div>
+                        }
+                        else
+                        {
+                            @if (existingInterest != null && existingInterest.Status == "Rejected")
+                            {
+                                <div class="alert alert-danger rounded-4 border-0 shadow-sm p-3 mb-3">
+                                    <h6 class="fw-bold mb-1"><i class="fa-solid fa-triangle-exclamation me-1"></i> Previous Request Declined</h6>
+                                    @if (!string.IsNullOrEmpty(existingInterest.ShelterResponse))
+                                    {
+                                        <div class="small"><em>Shelter Response: "@existingInterest.ShelterResponse"</em></div>
+                                    }
+                                </div>
+                            }
+
+                            <!-- Application Form -->
+                            <form asp-action="SubmitInterest" method="post">
+                                <input type="hidden" name="adoptionListingId" value="@Model.AdoptionListingId" />
+
+                                <div class="row g-2 mb-3">
+                                    <div class="col-md-6">
+                                        <label class="fw-bold small mb-1">Contact Phone Number <span class="text-danger">*</span></label>
+                                        <input type="text" name="phoneNumber" class="form-control" placeholder="03xx-xxxxxxx" required />
+                                    </div>
+                                    <div class="col-md-6">
+                                        <label class="fw-bold small mb-1">Home Address <span class="text-danger">*</span></label>
+                                        <input type="text" name="address" class="form-control" placeholder="City, Area details" required />
+                                    </div>
+                                </div>
+
+                                <div class="mb-3">
+                                    <label class="fw-bold small mb-1">Why do you want to adopt @Model.PetName? <span class="text-danger">*</span></label>
+                                    <textarea name="message" class="form-control" rows="3"
+                                              placeholder="Tell the shelter about your home environment, schedule, and experience with pets..." required></textarea>
+                                </div>
+
+                                <button type="submit" class="btn btn-primary btn-lg w-100 py-3 shadow-sm">
+                                    <i class="fa-solid fa-heart me-2"></i> Submit Adoption Request
+                                </button>
+                            </form>
+                        }
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        @if (Model.Shelter != null && ViewBag.RatingWidget != null)
+        {
+            <div class="mt-5 card border-0 shadow-sm rounded-4 p-4 bg-white">
+                @await Html.PartialAsync("_RatingWidget", (FurShield.Models.RatingWidgetViewModel)ViewBag.RatingWidget)
+            </div>
+        }
+    </div>
+</section>

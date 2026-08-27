@@ -1,0 +1,68 @@
+@model IEnumerable<FurShield.Data.PetImage>
+@{
+    var pet = ViewBag.Pet as FurShield.Data.Pet;
+    Layout = "_PetOwnerLayout";
+    ViewData["Title"] = "Photo Gallery";
+}
+
+<div class="d-flex justify-content-between align-items-center mb-3">
+    <h2><i class="bi bi-images text-primary me-2"></i>@pet?.Name's Photo Gallery</h2>
+    <a asp-controller="Pet" asp-action="Details" asp-route-id="@pet?.PetId" class="btn btn-secondary">
+        <i class="bi bi-arrow-left"></i> Back to Pet
+    </a>
+</div>
+<hr />
+
+@if (TempData["SuccessMessage"] != null)
+{
+    <div class="alert alert-success">@TempData["SuccessMessage"]</div>
+}
+@if (TempData["ErrorMessage"] != null)
+{
+    <div class="alert alert-danger">@TempData["ErrorMessage"]</div>
+}
+
+<div class="card shadow-sm mb-4">
+    <div class="card-body">
+        <h5 class="card-title text-primary">Add a Photo</h5>
+        <form asp-action="Upload" method="post" enctype="multipart/form-data" class="row g-2 align-items-center">
+            <input type="hidden" name="petId" value="@pet?.PetId" />
+            <div class="col-md-8">
+                <input type="file" name="image" class="form-control" accept="image/*" required />
+            </div>
+            <div class="col-md-4">
+                <button type="submit" class="btn btn-primary w-100">
+                    <i class="bi bi-upload"></i> Upload Photo
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<div class="row row-cols-2 row-cols-md-4 g-3">
+    @if (Model != null && Model.Any())
+    {
+        @foreach (var img in Model)
+        {
+            <div class="col">
+                <div class="card shadow-sm h-100">
+                    <img src="~/@img.ImageUrl" class="card-img-top" style="height: 160px; object-fit: cover;" alt="Pet photo" />
+                    <div class="card-body p-2 text-center">
+                        <form asp-action="Delete" asp-route-id="@img.PetImageId" method="post" onsubmit="return confirm('Delete this photo?');">
+                            <button type="submit" class="btn btn-sm btn-outline-danger w-100">
+                                <i class="bi bi-trash"></i> Delete
+                            </button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        }
+    }
+    else
+    {
+        <div class="col-12 text-center py-5">
+            <i class="bi bi-images display-4 text-muted d-block mb-2"></i>
+            <p class="text-muted">No photos yet — upload the first one above.</p>
+        </div>
+    }
+</div>

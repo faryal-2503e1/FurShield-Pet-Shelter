@@ -1,0 +1,518 @@
+@model IEnumerable<FurShield.Data.Appointment>
+
+@{
+    ViewData["Title"] = "Vet Appointments";
+    Layout = "~/Views/Shared/_VetLayout.cshtml";
+}
+
+@{
+    var totalCount     = Model.Count();
+    var pendingCount   = Model.Count(a => a.Status == "Pending");
+    var todayCount     = Model.Count(a => a.AppointmentDate.Date == DateTime.Today);
+    var completedCount = Model.Count(a => a.Status == "Completed");
+}
+
+<style>
+    :root {
+        --fs-cream-bg: #FBF8F3;
+        --fs-ink: #211A16;
+        --fs-pink: #C76A8F;
+        --fs-pink-dark: #B35478;
+        --fs-pink-soft: #FDF0F5;
+        --fs-sage: #74987E;
+        --fs-sage-soft: #EFF6F1;
+        --fs-amber: #D98829;
+        --fs-amber-soft: #FFF9EE;
+        --fs-sky: #3587B8;
+        --fs-sky-soft: #F1F8FC;
+        --fs-border: #EFE4D6;
+    }
+
+    body, .dashboard-shell {
+        background-color: #FBF8F3 !important;
+        font-family: 'DM Sans', sans-serif;
+    }
+
+    /* ---- Home Hero Container ---- */
+    .home-theme-hero {
+        background: #FFFFFF;
+        border: 1.5px solid var(--fs-border);
+        border-radius: 28px;
+        padding: 2.3rem 2.6rem;
+        margin-bottom: 2rem;
+        position: relative;
+        box-shadow: 0 10px 30px rgba(33, 26, 22, 0.04);
+        overflow: hidden;
+    }
+    .home-theme-hero::before {
+        content: '';
+        position: absolute;
+        top: -40px; right: -40px;
+        width: 180px; height: 180px;
+        background: #EFF6F1;
+        border-radius: 50%;
+        z-index: 0;
+    }
+    .home-theme-hero::after {
+        content: '';
+        position: absolute;
+        bottom: -50px; right: 120px;
+        width: 140px; height: 140px;
+        background: #FDF0F5;
+        border-radius: 50%;
+        z-index: 0;
+    }
+
+    .fs-pill-tag {
+        display: inline-flex;
+        align-items: center;
+        gap: .5rem;
+        background: #EFF6F1;
+        border: 1.5px solid #D5E6DA;
+        color: #2D5838;
+        font-family: 'Baloo 2', sans-serif;
+        font-size: .82rem;
+        font-weight: 700;
+        letter-spacing: .08em;
+        text-transform: uppercase;
+        padding: .35rem 1.1rem;
+        border-radius: 50px;
+        margin-bottom: 1rem;
+    }
+
+    .fs-hero-title {
+        font-family: 'Baloo 2', sans-serif;
+        font-size: 2.3rem;
+        font-weight: 800;
+        color: #211A16;
+        line-height: 1.15;
+        margin-bottom: .6rem;
+    }
+    .fs-hero-title .highlight-pink {
+        color: #C76A8F;
+    }
+
+    .fs-hero-subtitle {
+        color: #6E665E;
+        font-size: 1.05rem;
+        max-width: 600px;
+        margin: 0;
+    }
+
+    /* ---- Stat Cards ---- */
+    .fs-stat-card {
+        background: #FFFFFF;
+        border-radius: 22px;
+        padding: 1.5rem 1.3rem;
+        transition: all .22s ease;
+        display: flex;
+        align-items: center;
+        gap: 1.1rem;
+        text-decoration: none;
+        box-shadow: 0 4px 16px rgba(33, 26, 22, 0.04);
+    }
+    .fs-stat-card:hover {
+        transform: translateY(-4px);
+        box-shadow: 0 14px 32px rgba(33, 26, 22, 0.08);
+    }
+    .fs-stat-icon-wrap {
+        width: 52px; height: 52px;
+        border-radius: 16px;
+        display: flex; align-items: center; justify-content: center;
+        font-size: 1.4rem;
+        flex-shrink: 0;
+    }
+    .fs-stat-num {
+        font-family: 'Baloo 2', sans-serif;
+        font-size: 2.1rem;
+        font-weight: 800;
+        line-height: 1;
+        margin-bottom: .2rem;
+    }
+    .fs-stat-title {
+        font-size: .82rem;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: .06em;
+    }
+
+    .card-sky    { background: #F1F8FC; border: 1.5px solid #D6EBF8; color: #1E5C82; }
+    .card-sky .fs-stat-icon-wrap { background: #FFFFFF; color: #3587B8; box-shadow: 0 4px 10px rgba(53,135,184,.15); }
+    .card-sky .fs-stat-num { color: #1E5C82; }
+
+    .card-amber  { background: #FFF9EE; border: 1.5px solid #FDE7C4; color: #8C5B17; }
+    .card-amber .fs-stat-icon-wrap { background: #FFFFFF; color: #D98829; box-shadow: 0 4px 10px rgba(217,136,41,.15); }
+    .card-amber .fs-stat-num { color: #8C5B17; }
+
+    .card-pink   { background: #FFF5F9; border: 1.5px solid #F8D3E4; color: #8F325C; }
+    .card-pink .fs-stat-icon-wrap { background: #FFFFFF; color: #C76A8F; box-shadow: 0 4px 10px rgba(199,106,143,.15); }
+    .card-pink .fs-stat-num { color: #8F325C; }
+
+    .card-sage   { background: #F2F8F4; border: 1.5px solid #D7E8DC; color: #2B5738; }
+    .card-sage .fs-stat-icon-wrap { background: #FFFFFF; color: #74987E; box-shadow: 0 4px 10px rgba(116,152,126,.15); }
+    .card-sage .fs-stat-num { color: #2B5738; }
+
+    /* ---- Panel Card & Table ---- */
+    .fs-panel-card {
+        background: #FFFFFF;
+        border: 1.5px solid #EFE4D6;
+        border-radius: 26px;
+        padding: 2rem;
+        box-shadow: 0 6px 24px rgba(33, 26, 22, 0.04);
+    }
+    .fs-panel-header {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        margin-bottom: 1.5rem;
+        padding-bottom: 1rem;
+        border-bottom: 1.5px solid #F5EDE0;
+    }
+    .fs-panel-title {
+        font-family: 'Baloo 2', sans-serif;
+        font-size: 1.35rem;
+        font-weight: 800;
+        color: #211A16;
+        margin: 0;
+        display: flex;
+        align-items: center;
+        gap: .6rem;
+    }
+
+    .fs-table {
+        margin: 0;
+    }
+    .fs-table thead th {
+        background: #FAF5EE;
+        font-family: 'Baloo 2', sans-serif;
+        font-size: .85rem;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: .06em;
+        color: #5C5248;
+        border: none;
+        padding: 1rem 1.2rem;
+    }
+    .fs-table thead th:first-child { border-radius: 14px 0 0 14px; }
+    .fs-table thead th:last-child { border-radius: 0 14px 14px 0; }
+    
+    .fs-table tbody td {
+        padding: 1.1rem 1.2rem;
+        vertical-align: middle;
+        border-bottom: 1px solid #F5EDE0;
+        color: #211A16;
+        font-size: .92rem;
+    }
+    .fs-table tbody tr:last-child td {
+        border-bottom: none;
+    }
+    .fs-table tbody tr:hover td {
+        background: #FAF8F5;
+    }
+
+    /* Status Badges */
+    .fs-badge {
+        padding: .4rem .9rem;
+        border-radius: 50px;
+        font-weight: 700;
+        font-size: .78rem;
+        display: inline-flex;
+        align-items: center;
+        gap: .35rem;
+    }
+    .badge-approved    { background: #EAF5ED; color: #2B5738; border: 1px solid #CBE3D1; }
+    .badge-pending     { background: #FEF7ED; color: #8A5B18; border: 1px solid #FDE4C2; }
+    .badge-completed   { background: #EFF6FB; color: #1E5C82; border: 1px solid #D5E7F5; }
+    .badge-cancelled   { background: #FFF0F2; color: #A82B3E; border: 1px solid #FAD1D7; }
+    .badge-rescheduled { background: #F6F2FB; color: #4B3A82; border: 1px solid #E6DDFC; }
+
+    /* Pill Buttons */
+    .btn-fs-pink {
+        background: #C76A8F;
+        color: #FFFFFF !important;
+        border: none;
+        border-radius: 50px;
+        padding: 7px 18px;
+        font-weight: 700;
+        font-size: .85rem;
+        transition: all .2s;
+        text-decoration: none;
+        display: inline-flex;
+        align-items: center;
+        gap: .4rem;
+    }
+    .btn-fs-pink:hover {
+        background: #B35478;
+        color: #FFFFFF !important;
+        transform: translateY(-2px);
+    }
+
+    .btn-fs-sage {
+        background: #74987E;
+        color: #FFFFFF !important;
+        border: none;
+        border-radius: 50px;
+        padding: 7px 18px;
+        font-weight: 700;
+        font-size: .85rem;
+        transition: all .2s;
+        display: inline-flex;
+        align-items: center;
+        gap: .4rem;
+    }
+    .btn-fs-sage:hover {
+        background: #5F8369;
+        color: #FFFFFF !important;
+        transform: translateY(-2px);
+    }
+
+    .btn-fs-dark {
+        background: #FFFFFF;
+        color: #211A16 !important;
+        border: 1.5px solid #EADFCF;
+        border-radius: 50px;
+        padding: 7px 16px;
+        font-weight: 700;
+        font-size: .85rem;
+        transition: all .2s;
+        text-decoration: none;
+        display: inline-flex;
+        align-items: center;
+        gap: .4rem;
+    }
+    .btn-fs-dark:hover {
+        background: #211A16;
+        color: #FFFFFF !important;
+        border-color: #211A16;
+        transform: translateY(-2px);
+    }
+
+    @@media (max-width: 768px) {
+        .home-theme-hero { padding: 1.6rem 1.4rem; }
+        .fs-hero-title { font-size: 1.75rem; }
+    }
+</style>
+
+<!-- Hero Section with Home Theme Styling -->
+<div class="home-theme-hero">
+    <div class="row align-items-center position-relative" style="z-index: 1;">
+        <div class="col-lg-8">
+            <div class="fs-pill-tag">
+                <i class="bi bi-hospital-fill"></i> Veterinarian Clinic Portal
+            </div>
+            <h1 class="fs-hero-title">
+                Compassionate healthcare <span class="highlight-pink">for every pet.</span>
+            </h1>
+            <p class="fs-hero-subtitle">
+                Review your patient appointments, log clinical diagnoses &amp; vaccinations, manage weekly time slots, and inspect medical histories.
+            </p>
+        </div>
+        <div class="col-lg-4 text-lg-end mt-3 mt-lg-0">
+            <a asp-action="Profile" class="btn-fs-dark">
+                <i class="bi bi-person-gear"></i> Doctor Profile
+            </a>
+            <a asp-action="Availability" class="btn-fs-pink ms-2">
+                <i class="bi bi-calendar-week"></i> Manage Schedule
+            </a>
+        </div>
+    </div>
+</div>
+
+<!-- 4 Stat Counters in Home Pastel Palette -->
+<div class="row g-3 mb-4">
+    <div class="col-lg-3 col-md-6 col-sm-6 col-12">
+        <div class="fs-stat-card card-sky">
+            <div class="fs-stat-icon-wrap"><i class="bi bi-calendar-range-fill"></i></div>
+            <div>
+                <div class="fs-stat-num">@totalCount</div>
+                <div class="fs-stat-title" title="Total Visits">Total Visits</div>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-lg-3 col-md-6 col-sm-6 col-12">
+        <div class="fs-stat-card card-amber">
+            <div class="fs-stat-icon-wrap"><i class="bi bi-hourglass-split"></i></div>
+            <div>
+                <div class="fs-stat-num">@pendingCount</div>
+                <div class="fs-stat-title" title="Pending Approval">Pending Approval</div>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-lg-3 col-md-6 col-sm-6 col-12">
+        <div class="fs-stat-card card-pink">
+            <div class="fs-stat-icon-wrap"><i class="bi bi-calendar-event-fill"></i></div>
+            <div>
+                <div class="fs-stat-num">@todayCount</div>
+                <div class="fs-stat-title" title="Today's Visits">Today's Visits</div>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-lg-3 col-md-6 col-sm-6 col-12">
+        <div class="fs-stat-card card-sage">
+            <div class="fs-stat-icon-wrap"><i class="bi bi-check-circle-fill"></i></div>
+            <div>
+                <div class="fs-stat-num">@completedCount</div>
+                <div class="fs-stat-title" title="Completed">Completed</div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Appointments Table Card -->
+<div class="fs-panel-card">
+    <div class="fs-panel-header">
+        <h3 class="fs-panel-title">
+            <i class="bi bi-calendar-check-fill" style="color:#C76A8F;"></i> Appointment Bookings
+        </h3>
+        <span class="badge bg-light text-dark px-3 py-2 rounded-pill fw-semibold" style="border: 1.5px solid #EADFCF;">
+            @totalCount Scheduled
+        </span>
+    </div>
+
+    <div class="table-responsive">
+        <table class="table fs-table align-middle">
+            <thead>
+                <tr>
+                    <th>Pet Name</th>
+                    <th>Pet Owner</th>
+                    <th>Date &amp; Time</th>
+                    <th>Consultation Reason</th>
+                    <th>Status</th>
+                    <th class="text-end">Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                @if (!Model.Any())
+                {
+                    <tr>
+                        <td colspan="6" class="text-center py-5 text-muted">
+                            <i class="bi bi-calendar-x fs-1 d-block mb-2" style="color:#C76A8F; opacity:.6;"></i>
+                            No appointments found on your schedule.
+                        </td>
+                    </tr>
+                }
+                else
+                {
+                    @foreach (var item in Model)
+                    {
+                        <tr>
+                            <td>
+                                <div class="d-flex align-items-center gap-2">
+                                    <div style="width:38px; height:38px; border-radius:12px; background:#FFF0F5; color:#C76A8F; display:flex; align-items:center; justify-content:center; flex-shrink:0;">
+                                        <i class="bi bi-heart-pulse-fill"></i>
+                                    </div>
+                                    <div>
+                                        <strong style="color:#211A16;">@(item.Pet?.Name ?? "N/A")</strong>
+                                        <small class="d-block text-muted">@(item.Pet?.Species ?? "Pet")</small>
+                                    </div>
+                                </div>
+                            </td>
+                            <td>
+                                <span class="fw-semibold" style="color:#211A16;">@(item.Owner?.FullName ?? item.Owner?.UserName ?? "N/A")</span>
+                            </td>
+                            <td>
+                                <div class="d-flex align-items-center gap-1 text-muted">
+                                    <i class="bi bi-clock"></i>
+                                    <span>@item.AppointmentDate.ToString("dd MMM yyyy, hh:mm tt")</span>
+                                </div>
+                            </td>
+                            <td>
+                                <span>@(string.IsNullOrEmpty(item.Reason) ? "General Checkup" : item.Reason)</span>
+                            </td>
+                            <td>
+                                @{
+                                    var badgeClass = item.Status switch {
+                                        "Approved"    => "badge-approved",
+                                        "Completed"   => "badge-completed",
+                                        "Cancelled"   => "badge-cancelled",
+                                        "Rescheduled" => "badge-rescheduled",
+                                        _             => "badge-pending"
+                                    };
+                                }
+                                <span class="fs-badge @badgeClass">
+                                    @item.Status
+                                </span>
+                            </td>
+                            <td class="text-end">
+                                <div class="d-flex justify-content-end gap-1 flex-wrap">
+                                    <form asp-action="UpdateStatus" method="post" class="d-inline">
+                                        <input type="hidden" name="appointmentId" value="@item.AppointmentId" />
+                                        @if (item.Status == "Pending" || item.Status == "Rescheduled")
+                                        {
+                                            <button type="submit" name="status" value="Approved" class="btn-fs-sage">
+                                                <i class="bi bi-check-lg"></i> Approve
+                                            </button>
+                                            <button type="submit" name="status" value="Cancelled" class="btn btn-sm btn-outline-danger rounded-pill px-3">
+                                                Cancel
+                                            </button>
+                                        }
+                                        else if (item.Status == "Approved")
+                                        {
+                                            <button type="submit" name="status" value="Completed" class="btn-fs-dark">
+                                                <i class="bi bi-check-circle"></i> Complete
+                                            </button>
+                                        }
+                                    </form>
+
+                                    @if (item.Status == "Pending" || item.Status == "Approved")
+                                    {
+                                        <button type="button" class="btn-fs-dark" data-bs-toggle="modal" data-bs-target="#rescheduleModal-@item.AppointmentId">
+                                            <i class="bi bi-calendar2-week"></i> Reschedule
+                                        </button>
+                                    }
+
+                                    @if (item.Status == "Approved" || item.Status == "Completed")
+                                    {
+                                        <a asp-action="AddHealthRecord" asp-route-appointmentId="@item.AppointmentId" class="btn-fs-pink" title="Add Medical Record">
+                                            <i class="bi bi-file-earmark-plus"></i> Record
+                                        </a>
+                                    }
+
+                                    @if (item.PetId > 0)
+                                    {
+                                        <a asp-action="PetHistory" asp-route-petId="@item.PetId" class="btn btn-sm btn-light border rounded-pill px-3" title="Medical History">
+                                            <i class="bi bi-clock-history"></i> History
+                                        </a>
+                                    }
+                                </div>
+                            </td>
+                        </tr>
+
+                        <!-- Reschedule Modal -->
+                        <div class="modal fade" id="rescheduleModal-@item.AppointmentId" tabindex="-1" aria-hidden="true">
+                            <div class="modal-dialog modal-dialog-centered">
+                                <div class="modal-content border-0 shadow-lg" style="border-radius: 24px; padding: 1.2rem;">
+                                    <form asp-action="Reschedule" method="post">
+                                        <div class="modal-header border-0 pb-0">
+                                            <h5 class="modal-title fw-bold" style="font-family:'Baloo 2',sans-serif; color:#211A16;">
+                                                <i class="bi bi-calendar2-week text-primary me-2"></i> Reschedule Appointment
+                                            </h5>
+                                            <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                                        </div>
+                                        <div class="modal-body pt-3">
+                                            <input type="hidden" name="appointmentId" value="@item.AppointmentId" />
+                                            <label class="form-label fw-bold">Select New Date &amp; Time</label>
+                                            @{
+                                                var minDate     = DateTime.Now.ToString("yyyy-MM-ddTHH:mm");
+                                                var defaultDate = item.AppointmentDate < DateTime.Now ? DateTime.Now.AddHours(1) : item.AppointmentDate;
+                                            }
+                                            <input type="datetime-local" name="newDate" class="form-control"
+                                                   min="@minDate" value="@defaultDate.ToString("yyyy-MM-ddTHH:mm")" required style="border-radius: 12px; padding: .65rem 1rem;" />
+                                        </div>
+                                        <div class="modal-footer border-0 pt-0">
+                                            <button type="button" class="btn btn-light rounded-pill px-4" data-bs-dismiss="modal">Close</button>
+                                            <button type="submit" class="btn-fs-pink">Confirm Reschedule</button>
+                                        </div>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                    }
+                }
+            </tbody>
+        </table>
+    </div>
+</div>

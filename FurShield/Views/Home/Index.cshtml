@@ -1,0 +1,396 @@
+@{
+    ViewData["Title"] = "Welcome to FurShield | International Pet Care & Wellness";
+    var featuredPets = ViewBag.FeaturedPets as List<FurShield.Data.AdoptionListing>;
+    var featuredProducts = ViewBag.FeaturedProducts as List<FurShield.Data.Product>;
+    var veterinarians = ViewBag.Veterinarians as List<FurShield.Data.Veterinarian>;
+}
+
+<!-- ===== Editorial Hero Section ===== -->
+<section class="fs-hero">
+    <div class="fs-corner-blob sage tl" style="opacity:.6"></div>
+    <div class="fs-corner-blob pink br" style="opacity:.5"></div>
+    <div class="container fs-hero-grid">
+        <div>
+            <div class="fs-hero-badge"><i class="fa-solid fa-paw me-1"></i> FurShield PetCare Platform</div>
+            <h1 class="fs-hero-heading">Every paw <em>deserves a shield</em> of love.</h1>
+            <p class="fs-hero-desc">
+                One home for pet owners, veterinarians and animal shelters &mdash; profiles,
+                health records, appointments and adoption, all in one calm, caring place.
+            </p>
+            <div class="fs-hero-actions">
+                <a class="btn btn-primary btn-lg" asp-controller="Adopt" asp-action="Index">
+                    Adopt a Pet <i class="fa-solid fa-arrow-right ms-1"></i>
+                </a>
+                <a class="btn btn-outline btn-lg" asp-controller="Product" asp-action="Index">
+                    Explore Shop <i class="fa-solid fa-bag-shopping ms-1"></i>
+                </a>
+            </div>
+            <div class="fs-hero-trust">
+                <span class="stars">&#9733;&#9733;&#9733;&#9733;&#9733;</span>
+                <strong>4.9/5</strong>
+                <span>from 2,500+ pet parents</span>
+            </div>
+        </div>
+        <div class="fs-hero-media">
+            <div class="fs-deco fs-bone" style="top:0;left:10%"></div>
+            <div class="fs-deco fs-paw small sage" style="bottom:8%;left:0"></div>
+            <img class="fs-hero-img-main fs-shape-arch reveal-clip"
+                 src="https://images.unsplash.com/photo-1548199973-03cce0bbc87b?auto=format&fit=crop&w=1200&q=90"
+                 alt="Golden retriever cared for through FurShield">
+            <img class="fs-hero-img-small fs-shape-blob reveal-clip-left"
+                 src="https://images.unsplash.com/photo-1518791841217-8f162f1e1131?auto=format&fit=crop&w=800&q=88"
+                 alt="Cat with a FurShield health profile">
+            <div class="fs-hero-float">
+                <span class="fs-hero-float-icon"><i class="fa-solid fa-heart-pulse"></i></span>
+                <div>
+                    <small>Always up to date</small>
+                    <strong>Health Records</strong>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- ===== Floating Benefits Ribbon ===== -->
+<section class="floating-benefits">
+    <div class="container benefits-grid">
+        <div class="benefit">
+            <span><i class="fa-solid fa-id-card"></i></span>
+            <div>
+                <strong>Pet profiles</strong>
+                <small>One unified medical record</small>
+            </div>
+        </div>
+        <div class="benefit">
+            <span><i class="fa-solid fa-user-doctor"></i></span>
+            <div>
+                <strong>Certified vets</strong>
+                <small>Direct slot booking &amp; history</small>
+            </div>
+        </div>
+        <div class="benefit">
+            <span><i class="fa-solid fa-house-chimney-heart"></i></span>
+            <div>
+                <strong>Shelter network</strong>
+                <small>Real adoption listings</small>
+            </div>
+        </div>
+        <div class="benefit">
+            <span><i class="fa-solid fa-shield-cat"></i></span>
+            <div>
+                <strong>Curated essentials</strong>
+                <small>Quality pet nutrition &amp; gear</small>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- ===== Introduction / About FurShield ===== -->
+<section class="fs-section">
+    <div class="fs-corner-blob sage tl"></div>
+    <div class="container fs-intro-grid">
+        <div class="fs-intro-media reveal">
+            <div class="fs-deco fs-bone" style="top:-6px;right:18%"></div>
+            <div class="fs-deco fs-paw small sage" style="left:2%;top:38%"></div>
+            <img class="fs-img-main"
+                 src="https://images.unsplash.com/photo-1601758228041-f3b2795255f1?auto=format&fit=crop&w=900&q=90"
+                 alt="Golden retriever cared for through FurShield">
+            <img class="fs-img-small"
+                 src="https://images.unsplash.com/photo-1518791841217-8f162f1e1131?auto=format&fit=crop&w=700&q=90"
+                 alt="Cat with a FurShield profile">
+            <div class="fs-badge-card">
+                One platform<br>
+                <small>Owners &middot; Vets &middot; Shelters</small>
+            </div>
+        </div>
+        <div class="reveal">
+            <div class="eyebrow">Introduction</div>
+            <h2>A single home for every pet's care.</h2>
+            <p>
+                As pet ownership grows, care information gets scattered across notebooks, clinics and group
+                chats. FurShield brings pet owners, veterinarians and animal shelters onto one platform &mdash;
+                centralizing profiles, health records and care activities so nothing gets missed.
+            </p>
+            <div class="check-list">
+                <div><i class="fa-solid fa-circle-check"></i> Centralized pet profiles &amp; vaccination records</div>
+                <div><i class="fa-solid fa-circle-check"></i> Direct veterinary coordination &amp; smart slot bookings</div>
+                <div><i class="fa-solid fa-circle-check"></i> Verified shelter adoption listings &amp; interest tracking</div>
+                <div><i class="fa-solid fa-circle-check"></i> Dedicated role-based portals for owners, vets &amp; shelters</div>
+            </div>
+            <a class="btn btn-green" asp-controller="Home" asp-action="About">
+                Discover Our Story <i class="fa-solid fa-arrow-right ms-1"></i>
+            </a>
+        </div>
+    </div>
+</section>
+
+<!-- ===== Core Services Grid ===== -->
+<section class="fs-section tight" style="background:#fff">
+    <div class="container">
+        <div class="section-head">
+            <div>
+                <div class="eyebrow">Core Services</div>
+                <h2>Everything your pet needs,<br>in one place.</h2>
+            </div>
+            <p>Daycare, grooming, veterinary care, shelter adoption and pet supplies &mdash; connected to the same profile.</p>
+        </div>
+        <div class="fs-services-grid">
+            <article class="fs-service-card reveal">
+                <div class="fs-service-photo">
+                    <img src="https://images.unsplash.com/photo-1450778869180-41d0601e046e?auto=format&fit=crop&w=400&q=80" alt="Daycare">
+                </div>
+                <h3>Daycare &amp; Play</h3>
+                <p>Supervised play and enrichment for busy days.</p>
+            </article>
+            <article class="fs-service-card reveal">
+                <div class="fs-service-photo">
+                    <img src="https://images.unsplash.com/photo-1516734212186-a967f81ad0d7?auto=format&fit=crop&w=400&q=80" alt="Grooming">
+                </div>
+                <h3>Grooming &amp; Spa</h3>
+                <p>Bath, style and nail care, tailored breed by breed.</p>
+            </article>
+            <article class="fs-service-card reveal">
+                <div class="fs-service-photo">
+                    <img src="https://images.unsplash.com/photo-1628009368231-7bb7cfcb0def?auto=format&fit=crop&w=400&q=80" alt="Veterinary">
+                </div>
+                <h3>Veterinary Care</h3>
+                <p>Certified checkups, diagnoses and health tracking.</p>
+            </article>
+            <article class="fs-service-card reveal">
+                <div class="fs-service-photo">
+                    <img src="https://images.unsplash.com/photo-1601758228041-f3b2795255f1?auto=format&fit=crop&w=400&q=80" alt="Boarding">
+                </div>
+                <h3>Loving Boarding</h3>
+                <p>Comfortable stays with attentive daily care.</p>
+            </article>
+            <article class="fs-service-card reveal">
+                <div class="fs-service-photo">
+                    <img src="https://images.unsplash.com/photo-1589924691995-400dc9ecc119?auto=format&fit=crop&w=400&q=80" alt="Pet supplies">
+                </div>
+                <h3>Pet Supplies</h3>
+                <p>Curated nutrition, toys and daily wellness essentials.</p>
+            </article>
+        </div>
+        <div class="text-center mt-4">
+            <a class="btn btn-outline" asp-controller="Home" asp-action="Vets">
+                Explore All Vets &amp; Services <i class="fa-solid fa-arrow-right ms-1"></i>
+            </a>
+        </div>
+    </div>
+</section>
+
+<!-- ===== Featured Adoption Listings ===== -->
+<section class="fs-section pet-section">
+    <div class="fs-corner-blob pink tr"></div>
+    <div class="container">
+        <div class="section-head">
+            <div>
+                <div class="eyebrow">Shelter Network</div>
+                <h2>Somewhere out there,<br><span>your best friend is waiting.</span></h2>
+            </div>
+            <a class="btn btn-outline" asp-controller="Adopt" asp-action="Index">
+                View All Pets <i class="fa-solid fa-arrow-right ms-1"></i>
+            </a>
+        </div>
+
+        <div class="row row-cols-1 row-cols-md-3 g-4">
+            @if (featuredPets != null && featuredPets.Any())
+            {
+                @foreach (var pet in featuredPets)
+                {
+                    <div class="col">
+                        <div class="card h-100 border-0 shadow-sm rounded-4 overflow-hidden bg-white" style="transition: transform .3s ease;">
+                            <div style="height: 220px; overflow:hidden; position:relative;">
+                                <img src="@(string.IsNullOrEmpty(pet.ImageUrl) ? "https://images.unsplash.com/photo-1548199973-03cce0bbc87b?auto=format&fit=crop&w=600&q=80" : pet.ImageUrl)"
+                                     class="w-100 h-100" style="object-fit: cover; transition: transform .5s ease;" alt="@pet.PetName" />
+                                <span class="badge position-absolute top-0 end-0 m-3 px-3 py-2 rounded-pill bg-success text-white shadow-sm">
+                                    <i class="fa-solid fa-heart me-1"></i> Ready to Meet
+                                </span>
+                            </div>
+                            <div class="card-body p-4 d-flex flex-column">
+                                <h4 class="fw-bold mb-1" style="font-family:'Baloo 2',sans-serif;">@pet.PetName</h4>
+                                <p class="text-muted small mb-3">
+                                    <i class="fa-solid fa-paw text-danger me-1"></i> @pet.Species &middot; @pet.Breed &middot; @pet.Age yrs
+                                </p>
+                                <div class="mt-auto">
+                                    <a asp-controller="Adopt" asp-action="Details" asp-route-id="@pet.AdoptionListingId"
+                                       class="btn btn-primary w-100">
+                                        Meet @pet.PetName &amp; Adopt <i class="fa-solid fa-arrow-right ms-1"></i>
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                }
+            }
+            else
+            {
+                <div class="col-12 text-center py-5">
+                    <div class="p-4 bg-white rounded-4 shadow-sm d-inline-block">
+                        <i class="fa-solid fa-paw fs-1 text-muted mb-2"></i>
+                        <p class="text-muted mb-0">No pets available for adoption right now. Check back soon!</p>
+                    </div>
+                </div>
+            }
+        </div>
+    </div>
+</section>
+
+<!-- ===== Expert Veterinarians Section ===== -->
+<section class="fs-section" style="background:#fff;">
+    <div class="container">
+        <div class="section-head">
+            <div>
+                <div class="eyebrow">Expert Veterinarians</div>
+                <h2>Certified doctors you can trust.</h2>
+            </div>
+            <a class="btn btn-outline" asp-controller="Home" asp-action="Vets">
+                View All Doctors <i class="fa-solid fa-arrow-right ms-1"></i>
+            </a>
+        </div>
+
+        <div class="row row-cols-1 row-cols-md-3 g-4">
+            @if (veterinarians != null && veterinarians.Any())
+            {
+                @foreach (var vet in veterinarians)
+                {
+                    <div class="col">
+                        <div class="card h-100 border-0 shadow-sm rounded-4 p-4 bg-light">
+                            <div class="d-flex align-items-center mb-3">
+                                <div class="rounded-circle d-grid place-items-center me-3 shadow-sm"
+                                     style="width:58px;height:58px;background:var(--fs-sage-tint);color:var(--fs-sage-dark);font-size:22px;display:grid;place-items:center;">
+                                    <i class="fa-solid fa-user-doctor"></i>
+                                </div>
+                                <div>
+                                    <h5 class="fw-bold mb-0" style="font-family:'Baloo 2',sans-serif;">Dr. @(vet.User?.FullName ?? vet.User?.UserName ?? "Doctor")</h5>
+                                    <span class="badge bg-white text-dark border small mt-1">@vet.Specialization</span>
+                                </div>
+                            </div>
+                            <p class="text-muted small mb-3">
+                                <i class="fa-solid fa-award text-warning me-1"></i> <strong>@vet.Experience Years</strong> of clinical experience in veterinary wellness.
+                            </p>
+                            @if (!string.IsNullOrEmpty(vet.Address))
+                            {
+                                <p class="text-muted small mb-3 text-truncate">
+                                    <i class="fa-solid fa-location-dot text-danger me-1"></i> @vet.Address
+                                </p>
+                            }
+                            <div class="mt-auto d-grid gap-2">
+                                <a asp-controller="Appointment" asp-action="Create" asp-route-vetId="@vet.VeterinarianId" class="btn btn-green w-100">
+                                    <i class="fa-solid fa-calendar-check me-1"></i> Book Appointment
+                                </a>
+                                <a asp-controller="Home" asp-action="VetDetails" asp-route-id="@vet.VeterinarianId" class="btn btn-outline w-100">
+                                    <i class="fa-solid fa-star me-1 text-warning"></i> View Profile &amp; Ratings
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                }
+            }
+            else
+            {
+                <div class="col-12 text-center py-4">
+                    <p class="text-muted">No veterinarians registered yet.</p>
+                </div>
+            }
+        </div>
+    </div>
+</section>
+
+<!-- ===== Curated Pet Products Section ===== -->
+<section class="fs-section pet-section">
+    <div class="container">
+        <div class="section-head">
+            <div>
+                <div class="eyebrow">Curated Pet Shop</div>
+                <h2>Nutrition, toys &amp; essentials.</h2>
+            </div>
+            <a class="btn btn-outline" asp-controller="Product" asp-action="Index">
+                Visit Pet Shop <i class="fa-solid fa-arrow-right ms-1"></i>
+            </a>
+        </div>
+
+        <div class="row row-cols-1 row-cols-md-4 g-4">
+            @if (featuredProducts != null && featuredProducts.Any())
+            {
+                @foreach (var product in featuredProducts)
+                {
+                    <div class="col">
+                        <div class="card h-100 border-0 shadow-sm rounded-4 overflow-hidden bg-white">
+                            <div style="height: 180px; overflow:hidden; position:relative; background:#f5f3ec;">
+                                <img src="@(string.IsNullOrEmpty(product.ImageUrl) ? "https://images.unsplash.com/photo-1589924691995-400dc9ecc119?auto=format&fit=crop&w=400&q=80" : product.ImageUrl)"
+                                     class="w-100 h-100" style="object-fit: cover; transition: transform .5s ease;" alt="@product.Name" />
+                                <span class="badge position-absolute top-0 start-0 m-2 px-2 py-1 bg-white text-dark shadow-sm small">
+                                    @product.Category
+                                </span>
+                            </div>
+                            <div class="card-body p-3 d-flex flex-column">
+                                <h6 class="fw-bold mb-1" style="font-family:'Baloo 2',sans-serif;">@product.Name</h6>
+                                <div class="fs-5 fw-bold text-success mb-3">Rs. @product.Price</div>
+                                <div class="mt-auto d-flex gap-2">
+                                    @if (User.Identity != null && User.Identity.IsAuthenticated)
+                                    {
+                                        <form asp-controller="Cart" asp-action="Add" method="post" class="flex-grow-1">
+                                            <input type="hidden" name="productId" value="@product.ProductId" />
+                                            <input type="hidden" name="quantity" value="1" />
+                                            <button type="submit" class="btn btn-outline-success w-100 btn-sm">
+                                                <i class="fa-solid fa-cart-plus me-1"></i> Add
+                                            </button>
+                                        </form>
+                                        <a asp-controller="Order" asp-action="Checkout" asp-route-productId="@product.ProductId"
+                                           class="btn btn-primary btn-sm px-3">
+                                            Buy
+                                        </a>
+                                    }
+                                    else
+                                    {
+                                        <a asp-area="Identity" asp-page="/Account/Login"
+                                           asp-route-returnUrl="@Url.Action("Details", "Product", new { id = product.ProductId })"
+                                           class="btn btn-outline-success w-100 btn-sm">
+                                            <i class="fa-solid fa-cart-plus me-1"></i> Add
+                                        </a>
+                                        <a asp-area="Identity" asp-page="/Account/Login"
+                                           asp-route-returnUrl="@Url.Action("Details", "Product", new { id = product.ProductId })"
+                                           class="btn btn-primary btn-sm px-3">
+                                            Buy
+                                        </a>
+                                    }
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                }
+            }
+            else
+            {
+                <div class="col-12 text-center py-4">
+                    <p class="text-muted">No products available in shop right now.</p>
+                </div>
+            }
+        </div>
+    </div>
+</section>
+
+<!-- ===== Numbers & Stats Section ===== -->
+<section class="fs-section tight" style="background:#fff;">
+    <div class="container">
+        <div class="numbers-grid">
+            <div class="number-item reveal">
+                <strong data-count="2500" data-suffix="+">2,500+</strong>
+                <span>Happy Pets Cared</span>
+            </div>
+            <div class="number-item reveal">
+                <strong data-count="8" data-suffix="+">8+</strong>
+                <span>Years of Experience</span>
+            </div>
+            <div class="number-item reveal">
+                <strong data-count="15" data-suffix="+">15+</strong>
+                <span>Care Specialists</span>
+            </div>
+            <div class="number-item reveal">
+                <strong data-count="4.9" data-decimals="1" data-suffix="/5">4.9/5</strong>
+                <span>Average Pet Parent Rating</span>
+            </div>
+        </div>
+    </div>
+</section>

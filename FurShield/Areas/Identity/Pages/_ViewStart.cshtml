@@ -1,0 +1,18 @@
+@{
+    if (User.IsInRole("PetOwner"))
+    {
+        Layout = "~/Views/Shared/_PetOwnerLayout.cshtml";
+    }
+    else if (User.IsInRole("Veterinarian"))
+    {
+        Layout = "~/Views/Shared/_VetLayout.cshtml";
+    }
+    else if (User.IsInRole("Shelter"))
+    {
+        Layout = "~/Views/Shared/_ShelterLayout.cshtml";
+    }
+    else
+    {
+        Layout = "~/Views/Shared/_Layout.cshtml";
+    }
+}

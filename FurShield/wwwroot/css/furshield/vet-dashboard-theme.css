@@ -1,0 +1,243 @@
+/* =========================================================
+   FurShield — Veterinarian Dashboard Theme
+   -----------------------------------------------------------
+   Loaded ONLY by _VetLayout.cshtml, after the shared
+   dashboard-sidebar.css. It re-skins the shared dashboard shell
+   with the FurShield pet-care identity (same palette/fonts as
+   the public site) and adds card/table/badge/form polish, so the
+   Vet portal feels like part of the same product but with a more
+   practical, data-dense admin layout.
+
+   Scoped so it cannot affect the public site or the other role
+   dashboards (Shelter/PetOwner/Admin), which don't load this file.
+   ========================================================= */
+
+@import url('https://fonts.googleapis.com/css2?family=Baloo+2:wght@500;600;700;800&family=DM+Sans:wght@400;500;600;700&display=swap');
+
+:root{
+  --vet-cream:#FBF1E2;
+  --vet-cream-2:#F6E9D6;
+  --vet-ink:#211A16;
+  --vet-charcoal:#1B1815;
+  --vet-charcoal-2:#141210;
+  --vet-sage:#8FBFA6;
+  --vet-sage-dark:#4F8B71;
+  --vet-sage-tint:#E4F1EA;
+  --vet-pink:#E7A9C9;
+  --vet-pink-dark:#CE7CA6;
+  --vet-pink-tint:#F7E1EC;
+  --vet-muted:#7A7167;
+  --vet-line:#EADFCF;
+  --vet-shadow:0 16px 40px rgba(33,26,22,.08);
+}
+
+/* ---------- Base typography for the whole vet portal ---------- */
+.sidebar--vet ~ .sidebar-backdrop,
+body:has(.sidebar--vet){
+  font-family:'DM Sans',sans-serif;
+}
+.dashboard-content, .dashboard-sidebar.sidebar--vet{
+  font-family:'DM Sans',sans-serif;
+}
+.dashboard-content h1,.dashboard-content h2,.dashboard-content h3,
+.dashboard-content h4,.dashboard-content h5,.dashboard-content h6,
+.dashboard-content .card-header,.sidebar-brand a{
+  font-family:'Baloo 2','DM Sans',sans-serif;
+  letter-spacing:-.01em;
+}
+
+/* ---------- Sidebar: FurShield charcoal + sage accent ---------- */
+.dashboard-sidebar.sidebar--vet{
+  --accent:var(--vet-sage-dark);
+  --accent-soft:rgba(143,191,166,.14);
+  background:linear-gradient(180deg,var(--vet-charcoal) 0%,var(--vet-charcoal-2) 100%);
+}
+.dashboard-sidebar.sidebar--vet .sidebar-brand{
+  border-bottom-color:rgba(255,255,255,.07);
+}
+.dashboard-sidebar.sidebar--vet .sidebar-link.active{
+  background:var(--accent-soft);
+  box-shadow:inset 3px 0 0 var(--accent);
+}
+.dashboard-sidebar.sidebar--vet .sidebar-user-avatar{
+  background:var(--vet-sage-dark);
+  color:#fff;
+}
+
+/* ---------- Topbar / content background ---------- */
+.dashboard-shell:has(.sidebar--vet){
+  background:var(--vet-cream);
+}
+.sidebar--vet ~ .dashboard-content .dashboard-topbar,
+.dashboard-content .dashboard-topbar{
+  background:#fff;
+}
+.dashboard-content .dashboard-topbar .text-primary{
+  color:var(--vet-ink) !important;
+}
+
+/* All Bootstrap `.text-primary` labels/headings across the Vet portal
+   (section titles like "Symptoms", "Diagnosis", "Veterinarian
+   Appointments", the icons next to them, etc.) render in Bootstrap's
+   default blue — switched to the brand ink/black color everywhere
+   in this portal, including the mobile topbar label. */
+.dashboard-content .text-primary,
+.dashboard-topbar .text-primary,
+.sidebar--vet ~ .dashboard-content .text-primary{
+  color:var(--vet-ink) !important;
+}
+.vet-welcome{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  flex-wrap:wrap;
+  gap:.75rem;
+  margin-bottom:1.75rem;
+}
+.vet-welcome h2{
+  margin:0;
+  font-size:1.5rem;
+  font-weight:700;
+  color:var(--vet-ink);
+}
+.vet-welcome p{
+  margin:.15rem 0 0;
+  color:var(--vet-muted);
+  font-size:.92rem;
+}
+.vet-welcome .vet-date-pill{
+  background:#fff;
+  border:1px solid var(--vet-line);
+  border-radius:999px;
+  padding:.5rem 1rem;
+  font-size:.82rem;
+  font-weight:600;
+  color:var(--vet-muted);
+  box-shadow:var(--vet-shadow);
+}
+
+/* ---------- Stat cards (dashboard overview) ---------- */
+.vet-stats{
+  display:grid;
+  grid-template-columns:repeat(4,1fr);
+  gap:16px;
+  margin-bottom:1.75rem;
+}
+.vet-stat-card{
+  background:#fff;
+  border:1px solid var(--vet-line);
+  border-radius:20px;
+  padding:20px 22px;
+  display:flex;
+  align-items:center;
+  gap:14px;
+  box-shadow:var(--vet-shadow);
+  transition:transform .2s ease,box-shadow .2s ease;
+}
+.vet-stat-card:hover{ transform:translateY(-3px); }
+.vet-stat-icon{
+  width:48px;height:48px;border-radius:14px;
+  display:grid;place-items:center;
+  font-size:1.25rem;flex-shrink:0;
+}
+.vet-stat-card.total .vet-stat-icon{ background:var(--vet-sage-tint); color:var(--vet-sage-dark); }
+.vet-stat-card.pending .vet-stat-icon{ background:#FDF1D9; color:#B8860B; }
+.vet-stat-card.today .vet-stat-icon{ background:var(--vet-pink-tint); color:var(--vet-pink-dark); }
+.vet-stat-card.completed .vet-stat-icon{ background:#E3EEFB; color:#2C6FB0; }
+.vet-stat-number{ font-size:1.5rem; font-weight:800; color:var(--vet-ink); line-height:1; font-family:'Baloo 2',sans-serif; }
+.vet-stat-label{ font-size:.78rem; color:var(--vet-muted); font-weight:600; text-transform:uppercase; letter-spacing:.03em; }
+@media (max-width:1200px){ .vet-stats{ grid-template-columns:repeat(2,1fr); } }
+@media (max-width:576px){ .vet-stats{ grid-template-columns:1fr; } }
+
+/* ---------- Cards ---------- */
+.dashboard-content .card{
+  border:1px solid var(--vet-line);
+  border-radius:20px;
+  box-shadow:var(--vet-shadow);
+}
+.dashboard-content .card-header{
+  border-bottom:1px solid var(--vet-line);
+  border-radius:20px 20px 0 0 !important;
+  font-weight:700;
+  color:var(--vet-ink);
+}
+.dashboard-content .card-header.bg-primary{
+  background:var(--vet-sage-dark) !important;
+}
+
+/* ---------- Buttons ---------- */
+.dashboard-content .btn{
+  border-radius:12px;
+  font-weight:600;
+  transition:transform .15s ease,box-shadow .15s ease;
+}
+.dashboard-content .btn:hover{ transform:translateY(-1px); }
+.dashboard-content .btn-primary{
+  background:var(--vet-sage-dark);
+  border-color:var(--vet-sage-dark);
+}
+.dashboard-content .btn-primary:hover{
+  background:#3f7861;
+  border-color:#3f7861;
+}
+.dashboard-content .btn-outline-primary{
+  color:var(--vet-sage-dark);
+  border-color:var(--vet-sage-dark);
+}
+.dashboard-content .btn-outline-primary:hover{
+  background:var(--vet-sage-dark);
+  border-color:var(--vet-sage-dark);
+}
+.dashboard-content .nav-pills .nav-link.active{
+  background:var(--vet-sage-dark) !important;
+}
+
+/* ---------- Tables ---------- */
+.dashboard-content .table thead.table-light th{
+  background:var(--vet-sage-tint);
+  color:var(--vet-ink);
+  font-size:.76rem;
+  text-transform:uppercase;
+  letter-spacing:.04em;
+  font-weight:700;
+  border-bottom:0;
+}
+.dashboard-content .table-hover tbody tr:hover{
+  background:var(--vet-cream-2);
+}
+.dashboard-content .table td, .dashboard-content .table th{
+  vertical-align:middle;
+}
+
+/* ---------- Badges (status pills) ---------- */
+.dashboard-content .badge{
+  font-weight:700;
+  font-size:.72rem;
+  padding:.45em .75em;
+  border-radius:999px;
+  letter-spacing:.02em;
+}
+
+/* ---------- Forms ---------- */
+.dashboard-content .form-control,.dashboard-content .form-select{
+  border:1px solid var(--vet-line);
+  border-radius:12px;
+  padding:.55rem .85rem;
+}
+.dashboard-content .form-control:focus,.dashboard-content .form-select:focus{
+  border-color:var(--vet-sage-dark);
+  box-shadow:0 0 0 3px rgba(79,139,113,.15);
+}
+.dashboard-content .form-label{ color:var(--vet-ink); }
+
+/* ---------- Empty states ---------- */
+.dashboard-content .text-center.text-muted i.display-5,
+.dashboard-content .text-center.py-4.text-muted,
+.dashboard-content .text-center.py-5.text-muted{
+  color:var(--vet-sage-dark) !important;
+  opacity:.55;
+}
+
+/* ---------- Alerts ---------- */
+.dashboard-content .alert-success{ background:var(--vet-sage-tint); color:#2c5c46; border:1px solid #cfe6da; }
+.dashboard-content .alert-info{ background:var(--vet-pink-tint); color:#8a4a68; border:1px solid #f0d3e2; }

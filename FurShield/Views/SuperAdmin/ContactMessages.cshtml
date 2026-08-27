@@ -1,0 +1,95 @@
+@model IEnumerable<FurShield.Models.ContactMessage>
+
+@{
+    ViewData["Title"] = "Contact Inquiries";
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+}
+
+<div class="container-fluid py-4">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <div>
+            <h2 class="fw-bold mb-1"><i class="bi bi-envelope-paper-heart text-primary me-2"></i>Contact Messages & Inquiries</h2>
+            <p class="text-muted mb-0">Review and manage direct inquiries submitted from the Contact Us page.</p>
+        </div>
+        <a asp-action="Index" class="btn btn-outline-secondary">
+            <i class="bi bi-arrow-left me-1"></i> Back to Dashboard
+        </a>
+    </div>
+
+    @if (!Model.Any())
+    {
+        <div class="card border-0 shadow-sm rounded-4 p-5 text-center text-muted">
+            <i class="bi bi-inbox display-4 d-block mb-3 text-secondary"></i>
+            <h5>No Contact Messages Yet</h5>
+            <p class="mb-0">When visitors fill out the Contact Us form, their inquiries will appear here.</p>
+        </div>
+    }
+    else
+    {
+        <div class="card border-0 shadow-sm rounded-4 overflow-hidden">
+            <div class="table-responsive">
+                <table class="table table-hover align-middle mb-0">
+                    <thead class="table-light">
+                        <tr>
+                            <th>Status</th>
+                            <th>Sender</th>
+                            <th>Subject</th>
+                            <th>Message</th>
+                            <th>Date Received</th>
+                            <th class="text-end">Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var msg in Model)
+                        {
+                            <tr class="@(msg.IsRead ? "opacity-75" : "fw-bold")">
+                                <td>
+                                    @if (msg.IsRead)
+                                    {
+                                        <span class="badge bg-secondary"><i class="bi bi-envelope-open me-1"></i> Read</span>
+                                    }
+                                    else
+                                    {
+                                        <span class="badge bg-primary"><i class="bi bi-envelope-fill me-1"></i> New</span>
+                                    }
+                                </td>
+                                <td>
+                                    <div><strong>@msg.Name</strong></div>
+                                    <small class="text-muted"><a href="mailto:@msg.Email" class="text-decoration-none text-muted"><i class="bi bi-envelope me-1"></i>@msg.Email</a></small>
+                                </td>
+                                <td><span class="badge bg-light text-dark border">@msg.Subject</span></td>
+                                <td>
+                                    <p class="mb-0 text-break small" style="max-width: 350px;">@msg.Message</p>
+                                </td>
+                                <td>
+                                    <small class="text-muted"><i class="bi bi-clock me-1"></i>@msg.DateSent.ToString("dd MMM yyyy, hh:mm tt")</small>
+                                </td>
+                                <td class="text-end">
+                                    <div class="d-inline-flex gap-1">
+                                        <form asp-action="ToggleContactRead" method="post">
+                                            <input type="hidden" name="id" value="@msg.ContactMessageId" />
+                                            <button type="submit" class="btn btn-sm @(msg.IsRead ? "btn-outline-secondary" : "btn-outline-primary")" title="@(msg.IsRead ? "Mark Unread" : "Mark Read")">
+                                                <i class="bi @(msg.IsRead ? "bi-envelope" : "bi-envelope-check")"></i>
+                                            </button>
+                                        </form>
+
+                                        <a href="mailto:@msg.Email?subject=RE: @Uri.EscapeDataString(msg.Subject)" class="btn btn-sm btn-outline-success" title="Reply via Email">
+                                            <i class="bi bi-reply-fill"></i>
+                                        </a>
+
+                                        <form asp-action="DeleteContactMessage" method="post" onsubmit="return confirm('Are you sure you want to delete this message?');">
+                                            <input type="hidden" name="id" value="@msg.ContactMessageId" />
+                                            <button type="submit" class="btn btn-sm btn-outline-danger" title="Delete">
+                                                <i class="bi bi-trash"></i>
+                                            </button>
+                                        </form>
+                                    </div>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    }
+</div>

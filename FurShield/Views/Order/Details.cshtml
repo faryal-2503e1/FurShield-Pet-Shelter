@@ -1,0 +1,53 @@
+﻿@model FurShield.Data.Order
+
+@{
+    ViewData["Title"] = "Order Details";
+    Layout = "~/Views/Shared/_PetOwnerLayout.cshtml";
+}
+
+<div class="row justify-content-center">
+    <div class="col-md-8">
+        <div class="card border-0 shadow-sm">
+            <div class="card-header bg-primary text-white py-3 d-flex justify-content-between align-items-center">
+                <h4 class="mb-0 fw-bold"><i class="bi bi-receipt me-2"></i>Order #ORD-@Model.OrderId</h4>
+                <span class="badge bg-light text-dark fs-6">@Model.Status</span>
+            </div>
+            <div class="card-body p-4">
+                <p class="mb-3"><strong>Order Date:</strong> @Model.OrderDate.ToString("dd MMMM yyyy - hh:mm tt")</p>
+
+                @if (!(bool)(ViewBag.IsMine ?? true))
+                {
+                    <p class="mb-3">
+                        <strong>Ordered By:</strong>
+                        <i class="bi bi-people-fill text-primary"></i> @(Model.Owner?.FullName ?? Model.Owner?.UserName ?? "Family member")
+                        <span class="badge bg-light text-dark border ms-2"><i class="bi bi-eye"></i> Shared with your family</span>
+                    </p>
+                }
+
+                <h5 class="fw-bold mt-4 mb-3">Ordered Items</h5>
+                <ul class="list-group mb-4">
+                    @if (Model.OrderItems != null && Model.OrderItems.Any())
+                    {
+                        @foreach (var item in Model.OrderItems)
+                        {
+                            <li class="list-group-item d-flex justify-content-between align-items-center">
+                                <div>
+                                    <h6 class="my-0">@(item.Product != null ? item.Product.Name : "Product")</h6>
+                                    <small class="text-muted">Qty: @item.Quantity x Rs. @item.PriceEach</small>
+                                </div>
+                                <span class="fw-bold text-success">Rs. @(item.Quantity * item.PriceEach)</span>
+                            </li>
+                        }
+                    }
+                </ul>
+
+                <div class="d-flex justify-content-between align-items-center border-top pt-3">
+                    <a asp-action="Index" class="btn btn-outline-secondary">
+                        <i class="bi bi-arrow-left"></i> Back to My Orders
+                    </a>
+                    <h4 class="fw-bold text-success mb-0">Total: Rs. @Model.TotalAmount</h4>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

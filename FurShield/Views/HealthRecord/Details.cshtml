@@ -1,0 +1,92 @@
+﻿@model FurShield.Data.HealthRecord
+
+@{
+    ViewData["Title"] = "Health Record Details";
+    Layout = "~/Views/Shared/_PetOwnerLayout.cshtml";
+}
+
+<div class="row justify-content-center">
+    <div class="col-md-8">
+        <div class="card border-0 shadow-sm">
+            <div class="card-header bg-primary text-white py-3">
+                <h4 class="mb-0 fw-bold"><i class="bi bi-journal-medical me-2"></i>Medical Record Summary</h4>
+            </div>
+            <div class="card-body p-4">
+                <dl class="row mb-0 fs-6">
+                    <dt class="col-sm-4 text-muted">Visit Date</dt>
+                    <dd class="col-sm-8 fw-bold">@Model.VisitDate.ToString("dd MMMM yyyy")</dd>
+
+                    <dt class="col-sm-4 text-muted">Pet Name</dt>
+                    <dd class="col-sm-8"><span class="badge bg-info text-dark">@(Model.Pet != null ? Model.Pet.Name : "N/A")</span></dd>
+
+                    @if (!(bool)(ViewBag.IsMine ?? true))
+                    {
+                        <dt class="col-sm-4 text-muted">Pet Owner</dt>
+                        <dd class="col-sm-8">
+                            <i class="bi bi-people-fill text-primary"></i> @(Model.Pet?.Owner?.FullName ?? Model.Pet?.Owner?.UserName ?? "Family member")
+                            <span class="badge bg-light text-dark border ms-2"><i class="bi bi-eye"></i> Shared with your family</span>
+                        </dd>
+                    }
+
+                    <dt class="col-sm-4 text-muted">Attending Doctor</dt>
+                    <dd class="col-sm-8">Dr. @(Model.Veterinarian?.User?.UserName ?? "Assigned Doctor")</dd>
+
+                    <dt class="col-sm-4 text-muted">Symptoms</dt>
+                    <dd class="col-sm-8">@(string.IsNullOrEmpty(Model.Symptoms) ? "N/A" : Model.Symptoms)</dd>
+
+                    <dt class="col-sm-4 text-muted">Diagnosis</dt>
+                    <dd class="col-sm-8 fw-bold text-dark">@(string.IsNullOrEmpty(Model.Diagnosis) ? "N/A" : Model.Diagnosis)</dd>
+
+                    <dt class="col-sm-4 text-muted">Treatment Given</dt>
+                    <dd class="col-sm-8">@(string.IsNullOrEmpty(Model.Treatment) ? "N/A" : Model.Treatment)</dd>
+
+                    <dt class="col-sm-4 text-muted">Lab Results</dt>
+                    <dd class="col-sm-8">@(string.IsNullOrEmpty(Model.LabResults) ? "N/A" : Model.LabResults)</dd>
+
+                    <dt class="col-sm-4 text-muted">Prescription</dt>
+                    <dd class="col-sm-8">@(string.IsNullOrEmpty(Model.Prescription) ? "N/A" : Model.Prescription)</dd>
+
+                    <dt class="col-sm-4 text-muted">Vaccination Details</dt>
+                    <dd class="col-sm-8">@(string.IsNullOrEmpty(Model.Vaccination) ? "No vaccination recorded" : Model.Vaccination)</dd>
+
+                    <dt class="col-sm-4 text-muted">Doctor Notes</dt>
+                    <dd class="col-sm-8">@(string.IsNullOrEmpty(Model.Notes) ? "No additional notes" : Model.Notes)</dd>
+
+                    <dt class="col-sm-4 text-muted">Next Vaccination / Follow-up Due</dt>
+                    <dd class="col-sm-8">
+                        @if (Model.NextDueDate.HasValue)
+                        {
+                            <span>@Model.NextDueDate.Value.ToString("dd MMM yyyy")</span>
+                            @if (Model.NextDueDate.Value.Date < DateTime.Now.Date)
+                            {
+                                <span class="badge bg-danger ms-2">Overdue</span>
+                            }
+                            else if (Model.DueReminderSent)
+                            {
+                                <span class="badge bg-info text-dark ms-2">Reminder sent</span>
+                            }
+                        }
+                        else
+                        {
+                            <span>Not set</span>
+                        }
+                    </dd>
+                </dl>
+
+                <hr class="my-4" />
+
+                <div class="d-flex justify-content-start">
+                    <a asp-action="Index" class="btn btn-outline-secondary">
+                        <i class="bi bi-arrow-left"></i> Back to Health Records
+                    </a>
+                    @if (Model.AddedByOwner && (bool)(ViewBag.IsMine ?? true))
+                    {
+                        <a asp-action="Edit" asp-route-id="@Model.HealthRecordId" class="btn btn-outline-warning ms-2">
+                            <i class="bi bi-pencil"></i> Edit
+                        </a>
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,54 @@
+﻿@model FurShield.Data.Shelter
+
+@{
+    ViewData["Title"] = "Shelter Profile";
+    Layout = "~/Views/Shared/_ShelterLayout.cshtml";
+}
+
+<div class="row justify-content-center py-4">
+    <div class="col-md-8">
+        <div class="card border-0 shadow-sm">
+            <div class="card-header bg-primary text-white py-3">
+                <h4 class="mb-0 fw-bold"><i class="bi bi-building me-2"></i>Shelter Profile Details</h4>
+            </div>
+            <div class="card-body p-4">
+                <form asp-action="Profile" method="post">
+
+                    <div class="mb-3">
+                        <label asp-for="ShelterName" class="form-label fw-semibold">Shelter Name</label>
+                        <input asp-for="ShelterName" class="form-control" placeholder="e.g. Hope Animal Rescue" required />
+                    </div>
+
+                    <div class="mb-3">
+                        <label asp-for="ContactPerson" class="form-label fw-semibold">Contact Person</label>
+                        <input asp-for="ContactPerson" class="form-control" placeholder="e.g. John Doe" required />
+                    </div>
+
+                    <div class="mb-3">
+                        <label asp-for="Phone" class="form-label fw-semibold">Contact Phone Number</label>
+                        <input asp-for="Phone" class="form-control" placeholder="+92 300 0000000" required />
+                    </div>
+
+                    <div class="mb-3">
+                        <label asp-for="Address" class="form-label fw-semibold">Address / Location</label>
+                        <input asp-for="Address" class="form-control" placeholder="City, Area or Street Address" required />
+                    </div>
+
+                    <div class="mb-4">
+                        <label asp-for="Description" class="form-label fw-semibold">About Shelter</label>
+                        <textarea asp-for="Description" class="form-control" rows="4" placeholder="Brief details about your shelter's mission..."></textarea>
+                    </div>
+
+                    <div class="d-flex justify-content-between align-items-center">
+                        <a asp-action="Index" class="btn btn-outline-secondary">
+                            <i class="bi bi-arrow-left"></i> Back to Dashboard
+                        </a>
+                        <button type="submit" class="btn btn-primary fw-bold px-4">
+                            <i class="bi bi-save me-1"></i> Save Profile
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,64 @@
+﻿@model FurShield.Data.Appointment
+
+@{
+    ViewData["Title"] = "Appointment Details";
+    Layout = "~/Views/Shared/_PetOwnerLayout.cshtml";
+}
+
+<div class="row justify-content-center">
+    <div class="col-md-8">
+        <div class="card border-0 shadow-sm">
+            <div class="card-header bg-primary text-white py-3 d-flex justify-content-between align-items-center">
+                <h4 class="mb-0 fw-bold"><i class="bi bi-info-circle me-2"></i>Appointment Summary</h4>
+                <span class="badge @(Model.Status == "Approved" ? "bg-success" : Model.Status == "Cancelled" ? "bg-danger" : "bg-warning text-dark") fs-6">
+                    @Model.Status
+                </span>
+            </div>
+            <div class="card-body p-4">
+                <dl class="row mb-0 fs-6">
+                    <dt class="col-sm-4 text-muted">Appointment Date</dt>
+                    <dd class="col-sm-8 fw-bold">@Model.AppointmentDate.ToString("dd MMMM yyyy - hh:mm tt")</dd>
+
+                    <dt class="col-sm-4 text-muted">Pet Name</dt>
+                    <dd class="col-sm-8"><span class="badge bg-info text-dark">@(Model.Pet != null ? Model.Pet.Name : "N/A")</span></dd>
+
+                    @if (!(bool)(ViewBag.IsMine ?? true))
+                    {
+                        <dt class="col-sm-4 text-muted">Booked By</dt>
+                        <dd class="col-sm-8">
+                            <i class="bi bi-people-fill text-primary"></i> @(Model.Owner?.FullName ?? Model.Owner?.UserName ?? "Family member")
+                            <span class="badge bg-light text-dark border ms-2"><i class="bi bi-eye"></i> Shared with your family</span>
+                        </dd>
+                    }
+
+                    <dt class="col-sm-4 text-muted">Veterinarian</dt>
+                    <dd class="col-sm-8">Dr. @(Model.Veterinarian?.User?.UserName ?? "Assigned Doctor")</dd>
+
+                    <dt class="col-sm-4 text-muted">Reason / Notes</dt>
+                    <dd class="col-sm-8">@Model.Reason</dd>
+
+                    <dt class="col-sm-4 text-muted">Booking Reference ID</dt>
+                    <dd class="col-sm-8 text-secondary">#APT-@Model.AppointmentId</dd>
+                </dl>
+
+                <hr class="my-4" />
+
+                <div class="d-flex justify-content-between align-items-center">
+                    <a asp-action="Index" class="btn btn-outline-secondary">
+                        <i class="bi bi-arrow-left"></i> Back to List
+                    </a>
+                    @if ((bool)(ViewBag.IsMine ?? true) && Model.Status == "Pending")
+                    {
+                        <form asp-action="ChangeStatus" method="post" class="d-inline">
+                            <input type="hidden" name="id" value="@Model.AppointmentId" />
+                            <input type="hidden" name="status" value="Cancelled" />
+                            <button type="submit" class="btn btn-danger" onclick="return confirm('Are you sure you want to cancel this appointment?');">
+                                <i class="bi bi-x-circle"></i> Cancel Appointment
+                            </button>
+                        </form>
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

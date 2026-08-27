@@ -1,0 +1,132 @@
+@model IEnumerable<FurShield.Data.CartItem>
+@{
+    ViewData["Title"] = "Shopping Cart";
+    if (User.IsInRole("PetOwner"))
+    {
+        Layout = "~/Views/Shared/_PetOwnerLayout.cshtml";
+    }
+}
+
+<div class="container py-3">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <div>
+            <h2 class="fw-bold mb-1" style="font-family:'Baloo 2',sans-serif;"><i class="fa-solid fa-bag-shopping text-danger me-2"></i>Your Shopping Cart</h2>
+            <p class="text-muted small mb-0">Review your selected pet supplies and proceed to secure checkout</p>
+        </div>
+        <a asp-controller="Product" asp-action="Index" class="btn btn-outline btn-sm">
+            <i class="fa-solid fa-arrow-left me-1"></i> Continue Shopping
+        </a>
+    </div>
+
+    @if (TempData["SuccessMessage"] != null)
+    {
+        <div class="alert alert-success alert-dismissible fade show rounded-4 shadow-sm p-3 mb-4" role="alert">
+            <i class="fa-solid fa-circle-check me-2"></i> @TempData["SuccessMessage"]
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+    }
+
+    @if (Model != null && Model.Any())
+    {
+        <div class="row g-4 align-items-start">
+            <!-- Cart Items List Table -->
+            <div class="col-lg-8">
+                <div class="cart-table shadow-sm">
+                    <div class="cart-row cart-head">
+                        <div>Product</div>
+                        <div>Price</div>
+                        <div>Quantity</div>
+                        <div>Subtotal</div>
+                        <div></div>
+                    </div>
+
+                    @foreach (var item in Model)
+                    {
+                        <div class="cart-row">
+                            <div class="cart-product">
+                                <img src="@(string.IsNullOrEmpty(item.Product?.ImageUrl) ? "https://images.unsplash.com/photo-1589924691995-400dc9ecc119?auto=format&fit=crop&w=400&q=80" : item.Product.ImageUrl)"
+                                     alt="@item.Product?.Name" />
+                                <div>
+                                    <strong class="d-block" style="font-family:'Baloo 2',sans-serif;font-size:17px;">@item.Product?.Name</strong>
+                                    <small class="text-muted">@(item.Product?.Category ?? "Supplies")</small>
+                                </div>
+                            </div>
+
+                            <div class="fw-bold">Rs. @item.Product?.Price</div>
+
+                            <div>
+                                <form asp-action="UpdateQuantity" method="post" class="d-flex align-items-center gap-2">
+                                    <input type="hidden" name="id" value="@item.CartItemId" />
+                                    <input type="number" name="quantity" value="@item.Quantity" min="1" max="99"
+                                           class="form-control form-control-sm text-center fw-bold" style="width: 65px; border-radius:10px;" />
+                                    <button type="submit" class="btn btn-outline-primary btn-sm px-2" title="Update Quantity">
+                                        <i class="fa-solid fa-rotate"></i>
+                                    </button>
+                                </form>
+                            </div>
+
+                            <div class="fw-bold text-success fs-5">
+                                Rs. @(item.Quantity * (item.Product?.Price ?? 0))
+                            </div>
+
+                            <div class="text-end">
+                                <form asp-action="Remove" method="post" onsubmit="return confirm('Remove this item from your cart?');">
+                                    <input type="hidden" name="id" value="@item.CartItemId" />
+                                    <button type="submit" class="btn btn-outline-danger btn-sm rounded-circle p-2" style="width:36px;height:36px;" title="Remove">
+                                        <i class="fa-solid fa-trash"></i>
+                                    </button>
+                                </form>
+                            </div>
+                        </div>
+                    }
+                </div>
+            </div>
+
+            <!-- Order Summary Card -->
+            <div class="col-lg-4">
+                <div class="info-card">
+                    <div class="eyebrow">Checkout</div>
+                    <h3 class="fw-bold mb-3">Order Summary</h3>
+
+                    <div class="d-flex justify-content-between mb-2">
+                        <span class="text-muted">Items Subtotal</span>
+                        <span class="fw-bold">Rs. @ViewBag.Total</span>
+                    </div>
+                    <div class="d-flex justify-content-between mb-2">
+                        <span class="text-muted">Standard Delivery</span>
+                        <span class="text-success fw-bold">FREE</span>
+                    </div>
+
+                    <hr class="my-3" />
+
+                    <div class="d-flex justify-content-between align-items-baseline mb-4">
+                        <span class="fw-bold fs-5">Total Payable</span>
+                        <span class="fs-3 fw-bold text-success">Rs. @ViewBag.Total</span>
+                    </div>
+
+                    <form asp-action="Checkout" method="post">
+                        <button type="submit" class="btn btn-primary btn-lg w-100 py-3 shadow-sm">
+                            <i class="fa-solid fa-shield-check me-2"></i> Proceed to Checkout
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    }
+    else
+    {
+        <div class="card border-0 shadow-sm rounded-4 p-5 text-center bg-white my-4">
+            <div class="empty-icon mb-3">
+                <i class="fa-solid fa-bag-shopping"></i>
+            </div>
+            <h3 class="fw-bold mb-2">Your Shopping Cart is Empty</h3>
+            <p class="text-muted mb-4">Explore our curated selection of pet food, toys, and care essentials.</p>
+            <div>
+                <a asp-controller="Product" asp-action="Index" class="btn btn-primary btn-lg px-4">
+                    <i class="fa-solid fa-bag-shopping me-2"></i> Browse Pet Shop
+                </a>
+            </div>
+        </div>
+    }
+</div>
+

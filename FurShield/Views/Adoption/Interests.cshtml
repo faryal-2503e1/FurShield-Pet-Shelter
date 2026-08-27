@@ -1,0 +1,78 @@
+@model IEnumerable<FurShield.Data.AdoptionInterest>
+@{
+    ViewData["Title"] = "Adoption Requests";
+    Layout = "~/Views/Shared/_ShelterLayout.cshtml";
+}
+
+<div class="container py-4">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h3 class="fw-bold"><i class="bi bi-people text-success me-2"></i>Adoption Requests from Pet Owners</h3>
+        <a asp-action="Index" class="btn btn-outline-secondary"><i class="bi bi-arrow-left"></i> Back to Listings</a>
+    </div>
+
+    @if (TempData["SuccessMessage"] != null)
+    {
+        <div class="alert alert-success">@TempData["SuccessMessage"]</div>
+    }
+
+    @if (Model != null && Model.Any())
+    {
+        @foreach (var interest in Model)
+        {
+            <div class="card border-0 shadow-sm mb-3">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between align-items-start">
+                        <div>
+                            <h5 class="fw-bold mb-1">
+                                @interest.AdoptionListing?.PetName
+                                <span class="badge @(interest.Status == "Approved" ? "bg-success" : interest.Status == "Rejected" ? "bg-danger" : "bg-warning text-dark") ms-2">
+                                    @interest.Status
+                                </span>
+                            </h5>
+                            <p class="text-muted mb-1">
+                                Requested by: <strong>@(interest.Owner?.FullName ?? interest.Owner?.UserName)</strong>
+                                on @interest.DateSubmitted.ToString("dd MMM yyyy")
+                            </p>
+                            @if (!string.IsNullOrEmpty(interest.Message))
+                            {
+                                <p class="mb-1"><em>"@interest.Message"</em></p>
+                            }
+                            @if (!string.IsNullOrEmpty(interest.ShelterResponse))
+                            {
+                                <p class="mb-0 small text-secondary">Your response: @interest.ShelterResponse</p>
+                            }
+                        </div>
+                    </div>
+
+                    @if (interest.Status == "Pending")
+                    {
+                        <form asp-action="RespondInterest" method="post" class="row g-2 align-items-end mt-3 border-top pt-3">
+                            <input type="hidden" name="interestId" value="@interest.AdoptionInterestId" />
+                            <div class="col-md-8">
+                                <label class="form-label small fw-semibold">Response to the owner (optional)</label>
+                                <input type="text" name="response" class="form-control" placeholder="e.g. Please visit our shelter to complete the adoption..." />
+                            </div>
+                            <div class="col-md-4 d-flex gap-2">
+                                <button type="submit" name="status" value="Approved" class="btn btn-success flex-fill">
+                                    <i class="bi bi-check-circle"></i> Approve
+                                </button>
+                                <button type="submit" name="status" value="Rejected" class="btn btn-outline-danger flex-fill">
+                                    <i class="bi bi-x-circle"></i> Reject
+                                </button>
+                            </div>
+                        </form>
+                    }
+                </div>
+            </div>
+        }
+    }
+    else
+    {
+        <div class="card border-0 shadow-sm">
+            <div class="card-body text-center py-5 text-muted">
+                <i class="bi bi-inbox display-4 text-secondary d-block mb-2"></i>
+                No adoption requests yet.
+            </div>
+        </div>
+    }
+</div>

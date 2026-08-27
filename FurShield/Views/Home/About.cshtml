@@ -1,0 +1,140 @@
+@{
+    ViewData["Title"] = "About Us";
+}
+
+<!-- Dark Hero Card -->
+<section class="py-4 py-md-5">
+    <div class="container">
+        <div class="dark-hero-card d-flex flex-column flex-lg-row align-items-center justify-content-between">
+            <div>
+                <div class="breadcrumb" style="color:rgba(255,255,255,0.7);font-size:14px;margin-bottom:12px;">
+                    <a asp-controller="Home" asp-action="Index" style="color:rgba(255,255,255,0.7);text-decoration:none;">Home</a> / About
+                </div>
+                <div class="eyebrow" style="color:#ff85a2;letter-spacing:1.5px;font-size:13px;font-weight:700;margin-bottom:16px;">OUR STORY</div>
+                <h1 style="color:#fff;font-size:clamp(36px,5vw,56px);font-weight:700;line-height:1.15;margin-bottom:18px;">
+                    More Than Care.<br><span style="color:#ff85a2">We're Family.</span>
+                </h1>
+                <p style="color:rgba(255,255,255,0.85);font-size:1.05rem;max-width:520px;margin-bottom:0;">
+                    A warm, modern pet-care ecosystem built around trust, medical continuity, and better everyday experiences for your furry best friends.
+                </p>
+            </div>
+            <div class="dark-hero-img-wrap mt-4 mt-lg-0" style="position:relative;width:240px;height:240px;border-radius:50%;overflow:hidden;border:4px solid rgba(255,255,255,0.2);box-shadow:0 12px 30px rgba(0,0,0,0.3);flex-shrink:0;">
+                <img src="https://images.unsplash.com/photo-1583511655857-d19b40a7a54e?auto=format&fit=crop&w=600&q=85"
+                     alt="Adorable French Bulldog" style="width:100%;height:100%;object-fit:cover;" />
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- About Split Section with Organic Collage -->
+<section class="section">
+    <div class="container split">
+        <div class="collage reveal">
+            <div class="blob"></div>
+            <img class="main-img" src="https://images.unsplash.com/photo-1558788353-f76d92427f16?auto=format&fit=crop&w=900&q=85" alt="Happy golden retriever">
+            <img class="small-img" src="https://images.unsplash.com/photo-1518791841217-8f162f1e1131?auto=format&fit=crop&w=900&q=85" alt="Cat companion">
+            <div class="experience">
+                Since 2018<br>
+                <span style="color:var(--muted);font-size:12px;font-weight:600;">Loving pets every day</span>
+            </div>
+        </div>
+        <div class="reveal">
+            <div class="eyebrow">About FurShield</div>
+            <h2>Professional care with a personal touch.</h2>
+            <p>
+                FurShield was born from a simple belief: pets are cherished family members. By bringing grooming,
+                wellness, boarding, certified veterinary clinics, shelter adoption, and everyday pet essentials
+                into one unified platform, we make pet parenting joyful, seamless, and safe.
+            </p>
+            <div class="check-list">
+                <div><i class="fa-solid fa-circle-check"></i> Experienced &amp; Certified Pet Care Team</div>
+                <div><i class="fa-solid fa-circle-check"></i> Safe, Sanitized &amp; Loving Environment</div>
+                <div><i class="fa-solid fa-circle-check"></i> Personalized Health &amp; Vaccination Tracking</div>
+                <div><i class="fa-solid fa-circle-check"></i> Transparent Shelter Adoption Coordination</div>
+            </div>
+            <div class="d-flex gap-3 mt-4">
+                <a class="btn btn-primary btn-lg" asp-controller="Appointment" asp-action="Create">
+                    Book a Visit <i class="fa-solid fa-arrow-right ms-1"></i>
+                </a>
+                <a class="btn btn-outline btn-lg" asp-controller="Home" asp-action="Contact">
+                    Contact Team
+                </a>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Core Values Grid -->
+<section class="fs-section" style="background:#fff;">
+    <div class="container">
+        <div class="section-head text-center mx-auto" style="max-width:650px;">
+            <div class="eyebrow">Our Values</div>
+            <h2>Built with unconditional love for pets.</h2>
+            <p>Everything we build is designed to protect your pet's health and happiness.</p>
+        </div>
+
+        <div class="row row-cols-1 row-cols-md-4 g-4 mt-2">
+            <div class="col">
+                <div class="card h-100 border-0 p-4 rounded-4 shadow-sm" style="background:var(--fs-cream);">
+                    <div class="round-icon mb-3">
+                        <i class="fa-solid fa-heart-pulse"></i>
+                    </div>
+                    <h4 class="fw-bold mb-2">Health First</h4>
+                    <p class="text-muted small mb-0">Complete medical history tracking from puppyhood to senior wellness.</p>
+                </div>
+            </div>
+            <div class="col">
+                <div class="card h-100 border-0 p-4 rounded-4 shadow-sm" style="background:var(--fs-cream);">
+                    <div class="round-icon mb-3">
+                        <i class="fa-solid fa-user-doctor"></i>
+                    </div>
+                    <h4 class="fw-bold mb-2">Certified Vets</h4>
+                    <p class="text-muted small mb-0">Verified veterinary specialists with real clinical expertise and ratings.</p>
+                </div>
+            </div>
+            <div class="col">
+                <div class="card h-100 border-0 p-4 rounded-4 shadow-sm" style="background:var(--fs-cream);">
+                    <div class="round-icon mb-3">
+                        <i class="fa-solid fa-house-chimney-heart"></i>
+                    </div>
+                    <h4 class="fw-bold mb-2">Rescue Network</h4>
+                    <p class="text-muted small mb-0">Partnering with verified animal shelters to find forever homes for rescued pets.</p>
+                </div>
+            </div>
+            <div class="col">
+                <div class="card h-100 border-0 p-4 rounded-4 shadow-sm" style="background:var(--fs-cream);">
+                    <div class="round-icon mb-3">
+                        <i class="fa-solid fa-shield-cat"></i>
+                    </div>
+                    <h4 class="fw-bold mb-2">Total Shield</h4>
+                    <p class="text-muted small mb-0">Safe, high-quality nutrition, toys, and care supplies delivered right to you.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Stats / Numbers Section -->
+<section class="section-sm">
+    <div class="container">
+        <div class="numbers-grid">
+            <div class="number-item reveal">
+                <strong data-count="2500" data-suffix="+">2,500+</strong>
+                <span>Happy Pets Cared</span>
+            </div>
+            <div class="number-item reveal">
+                <strong data-count="8" data-suffix="+">8+</strong>
+                <span>Years of Service</span>
+            </div>
+            <div class="number-item reveal">
+                <strong data-count="15" data-suffix="+">15+</strong>
+                <span>Care Specialists</span>
+            </div>
+            <div class="number-item reveal">
+                <strong data-count="4.9" data-decimals="1" data-suffix="/5">4.9/5</strong>
+                <span>Parent Rating</span>
+            </div>
+        </div>
+    </div>
+</section>
+

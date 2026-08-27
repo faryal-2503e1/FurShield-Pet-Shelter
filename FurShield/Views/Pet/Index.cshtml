@@ -1,0 +1,161 @@
+@model IEnumerable<FurShield.Data.Pet>
+
+@{
+    ViewData["Title"] = "My Pets";
+    Layout = "~/Views/Shared/_PetOwnerLayout.cshtml";
+    var petList = Model?.ToList() ?? new List<FurShield.Data.Pet>();
+}
+
+<div class="container-fluid py-4">
+    <!-- Header Section -->
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h3 class="fw-bold text-dark"><i class="bi bi-paw me-2 text-primary"></i> My Registered Pets</h3>
+        <a asp-action="Create" class="btn btn-primary rounded-pill shadow-sm">
+            <i class="bi bi-plus-lg me-1"></i> Add New Pet
+        </a>
+    </div>
+
+    @if (petList.Any())
+    {
+        <div class="card border-0 shadow-sm rounded-4 overflow-hidden">
+            <div class="card-header bg-light border-0 pt-3 pb-0">
+                <ul class="nav nav-tabs card-header-tabs flex-nowrap overflow-auto" id="petTabs" role="tablist">
+                    @for (int i = 0; i < petList.Count; i++)
+                    {
+                        var pet = petList[i];
+                        <li class="nav-item" role="presentation">
+                            <button class="nav-link text-nowrap @(i == 0 ? "active" : "")"
+                                    id="pet-tab-@pet.PetId" data-bs-toggle="tab" data-bs-target="#pet-pane-@pet.PetId"
+                                    type="button" role="tab" aria-controls="pet-pane-@pet.PetId"
+                                    aria-selected="@(i == 0 ? "true" : "false")">
+                                @if (!string.IsNullOrEmpty(pet.ImageUrl))
+                                {
+                                    <img src="~/@pet.ImageUrl" class="rounded-circle me-2" style="width:22px; height:22px; object-fit:cover;" alt="@pet.Name" />
+                                }
+                                else
+                                {
+                                    <i class="bi bi-paw me-1"></i>
+                                }
+                                @pet.Name
+                            </button>
+                        </li>
+                    }
+                </ul>
+            </div>
+
+            <div class="tab-content p-4" id="petTabsContent">
+                @for (int i = 0; i < petList.Count; i++)
+                {
+                    var pet = petList[i];
+                    <div class="tab-pane fade @(i == 0 ? "show active" : "")" id="pet-pane-@pet.PetId" role="tabpanel" aria-labelledby="pet-tab-@pet.PetId">
+                        <div class="row g-4 align-items-start">
+                            <div class="col-md-3 text-center">
+                                @if (!string.IsNullOrEmpty(pet.ImageUrl))
+                                {
+                                    <img src="~/@pet.ImageUrl" class="rounded-circle shadow-sm mb-2" style="width:110px; height:110px; object-fit:cover;" alt="@pet.Name" />
+                                }
+                                else
+                                {
+                                    <div class="bg-light rounded-circle mx-auto mb-2 d-flex align-items-center justify-content-center shadow-sm" style="width:110px; height:110px;">
+                                        <i class="bi bi-paw text-muted" style="font-size:2.5rem;"></i>
+                                    </div>
+                                }
+                                <h5 class="fw-bold mb-0">@pet.Name</h5>
+                                <span class="badge bg-info text-dark mt-1">@pet.Species</span>
+                            </div>
+
+                            <div class="col-md-5">
+                                <table class="table table-sm table-borderless mb-0">
+                                    <tr><th class="text-muted" style="width:40%">Breed</th><td>@(string.IsNullOrEmpty(pet.Breed) ? "N/A" : pet.Breed)</td></tr>
+                                    <tr><th class="text-muted">Age</th><td>@pet.Age yrs</td></tr>
+                                    <tr><th class="text-muted">Gender</th><td>@(string.IsNullOrEmpty(pet.Gender) ? "N/A" : pet.Gender)</td></tr>
+                                    <tr>
+                                        <th class="text-muted">Allergies</th>
+                                        <td>
+                                            @if (string.IsNullOrEmpty(pet.Allergies))
+                                            {
+                                                <span class="text-muted small">None recorded</span>
+                                            }
+                                            else
+                                            {
+                                                <span class="badge bg-danger">@pet.Allergies</span>
+                                            }
+                                        </td>
+                                    </tr>
+                                </table>
+                            </div>
+
+                            <!-- Photo Gallery Section Updated with Controller Links -->
+                            <div class="col-md-4">
+                                <div class="d-flex justify-content-between align-items-center mb-2">
+                                    <h6 class="text-muted small text-uppercase mb-0">Photo Gallery</h6>
+                                    <a asp-controller="PetImage" asp-action="Gallery" asp-route-petId="@pet.PetId" class="btn btn-xs btn-outline-primary py-0 px-2 small" style="font-size: 0.75rem;">
+                                        <i class="bi bi-images me-1"></i> Open Gallery
+                                    </a>
+                                </div>
+
+                                @if (pet.Images != null && pet.Images.Any())
+                                {
+                                    <div class="d-flex flex-wrap gap-2">
+                                        @foreach (var img in pet.Images.Take(6))
+                                        {
+                                            <a asp-controller="PetImage" asp-action="Gallery" asp-route-petId="@pet.PetId">
+                                                <img src="~/@img.ImageUrl" class="rounded shadow-sm border" style="width:48px; height:48px; object-fit:cover;" alt="Pet photo" />
+                                            </a>
+                                        }
+                                        @if (pet.Images.Count > 6)
+                                        {
+                                            <a asp-controller="PetImage" asp-action="Gallery" asp-route-petId="@pet.PetId" class="text-decoration-none">
+                                                <span class="badge bg-secondary rounded-circle p-2 align-self-center">+@(pet.Images.Count - 6)</span>
+                                            </a>
+                                        }
+                                    </div>
+                                }
+                                else
+                                {
+                                    <div class="p-2 border rounded text-center bg-light">
+                                        <span class="text-muted small d-block mb-1">No extra photos</span>
+                                        <a asp-controller="PetImage" asp-action="Gallery" asp-route-petId="@pet.PetId" class="btn btn-sm btn-link p-0 text-decoration-none small">
+                                            <i class="bi bi-plus-circle me-1"></i> Upload Photos
+                                        </a>
+                                    </div>
+                                }
+                            </div>
+                        </div>
+
+                        <hr />
+
+                        <div class="d-flex justify-content-end gap-2">
+                            <a asp-controller="PetImage" asp-action="Gallery" asp-route-petId="@pet.PetId"
+                               class="btn btn-sm btn-outline-info text-dark border-info">
+                                <i class="bi bi-images me-1"></i> Gallery
+                            </a>
+                            <a asp-action="Details" asp-route-id="@pet.PetId" class="btn btn-sm btn-outline-info">
+                                <i class="bi bi-eye me-1"></i> View Details
+                            </a>
+                            <a asp-action="Edit" asp-route-id="@pet.PetId" class="btn btn-sm btn-outline-warning">
+                                <i class="bi bi-pencil me-1"></i> Edit
+                            </a>
+                            <a asp-action="Delete" asp-route-id="@pet.PetId" class="btn btn-sm btn-outline-danger">
+                                <i class="bi bi-trash me-1"></i> Delete
+                            </a>
+                        </div>
+                    </div>
+                }
+            </div>
+        </div>
+    }
+    else
+    {
+        <div class="card border-0 shadow-sm rounded-4 text-center py-5">
+            <div class="card-body">
+                <i class="bi bi-paw text-muted" style="font-size: 3rem;"></i>
+                <h5 class="fw-bold mt-3 text-secondary">No Pet Records Found</h5>
+                <p class="text-muted small">You haven't added any pets yet.</p>
+                <a asp-action="Create" class="btn btn-primary btn-sm rounded-pill mt-2">
+                    <i class="bi bi-plus-lg me-1"></i> Add Your First Pet
+                </a>
+            </div>
+        </div>
+    }
+</div>

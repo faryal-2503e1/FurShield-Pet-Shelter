@@ -1,0 +1,97 @@
+@model FurShield.Data.Pet
+
+@{
+    Layout = "_PetOwnerLayout";
+    ViewData["Title"] = "Create Pet";
+}
+
+<h2>Create Pet</h2>
+<hr />
+<div class="row">
+    <div class="col-md-6">
+        <form asp-action="Create" enctype="multipart/form-data">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+            <div class="form-group mb-3">
+                <label asp-for="Name" class="control-label"></label>
+                <input asp-for="Name" class="form-control" />
+                <span asp-validation-for="Name" class="text-danger"></span>
+            </div>
+
+            <div class="form-group mb-3">
+                <label asp-for="Species" class="control-label"></label>
+                <select asp-for="Species" class="form-control">
+                    <option value="">-- Select Pet Type --</option>
+                    <option value="Dog">🐶 Dog</option>
+                    <option value="Cat">🐱 Cat</option>
+                    <option value="Rabbit">🐰 Rabbit</option>
+                    <option value="Bird">🐦 Bird</option>
+                </select>
+                <span asp-validation-for="Species" class="text-danger"></span>
+            </div>
+
+            <div class="form-group mb-3">
+                <label asp-for="Breed" class="control-label"></label>
+                <input asp-for="Breed" class="form-control" />
+                <span asp-validation-for="Breed" class="text-danger"></span>
+            </div>
+
+            <div class="form-group mb-3">
+                <label asp-for="Age" class="control-label"></label>
+                <input asp-for="Age" class="form-control" type="number" min="0" />
+                <span asp-validation-for="Age" class="text-danger"></span>
+            </div>
+
+            <div class="form-group mb-3">
+                <label asp-for="Gender" class="control-label"></label>
+                <select asp-for="Gender" class="form-control">
+                    <option value="">-- Select Gender --</option>
+                    <option value="Male">Male</option>
+                    <option value="Female">Female</option>
+                </select>
+                <span asp-validation-for="Gender" class="text-danger"></span>
+            </div>
+
+            <div class="form-group mb-3">
+                <label asp-for="MedicalHistory" class="control-label">Medical History</label>
+                <textarea asp-for="MedicalHistory" class="form-control" rows="3"></textarea>
+                <span asp-validation-for="MedicalHistory" class="text-danger"></span>
+            </div>
+
+            <div class="form-group mb-3">
+                <label asp-for="Allergies" class="control-label">Allergies</label>
+                <input asp-for="Allergies" class="form-control" placeholder="e.g. Chicken, Pollen, Penicillin" />
+                <span asp-validation-for="Allergies" class="text-danger"></span>
+            </div>
+
+            <!-- Fixed: Upload input correctly bound to IFormFile parameter -->
+            <div class="form-group mb-3">
+                <label class="control-label">Pet Image</label>
+                <input type="file" name="imageFile" class="form-control" accept="image/*" />
+            </div>
+
+            <div class="form-group mb-3">
+                <label asp-for="InsurancePolicyNumber" class="control-label"></label>
+                <input asp-for="InsurancePolicyNumber" class="form-control" />
+                <span asp-validation-for="InsurancePolicyNumber" class="text-danger"></span>
+            </div>
+
+            <div class="form-group mb-3">
+                <label asp-for="InsuranceDetails" class="control-label"></label>
+                <textarea asp-for="InsuranceDetails" class="form-control" rows="2"></textarea>
+                <span asp-validation-for="InsuranceDetails" class="text-danger"></span>
+            </div>
+
+            <div class="form-group mt-3">
+                <input type="submit" value="Create" class="btn btn-primary" />
+                <a asp-action="Index" class="btn btn-secondary ms-2">Back to List</a>
+            </div>
+        </form>
+    </div>
+</div>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}

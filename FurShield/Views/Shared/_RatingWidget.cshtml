@@ -1,0 +1,87 @@
+@model FurShield.Models.RatingWidgetViewModel
+
+<div class="mt-2">
+    <h5 class="fw-bold mb-3" style="font-family:'Baloo 2',sans-serif;font-size:22px;">
+        <i class="fa-solid fa-star text-warning me-2"></i> Client Reviews &amp; Feedback
+    </h5>
+
+    @if (Model.Count > 0)
+    {
+        <div class="d-flex align-items-center mb-4 p-3 rounded-4" style="background:var(--fs-cream);">
+            <span class="fs-1 fw-bold me-3 text-dark" style="font-family:'Baloo 2',sans-serif;line-height:1;">
+                @Model.AverageScore.ToString("0.0")
+            </span>
+            <div>
+                <div class="text-warning mb-1">
+                    @for (int i = 1; i <= 5; i++)
+                    {
+                        <i class="fa-solid fa-star @(i <= Math.Round(Model.AverageScore) ? "" : "text-muted opacity-50")"></i>
+                    }
+                </div>
+                <div class="small text-muted fw-bold">Based on @Model.Count verified review@(Model.Count == 1 ? "" : "s")</div>
+            </div>
+        </div>
+    }
+    else
+    {
+        <div class="p-3 rounded-4 mb-3" style="background:var(--fs-cream);">
+            <p class="text-muted mb-0 small"><i class="fa-solid fa-circle-info me-1"></i> No ratings yet. Be the first to leave feedback!</p>
+        </div>
+    }
+
+    @if (Model.CanRate)
+    {
+        <form asp-controller="Rating" asp-action="Create" method="post" class="border-top pt-4 mb-4">
+            @Html.AntiForgeryToken()
+            <input type="hidden" name="targetType" value="@Model.TargetType" />
+            <input type="hidden" name="targetId" value="@Model.TargetId" />
+            <input type="hidden" name="returnUrl" value="@Context.Request.Path@Context.Request.QueryString" />
+
+            <label class="form-label fw-bold small mb-2">
+                @(Model.MyScore.HasValue ? "Update your review score:" : "Leave your rating:")
+            </label>
+            <div class="mb-3 d-flex flex-wrap gap-3">
+                @for (int i = 1; i <= 5; i++)
+                {
+                    <div class="form-check">
+                        <input class="form-check-input" type="radio" name="score" id="score_@(Model.TargetType)_@(i)" value="@i" required
+                               checked="@(Model.MyScore == i)" />
+                        <label class="form-check-label fw-bold text-dark" for="score_@(Model.TargetType)_@(i)">
+                            @i <i class="fa-solid fa-star text-warning small"></i>
+                        </label>
+                    </div>
+                }
+            </div>
+            <div class="mb-3">
+                <textarea name="comment" class="form-control" rows="3" placeholder="Share details of your experience with other pet parents...">@Model.MyComment</textarea>
+            </div>
+            <button type="submit" class="btn btn-primary">
+                <i class="fa-solid fa-paper-plane me-1"></i> @(Model.MyScore.HasValue ? "Update Rating" : "Submit Rating")
+            </button>
+        </form>
+    }
+
+    @if (Model.Ratings.Any(r => !string.IsNullOrWhiteSpace(r.Comment)))
+    {
+        <div class="border-top pt-3">
+            <h6 class="fw-bold text-muted small text-uppercase mb-3">Recent Reviews</h6>
+            @foreach (var r in Model.Ratings.Where(r => !string.IsNullOrWhiteSpace(r.Comment)).OrderByDescending(r => r.CreatedDate).Take(5))
+            {
+                <div class="mb-3 p-3 rounded-3 bg-light border">
+                    <div class="d-flex justify-content-between align-items-center mb-1">
+                        <div class="text-warning">
+                            @for (int i = 1; i <= 5; i++)
+                            {
+                                <i class="fa-solid fa-star @(i <= r.Score ? "" : "text-muted opacity-50") small"></i>
+                            }
+                        </div>
+                        <span class="small text-muted">@r.CreatedDate.ToString("dd MMM yyyy")</span>
+                    </div>
+                    <div class="fw-bold small text-dark mb-1">@(r.Rater?.FullName ?? r.Rater?.UserName ?? "Pet Owner")</div>
+                    <p class="mb-0 small text-muted">@r.Comment</p>
+                </div>
+            }
+        </div>
+    }
+</div>
+

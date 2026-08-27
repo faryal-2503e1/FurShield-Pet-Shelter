@@ -1,0 +1,130 @@
+@{
+    ViewData["Title"] = "Contact Us";
+}
+
+<!-- Dark Hero Card -->
+<section class="py-4 py-md-5">
+    <div class="container">
+        <div class="dark-hero-card d-flex flex-column flex-lg-row align-items-center justify-content-between">
+            <div>
+                <div class="breadcrumb" style="color:rgba(255,255,255,0.7);font-size:14px;margin-bottom:12px;">
+                    <a asp-controller="Home" asp-action="Index" style="color:rgba(255,255,255,0.7);text-decoration:none;">Home</a> / Contact
+                </div>
+                <div class="eyebrow" style="color:#ff85a2;letter-spacing:1.5px;font-size:13px;font-weight:700;margin-bottom:16px;">GET IN TOUCH</div>
+                <h1 style="color:#fff;font-size:clamp(36px,5vw,56px);font-weight:700;line-height:1.15;margin-bottom:18px;">
+                    We'd Love to Hear<br><span style="color:#ff85a2">From You &amp; Your Pet.</span>
+                </h1>
+                <p style="color:rgba(255,255,255,0.85);font-size:1.05rem;max-width:520px;margin-bottom:0;">
+                    Have questions about wellness consultations, shelter adoptions, or pet products? Our care specialists are always here to help.
+                </p>
+            </div>
+            <div class="dark-hero-img-wrap mt-4 mt-lg-0" style="position:relative;width:240px;height:240px;border-radius:50%;overflow:hidden;border:4px solid rgba(255,255,255,0.2);box-shadow:0 12px 30px rgba(0,0,0,0.3);flex-shrink:0;">
+                <img src="https://images.unsplash.com/photo-1548767797-d8c844163c4c?auto=format&fit=crop&w=600&q=85"
+                     alt="Happy puppy with ball" style="width:100%;height:100%;object-fit:cover;" />
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Contact Form & Info Section -->
+<section class="section">
+    <div class="container">
+        @if (TempData["ContactSent"] != null)
+        {
+            <div class="alert alert-success alert-dismissible fade show rounded-4 shadow-sm p-3 mb-4" role="alert">
+                <i class="fa-solid fa-circle-check me-2"></i> @TempData["ContactSent"]
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+        }
+
+        <div class="row g-4 align-items-start">
+            <!-- Left Info Panel -->
+            <div class="col-lg-5">
+                <div class="info-card h-100">
+                    <div class="eyebrow">Our Locations &amp; Reach</div>
+                    <h3 class="fw-bold mb-3">Reach Our Care Team</h3>
+                    <p class="text-muted small mb-4">Feel free to visit our international headquarters in Karachi or send us an inquiry online.</p>
+
+                    <div class="contact-item">
+                        <i class="fa-solid fa-location-dot"></i>
+                        <div>
+                            <strong>Main Headquarters</strong><br>
+                            <span class="text-muted small">Clifton, Block 4, Karachi, Sindh, Pakistan</span>
+                        </div>
+                    </div>
+
+                    <div class="contact-item">
+                        <i class="fa-solid fa-phone"></i>
+                        <div>
+                            <strong>Phone Number</strong><br>
+                            <span class="text-muted small">+92 300 1234567 / +92 21 35890000</span>
+                        </div>
+                    </div>
+
+                    <div class="contact-item">
+                        <i class="fa-solid fa-envelope"></i>
+                        <div>
+                            <strong>Email Address</strong><br>
+                            <span class="text-muted small">hello@furshield.com &middot; support@furshield.com</span>
+                        </div>
+                    </div>
+
+                    <div class="contact-item">
+                        <i class="fa-solid fa-clock"></i>
+                        <div>
+                            <strong>Working Hours</strong><br>
+                            <span class="text-muted small">Mon - Sat: 9:00 AM - 8:00 PM (Emergency 24/7)</span>
+                        </div>
+                    </div>
+
+                    <!-- Map Wrap -->
+                    <div class="mt-4 rounded-4 overflow-hidden shadow-sm" style="height:220px;">
+                        <iframe
+                            src="https://www.google.com/maps?q=Clifton+Block+4+Karachi+Sindh+Pakistan&output=embed"
+                            style="border:0;width:100%;height:100%;" allowfullscreen="" loading="lazy"
+                            referrerpolicy="no-referrer-when-downgrade"
+                            title="FurShield office location on Google Maps">
+                        </iframe>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Right Message Form -->
+            <div class="col-lg-7">
+                <div class="info-card form-card">
+                    <div class="eyebrow">Quick Inquiry</div>
+                    <h3 class="fw-bold mb-1">Send Us a Direct Message</h3>
+                    <p class="text-muted small mb-4">Fill in the details below and a FurShield advisor will respond within a few hours.</p>
+
+                    <form asp-controller="Home" asp-action="Contact" method="post">
+                        @Html.AntiForgeryToken()
+                        <div class="form-grid">
+                            <div class="field">
+                                <label class="fw-bold small">Your Full Name <span class="text-danger">*</span></label>
+                                <input type="text" name="name" class="form-control" placeholder="e.g. Ayesha Khan" required />
+                            </div>
+                            <div class="field">
+                                <label class="fw-bold small">Email Address <span class="text-danger">*</span></label>
+                                <input type="email" name="email" class="form-control" placeholder="ayesha@example.com" required />
+                            </div>
+                            <div class="field full">
+                                <label class="fw-bold small">Subject <span class="text-danger">*</span></label>
+                                <input type="text" name="subject" class="form-control" placeholder="e.g. Veterinary Consultation or Adoption query" required />
+                            </div>
+                            <div class="field full">
+                                <label class="fw-bold small">Your Message <span class="text-danger">*</span></label>
+                                <textarea name="message" class="form-control" rows="5" placeholder="Tell us how we can help you and your pet..." required></textarea>
+                            </div>
+                            <div class="field full">
+                                <button type="submit" class="btn btn-primary btn-lg w-100 py-3">
+                                    <i class="fa-solid fa-paper-plane me-2"></i> Send Message
+                                </button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+

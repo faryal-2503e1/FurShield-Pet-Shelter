@@ -1,0 +1,324 @@
+@using Microsoft.AspNetCore.Identity
+@using Microsoft.EntityFrameworkCore
+@using FurShield.Data
+@inject UserManager<ApplicationUser> UserManager
+@inject PetShelterContext DbContext
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] - FurShield Pet Owner Dashboard</title>
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css" />
+    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/css/dashboard-sidebar.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/css/furshield/furshield-theme.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/css/furshield/bootstrap-compat-fix.css" asp-append-version="true" />
+    <!-- FurShield brand theme for the Pet Owner portal only -->
+    <link rel="stylesheet" href="~/css/furshield/petowner-dashboard-theme.css" asp-append-version="true" />
+    @await RenderSectionAsync("Styles", required: false)
+</head>
+<body class="bg-light">
+    <div class="dashboard-shell">
+        <!-- Sidebar -->
+        <aside class="dashboard-sidebar sidebar--petowner" id="ownerSidebar">
+            <div class="sidebar-brand">
+                <a asp-controller="PetOwner" asp-action="Index">
+                    <i class="bi bi-person-badge-fill"></i> Pet Owner Portal
+                </a>
+            </div>
+
+            <div class="sidebar-back">
+                <a asp-controller="Home" asp-action="Index">
+                    <i class="bi bi-arrow-left-circle"></i> Back to Main Website
+                </a>
+            </div>
+
+            @{
+                var currentAction = ViewContext.RouteData.Values["action"]?.ToString();
+                var currentController = ViewContext.RouteData.Values["controller"]?.ToString();
+                Func<string, string, string> navActive = (ctrl, action) =>
+                    (string.Equals(currentController, ctrl, StringComparison.OrdinalIgnoreCase) &&
+                     string.Equals(currentAction, action, StringComparison.OrdinalIgnoreCase)) ? "active" : "";
+
+                var ownerUserId = UserManager.GetUserId(User);
+                var unreadNotificationCount = ownerUserId != null
+                    ? await DbContext.Notifications.CountAsync(n => n.UserId == ownerUserId && !n.IsRead)
+                    : 0;
+            }
+            <nav class="sidebar-nav">
+                <a class="sidebar-link @navActive("PetOwner", "Index")" asp-controller="PetOwner" asp-action="Index">
+                    <i class="bi bi-speedometer2"></i> Dashboard
+                </a>
+                <a class="sidebar-link @navActive("Pet", "Index")" asp-controller="Pet" asp-action="Index">
+                    <i class="bi bi-heart-fill text-danger"></i> My Pets
+                </a>
+                <a class="sidebar-link @navActive("HealthRecord", "Index")" asp-controller="HealthRecord" asp-action="Index">
+                    <i class="bi bi-file-earmark-medical"></i> Health Records
+                </a>
+                <a class="sidebar-link @navActive("PetDocument", "Index")" asp-controller="PetDocument" asp-action="Index">
+                    <i class="bi bi-folder-symlink"></i> Uploaded Documents
+                </a>
+                <a class="sidebar-link @navActive("Appointment", "Index")" asp-controller="Appointment" asp-action="Index">
+                    <i class="bi bi-calendar-event"></i> Appointments
+                </a>
+                <a class="sidebar-link @navActive("PetOwner", "AdoptPets")" asp-controller="PetOwner" asp-action="AdoptPets">
+                    <i class="bi bi-heart text-danger"></i> Adopt a Pet
+                </a>
+                <a class="sidebar-link @navActive("Notification", "Index")" asp-controller="Notification" asp-action="Index">
+                    <i class="bi bi-bell-fill"></i> Notifications
+                    @if (unreadNotificationCount > 0)
+                    {
+                        <span class="badge bg-danger rounded-pill ms-auto px-2 py-1">@unreadNotificationCount</span>
+                    }
+                </a>
+                <a class="sidebar-link @navActive("Product", "Index")" asp-controller="Product" asp-action="Index">
+                    <i class="bi bi-shop text-warning"></i> Shop Products
+                </a>
+                <a class="sidebar-link @navActive("Cart", "Index")" asp-controller="Cart" asp-action="Index">
+                    <i class="bi bi-cart3"></i> My Cart
+                </a>
+                <a class="sidebar-link @navActive("Order", "Index")" asp-controller="Order" asp-action="Index">
+                    <i class="bi bi-bag-check"></i> Orders
+                </a>
+                <a class="sidebar-link @navActive("Care", "Index")" asp-controller="Care" asp-action="Index">
+                    <i class="bi bi-heart-pulse text-danger"></i> Care Tips
+                </a>
+                <a class="sidebar-link @navActive("Family", "Index")" asp-controller="Family" asp-action="Index">
+                    <i class="bi bi-people-fill text-primary"></i> Family Sharing
+                </a>
+            </nav>
+
+            <div class="sidebar-footer">
+                <a class="sidebar-user" asp-area="Identity" asp-page="/Account/Manage/Index" title="Edit Profile">
+                    <span class="sidebar-user-avatar"><i class="bi bi-person-circle"></i></span>
+                    @{
+                        var currentUser = await UserManager.GetUserAsync(User);
+                        var displayName = currentUser?.FullName ?? UserManager.GetUserName(User);
+                    }
+
+                    <span class="sidebar-user-name">@displayName</span>
+                </a>
+                <form class="sidebar-logout-form" asp-area="Identity" asp-page="/Account/Logout" asp-route-returnUrl="@Url.Action("Index", "Home")">
+                    <button type="submit">
+                        <i class="bi bi-box-arrow-right"></i> Logout
+                    </button>
+                </form>
+            </div>
+        </aside>
+
+        <div class="sidebar-backdrop" id="ownerSidebarBackdrop"></div>
+
+        <!-- Main content -->
+        <div class="dashboard-content">
+            <div class="dashboard-topbar">
+                <button class="sidebar-toggle-btn" type="button" id="ownerSidebarToggle" aria-label="Toggle menu">
+                    <i class="bi bi-list"></i>
+                </button>
+                <span class="fw-bold text-success"><i class="bi bi-person-badge-fill me-1"></i> Pet Owner Portal</span>
+                <span></span>
+            </div>
+
+            <main role="main" class="dashboard-main">
+                @{
+                    var topbarUser = await UserManager.GetUserAsync(User);
+                    var topbarName = topbarUser?.FullName ?? UserManager.GetUserName(User);
+                }
+                <div class="owner-welcome">
+                    <div>
+                        <h2>Welcome back, @topbarName</h2>
+                        <p>@ViewData["Title"]</p>
+                    </div>
+                    <span class="owner-date-pill"><i class="bi bi-calendar3 me-1"></i> @DateTime.Now.ToString("dddd, dd MMM yyyy")</span>
+                </div>
+                @RenderBody()
+            </main>
+
+            <footer class="dashboard-footer">
+                &copy; 2026 - <strong>FurShield (Pet Owner Panel)</strong>
+            </footer>
+        </div>
+    </div>
+
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="~/js/site.js" asp-append-version="true"></script>
+    <script>
+        (function () {
+            var sidebar = document.getElementById('ownerSidebar');
+            var backdrop = document.getElementById('ownerSidebarBackdrop');
+            var toggleBtn = document.getElementById('ownerSidebarToggle');
+
+            function closeSidebar() {
+                sidebar.classList.remove('show');
+                backdrop.classList.remove('show');
+            }
+
+            toggleBtn?.addEventListener('click', function () {
+                sidebar.classList.toggle('show');
+                backdrop.classList.toggle('show');
+            });
+            backdrop?.addEventListener('click', closeSidebar);
+        })();
+    </script>
+    @await RenderSectionAsync("Scripts", required: false)
+
+
+    <!-- Free Permanent Floating Voice Chatbot -->
+    <div id="chatbot-container" style="position: fixed; bottom: 20px; right: 20px; z-index: 9999;">
+        <!-- Toggle Button -->
+        <button id="chat-toggle-btn" class="btn btn-primary rounded-circle shadow-lg d-flex align-items-center justify-content-center" style="width: 60px; height: 60px;">
+            <i class="bi bi-chat-dots-fill" style="font-size: 24px;"></i>
+        </button>
+
+        <!-- Chat Popup Box -->
+        <div id="chat-box" class="card shadow-lg d-none" style="width: 340px; height: 440px; position: absolute; bottom: 70px; right: 0; border-radius: 12px; overflow: hidden;">
+            <div class="card-header bg-primary text-white d-flex justify-content-between align-items-center">
+                <h6 class="mb-0"><i class="bi bi-robot me-1"></i> Pet Care Assistant</h6>
+                <button id="chat-close-btn" type="button" class="btn-close btn-close-white text-white btn-sm"></button>
+            </div>
+            <div id="chat-messages" class="card-body overflow-auto p-3" style="height: 310px; font-size: 13px; background-color: #f8f9fa;">
+                <div class="text-start mb-2">
+                    <span class="badge bg-white text-dark text-wrap p-2 shadow-sm border" style="text-align: left;">
+                        Hello! <i class="bi bi-heart-pulse-fill text-danger me-1"></i> Main Pet Care Assistant hoon. Aap bol kar ya type karke sawal pooch sakte hain!
+                    </span>
+                </div>
+            </div>
+            <div class="card-footer p-2 bg-white">
+                <div class="input-group">
+                    <!-- Mic Button -->
+                    <button id="mic-btn" class="btn btn-outline-secondary btn-sm" title="Click to Speak"><i class="bi bi-mic-fill"></i></button>
+                    <input type="text" id="user-input" class="form-control form-control-sm" placeholder="Type or click Mic to speak..." />
+                    <button id="send-btn" class="btn btn-primary btn-sm"><i class="bi bi-send-fill"></i></button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+        const toggleBtn = document.getElementById('chat-toggle-btn');
+        const closeBtn = document.getElementById('chat-close-btn');
+        const chatBox = document.getElementById('chat-box');
+        const sendBtn = document.getElementById('send-btn');
+        const micBtn = document.getElementById('mic-btn');
+        const userInput = document.getElementById('user-input');
+        const chatMessages = document.getElementById('chat-messages');
+
+        toggleBtn.addEventListener('click', () => chatBox.classList.toggle('d-none'));
+        closeBtn.addEventListener('click', () => {
+        chatBox.classList.add('d-none');
+        if ('speechSynthesis' in window) window.speechSynthesis.cancel();
+        });
+
+        sendBtn.addEventListener('click', sendMessage);
+        userInput.addEventListener('keypress', (e) => { if (e.key === 'Enter') sendMessage(); });
+
+        // 1. SPEECH TO TEXT (Mic Input)
+        const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+        if (SpeechRecognition) {
+        const recognition = new SpeechRecognition();
+        recognition.continuous = false;
+        recognition.lang = 'en-US';
+
+        micBtn.addEventListener('click', () => {
+        recognition.start();
+        micBtn.classList.replace('btn-outline-secondary', 'btn-danger');
+        userInput.placeholder = "Listening... Speak now";
+        });
+
+        recognition.onresult = (event) => {
+        const transcript = event.results[0][0].transcript;
+        userInput.value = transcript;
+        micBtn.classList.replace('btn-danger', 'btn-outline-secondary');
+        userInput.placeholder = "Type or click Mic to speak...";
+        sendMessage();
+        };
+
+        recognition.onerror = () => {
+        micBtn.classList.replace('btn-danger', 'btn-outline-secondary');
+        userInput.placeholder = "Mic error. Try typing.";
+        };
+
+        recognition.onend = () => {
+        micBtn.classList.replace('btn-danger', 'btn-outline-secondary');
+        };
+        } else {
+        micBtn.style.display = 'none';
+        }
+
+        // 2. GUARANTEED FEMALE VOICE LOGIC
+        let selectedFemaleVoice = null;
+
+        function loadVoices() {
+        if ('speechSynthesis' in window) {
+        const voices = window.speechSynthesis.getVoices();
+        // Windows / Chrome ki female voices filter karna
+        selectedFemaleVoice = voices.find(voice =>
+        voice.name.includes('Microsoft Zira') ||
+        voice.name.includes('Google UK English Female') ||
+        voice.name.includes('Google US English Female') ||
+        voice.name.includes('Samantha') ||
+        voice.name.includes('Female')
+        ) || voices[0]; // Fallback to first available voice
+        }
+        }
+
+        if ('speechSynthesis' in window) {
+        loadVoices();
+        window.speechSynthesis.onvoiceschanged = loadVoices;
+        }
+
+        function speakFemaleVoice(text) {
+        if ('speechSynthesis' in window) {
+        window.speechSynthesis.cancel();
+
+        // Clean HTML tags and symbols for soft speech
+        const cleanText = text.replace(/<[^>]*>?/gm, '').replace(/\*/g, '');
+        const utterance = new SpeechSynthesisUtterance(cleanText);
+
+        utterance.rate = 0.95;
+        utterance.pitch = 1.3; // Higher pitch ensures clear female voice tone
+
+        if (selectedFemaleVoice) {
+        utterance.voice = selectedFemaleVoice;
+        }
+
+        window.speechSynthesis.speak(utterance);
+        }
+        }
+
+        async function sendMessage() {
+        const text = userInput.value.trim();
+        if (!text) return;
+
+        chatMessages.innerHTML += `<div class="text-end mb-2"><span class="badge bg-primary text-wrap p-2" style="text-align: left;">${text}</span></div>`;
+        userInput.value = '';
+        chatMessages.scrollTop = chatMessages.scrollHeight;
+
+        try {
+        const res = await fetch('/Chatbot/Ask', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ prompt: text })
+        });
+        const data = await res.json();
+
+        chatMessages.innerHTML += `<div class="text-start mb-2"><span class="badge bg-white text-dark border text-wrap p-2 shadow-sm" style="text-align: left;">${data.response}</span></div>`;
+        chatMessages.scrollTop = chatMessages.scrollHeight;
+
+        // Answer Hamesha Larki ki Aawaz Mein Bolega
+        speakFemaleVoice(data.response);
+
+        } catch (err) {
+        chatMessages.innerHTML += `<div class="text-start mb-2"><span class="badge bg-danger p-2">Connection error.</span></div>`;
+        }
+        }
+        });
+    </script>
+
+
+</body>
+
+</html>

@@ -1,0 +1,230 @@
+/* =========================================================
+   FurShield — Shelter Dashboard Theme
+   -----------------------------------------------------------
+   Loaded ONLY by _ShelterLayout.cshtml. Mirrors the Veterinarian
+   dashboard theme (same shell, same FurShield palette/fonts) but
+   with its own warm "adoption" accent so each portal feels like
+   part of the same product while staying visually distinct.
+
+   Scoped so it cannot affect the public site or the other role
+   dashboards (Vet/PetOwner/Admin), which don't load this file.
+   ========================================================= */
+
+@import url('https://fonts.googleapis.com/css2?family=Baloo+2:wght@500;600;700;800&family=DM+Sans:wght@400;500;600;700&display=swap');
+
+:root{
+  --shl-cream:#FBF1E2;
+  --shl-cream-2:#F6E9D6;
+  --shl-ink:#211A16;
+  --shl-charcoal:#1B1815;
+  --shl-charcoal-2:#141210;
+  --shl-coral:#CE7CA6;          /* was #D9764B orange → now FurShield pink */
+  --shl-coral-dark:#B85E8C;     /* was #B85E38 orange-dark → now pink-dark */
+  --shl-coral-tint:#F7E1EC;     /* was #FBE7DA orange-tint → now pink-tint */
+  --shl-sage-dark:#4F8B71;
+  --shl-sage-tint:#E4F1EA;
+  --shl-pink-dark:#CE7CA6;
+  --shl-pink-tint:#F7E1EC;
+  --shl-muted:#7A7167;
+  --shl-line:#EADFCF;
+  --shl-shadow:0 16px 40px rgba(33,26,22,.08);
+}
+
+/* ---------- Base typography ---------- */
+.dashboard-content, .dashboard-sidebar.sidebar--shelter{
+  font-family:'DM Sans',sans-serif;
+}
+.dashboard-content h1,.dashboard-content h2,.dashboard-content h3,
+.dashboard-content h4,.dashboard-content h5,.dashboard-content h6,
+.dashboard-content .card-header,.sidebar-brand a{
+  font-family:'Baloo 2','DM Sans',sans-serif;
+  letter-spacing:-.01em;
+}
+
+/* ---------- Sidebar: FurShield charcoal + pink accent ---------- */
+.dashboard-sidebar.sidebar--shelter{
+  --accent:var(--shl-coral);
+  --accent-soft:rgba(206,124,166,.16);  /* was orange rgba(217,118,75,.16) */
+  background:linear-gradient(180deg,var(--shl-charcoal) 0%,var(--shl-charcoal-2) 100%);
+}
+.dashboard-sidebar.sidebar--shelter .sidebar-brand{
+  border-bottom-color:rgba(255,255,255,.07);
+}
+.dashboard-sidebar.sidebar--shelter .sidebar-link.active{
+  background:var(--accent-soft);
+  box-shadow:inset 3px 0 0 var(--accent);
+}
+.dashboard-sidebar.sidebar--shelter .sidebar-user-avatar{
+  background:var(--shl-coral);
+  color:#fff;
+}
+
+/* ---------- Page background (matches Vet portal's cream shell) ---------- */
+.dashboard-shell:has(.sidebar--shelter){
+  background:var(--shl-cream);
+}
+
+/* ---------- Topbar / content background ---------- */
+.sidebar--shelter ~ .dashboard-content .dashboard-topbar,
+.dashboard-content .dashboard-topbar{
+  background:#fff;
+}
+.dashboard-content .dashboard-topbar .text-success,
+.dashboard-content .dashboard-topbar .text-primary{
+  color:var(--shl-coral-dark) !important;
+}
+.shelter-welcome{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  flex-wrap:wrap;
+  gap:.75rem;
+  margin-bottom:1.5rem;
+}
+.shelter-welcome .vet-date-pill{
+  background:#fff;
+  border:1px solid var(--shl-line);
+  border-radius:999px;
+  padding:.5rem 1rem;
+  font-size:.82rem;
+  font-weight:600;
+  color:var(--shl-muted);
+  box-shadow:var(--shl-shadow);
+}
+
+/* ---------- Decorative brand color (headings, timestamps, prices) ----------
+   NOTE: only `.text-success` / `.text-primary` on plain text/icons is
+   touched here — real status badges use `.bg-success` / `.bg-warning` /
+   `.bg-danger` (background, not this class) so "Available", "Approved",
+   "Pending" etc. keep their normal semantic colors untouched. */
+.dashboard-content .text-success,
+.dashboard-content .text-primary{
+  color: var(--shl-coral-dark) !important;
+}
+
+/* ---------- Decorative colored tiles / headers (NOT status badges) ----------
+   Same reasoning: `.card.bg-success` / `.card-header.bg-primary` are the
+   dashboard analytics tiles and form/modal header bars, never a status
+   badge (badges never carry the `.card` or `.card-header` class too). */
+.dashboard-content .card.bg-primary,
+.dashboard-content .card-header.bg-primary{
+  background:var(--shl-coral) !important;
+}
+.dashboard-content .card.bg-success,
+.dashboard-content .card-header.bg-success{
+  background:var(--shl-sage-dark) !important;
+}
+.dashboard-content .card.bg-info{
+  background:var(--shl-pink-dark) !important;
+}
+
+/* ---------- Stat tiles polish (Shelter dashboard analytics cards) ---------- */
+.dashboard-content .card.bg-primary,
+.dashboard-content .card.bg-success,
+.dashboard-content .card.bg-info{
+  border-radius:20px !important;
+  box-shadow:var(--shl-shadow);
+}
+
+/* ---------- Cards ---------- */
+.dashboard-content .card{
+  border:1px solid var(--shl-line);
+  border-radius:20px;
+  box-shadow:var(--shl-shadow);
+}
+.dashboard-content .card-header{
+  border-bottom:1px solid var(--shl-line);
+  border-radius:20px 20px 0 0 !important;
+  font-weight:700;
+  color:var(--shl-ink);
+}
+
+/* ---------- Buttons ---------- */
+.dashboard-content .btn{
+  border-radius:12px;
+  font-weight:600;
+  transition:transform .15s ease,box-shadow .15s ease;
+}
+.dashboard-content .btn:hover{ transform:translateY(-1px); }
+.dashboard-content .btn-success{
+  background:var(--shl-sage-dark);
+  border-color:var(--shl-sage-dark);
+}
+.dashboard-content .btn-success:hover{
+  background:#3f7461;
+  border-color:#3f7461;
+}
+.dashboard-content .btn-outline-success{
+  color:var(--shl-sage-dark);
+  border-color:var(--shl-sage-dark);
+}
+.dashboard-content .btn-outline-success:hover{
+  background:var(--shl-sage-dark);
+  border-color:var(--shl-sage-dark);
+}
+.dashboard-content .btn-primary{
+  background:var(--shl-coral);
+  border-color:var(--shl-coral);
+}
+.dashboard-content .btn-primary:hover{
+  background:var(--shl-coral-dark);
+  border-color:var(--shl-coral-dark);
+}
+.dashboard-content .btn-outline-primary{
+  color:var(--shl-coral);
+  border-color:var(--shl-coral);
+}
+.dashboard-content .btn-outline-primary:hover{
+  background:var(--shl-coral);
+  border-color:var(--shl-coral);
+}
+
+/* ---------- Tables ---------- */
+.dashboard-content .table thead.table-light th{
+  background:var(--shl-coral-tint);
+  color:var(--shl-ink);
+  font-size:.76rem;
+  text-transform:uppercase;
+  letter-spacing:.04em;
+  font-weight:700;
+  border-bottom:0;
+}
+.dashboard-content .table-hover tbody tr:hover{
+  background:var(--shl-cream-2);
+}
+.dashboard-content .table td, .dashboard-content .table th{
+  vertical-align:middle;
+}
+
+/* ---------- Badges (status pills kept semantic, just modernized shape) ---------- */
+.dashboard-content .badge{
+  font-weight:700;
+  font-size:.72rem;
+  padding:.45em .75em;
+  border-radius:999px;
+  letter-spacing:.02em;
+}
+
+/* ---------- Forms ---------- */
+.dashboard-content .form-control,.dashboard-content .form-select{
+  border:1px solid var(--shl-line);
+  border-radius:12px;
+  padding:.55rem .85rem;
+}
+.dashboard-content .form-control:focus,.dashboard-content .form-select:focus{
+  border-color:var(--shl-coral);
+  box-shadow:0 0 0 3px rgba(206,124,166,.15);  /* was orange rgba(217,118,75,.15) */
+}
+.dashboard-content .form-label{ color:var(--shl-ink); }
+
+/* ---------- Empty states ---------- */
+.dashboard-content .text-center.text-muted i.display-5,
+.dashboard-content .text-center.py-4.text-muted,
+.dashboard-content .text-center.py-5.text-muted{
+  color:var(--shl-coral) !important;
+  opacity:.55;
+}
+
+/* ---------- Alerts ---------- */
+.dashboard-content .alert-success{ background:var(--shl-sage-tint); color:#2c5c46; border:1px solid #cfe6da; }
+.dashboard-content .alert-info{ background:var(--shl-pink-tint); color:#8a4a68; border:1px solid #f0d3e2; }

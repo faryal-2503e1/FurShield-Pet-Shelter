@@ -1,0 +1,157 @@
+﻿@model IEnumerable<FurShield.Data.HealthRecord>
+
+@{
+    ViewData["Title"] = "Pet Medical History";
+    Layout = "~/Views/Shared/_VetLayout.cshtml";
+    var petDocs = ViewBag.PetDocuments as IEnumerable<FurShield.Data.PetDocument>;
+}
+
+<div class="container py-4">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <div>
+            <h3 class="fw-bold mb-0"><i class="bi bi-clock-history text-primary me-2"></i>Pet Medical History</h3>
+            <p class="text-muted mb-0">Patient Name: <strong class="text-dark">@ViewBag.PetName</strong></p>
+        </div>
+        <a asp-action="Index" class="btn btn-outline-secondary">
+            <i class="bi bi-arrow-left me-1"></i> Back to Appointments
+        </a>
+    </div>
+
+    @* Document Vault / Uploaded Reports Section *@
+    @if (petDocs != null && petDocs.Any())
+    {
+        <div class="card border-0 shadow-sm mb-4">
+            <div class="card-header bg-white py-3">
+                <h5 class="fw-bold mb-0 text-primary">
+                    <i class="bi bi-folder2-open me-2"></i>Uploaded Reports & Documents
+                </h5>
+            </div>
+            <div class="card-body p-0">
+                <div class="table-responsive">
+                    <table class="table table-hover align-middle mb-0">
+                        <thead class="table-light">
+                            <tr>
+                                <th>Document Title</th>
+                                <th>Type</th>
+                                <th>Upload Date</th>
+                                <th class="text-end">Action</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var doc in petDocs)
+                            {
+                                <tr>
+                                    <td>
+                                        <i class="bi bi-file-earmark-pdf text-danger me-2"></i>
+                                        <strong>@doc.Title</strong>
+                                    </td>
+                                    <td><span class="badge bg-info text-dark">@doc.DocumentType</span></td>
+                                    <td>@doc.UploadedDate.ToString("dd MMM yyyy")</td>
+                                    <td class="text-end">
+                                        <a href="@doc.FilePath" target="_blank" class="btn btn-sm btn-success">
+                                            <i class="bi bi-eye me-1"></i> View Document
+                                        </a>
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    }
+
+    @* Health Records Section *@
+    <h5 class="fw-bold text-secondary mb-3"><i class="bi bi-journal-medical me-2"></i>Clinical Visit Records</h5>
+
+    @if (!Model.Any())
+    {
+        <div class="card border-0 shadow-sm">
+            <div class="card-body text-center py-5 text-muted">
+                <i class="bi bi-journal-x display-5 text-secondary d-block mb-2"></i>
+                No past health records found for this pet.
+            </div>
+        </div>
+    }
+    else
+    {
+        @foreach (var item in Model)
+        {
+            <div class="card border-0 shadow-sm mb-3">
+                <div class="card-header bg-white d-flex justify-content-between align-items-center py-3">
+                    <div>
+                        <strong>@item.VisitDate.ToString("dd MMM yyyy, hh:mm tt")</strong>
+
+                        @if (item.AddedByOwner)
+                        {
+                            <span class="badge bg-warning text-dark ms-2">
+                                <i class="bi bi-person-fill me-1"></i> Owner Self-Reported
+                            </span>
+                        }
+                        else
+                        {
+                            <span class="text-muted ms-2">— Dr. @(item.Veterinarian?.User?.FullName ?? item.Veterinarian?.User?.UserName ?? "Specialist")</span>
+                        }
+                    </div>
+
+                    @if (!string.IsNullOrEmpty(item.Vaccination))
+                    {
+                        <span class="badge bg-success"><i class="bi bi-shield-check me-1"></i> @item.Vaccination</span>
+                    }
+                </div>
+
+                <div class="card-body">
+                    <div class="row g-3">
+                        @if (!string.IsNullOrEmpty(item.Symptoms))
+                        {
+                            <div class="col-md-6">
+                                <h6 class="text-primary fw-bold small text-uppercase mb-1"><i class="bi bi-clipboard2-pulse me-1"></i> Symptoms</h6>
+                                <p class="mb-0">@item.Symptoms</p>
+                            </div>
+                        }
+
+                        @if (!string.IsNullOrEmpty(item.Diagnosis))
+                        {
+                            <div class="col-md-6">
+                                <h6 class="text-primary fw-bold small text-uppercase mb-1"><i class="bi bi-journal-medical me-1"></i> Diagnosis</h6>
+                                <p class="mb-0"><span class="badge bg-warning text-dark">@item.Diagnosis</span></p>
+                            </div>
+                        }
+
+                        @if (!string.IsNullOrEmpty(item.Treatment))
+                        {
+                            <div class="col-md-6">
+                                <h6 class="text-primary fw-bold small text-uppercase mb-1"><i class="bi bi-bandaid me-1"></i> Past Treatment</h6>
+                                <p class="mb-0">@item.Treatment</p>
+                            </div>
+                        }
+
+                        @if (!string.IsNullOrEmpty(item.LabResults))
+                        {
+                            <div class="col-md-6">
+                                <h6 class="text-primary fw-bold small text-uppercase mb-1"><i class="bi bi-flask me-1"></i> Lab Results</h6>
+                                <p class="mb-0">@item.LabResults</p>
+                            </div>
+                        }
+
+                        @if (!string.IsNullOrEmpty(item.Prescription))
+                        {
+                            <div class="col-md-6">
+                                <h6 class="text-primary fw-bold small text-uppercase mb-1"><i class="bi bi-capsule me-1"></i> Prescription</h6>
+                                <p class="mb-0">@item.Prescription</p>
+                            </div>
+                        }
+
+                        @if (!string.IsNullOrEmpty(item.Notes))
+                        {
+                            <div class="col-md-6">
+                                <h6 class="text-primary fw-bold small text-uppercase mb-1"><i class="bi bi-sticky me-1"></i> Doctor Notes</h6>
+                                <p class="mb-0">@item.Notes</p>
+                            </div>
+                        }
+                    </div>
+                </div>
+            </div>
+        }
+    }
+</div>

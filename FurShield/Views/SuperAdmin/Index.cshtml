@@ -1,0 +1,525 @@
+@{
+    Layout = "_AdminLayout";
+    ViewData["Title"] = "Admin Overview";
+}
+
+<style>
+    :root {
+        --fs-cream-bg: #FBF8F3;
+        --fs-ink: #211A16;
+        --fs-pink: #C76A8F;
+        --fs-pink-dark: #B35478;
+        --fs-pink-soft: #FDF0F5;
+        --fs-pink-border: #F7D4E3;
+        --fs-sage: #74987E;
+        --fs-sage-soft: #EFF6F1;
+        --fs-sage-border: #D5E6DA;
+        --fs-amber-soft: #FEF7ED;
+        --fs-amber-border: #FCE5C5;
+        --fs-border: #EFE4D6;
+    }
+
+    body, .dashboard-shell {
+        background-color: #FBF8F3 !important;
+        font-family: 'DM Sans', sans-serif;
+    }
+
+    /* ---- Home Hero Container ---- */
+    .home-theme-hero {
+        background: #FFFFFF;
+        border: 1.5px solid var(--fs-border);
+        border-radius: 28px;
+        padding: 2.5rem 2.8rem;
+        margin-bottom: 2rem;
+        position: relative;
+        box-shadow: 0 10px 30px rgba(33, 26, 22, 0.04);
+        overflow: hidden;
+    }
+    .home-theme-hero::before {
+        content: '';
+        position: absolute;
+        top: -40px; right: -40px;
+        width: 180px; height: 180px;
+        background: #FDF0F5;
+        border-radius: 50%;
+        z-index: 0;
+    }
+    .home-theme-hero::after {
+        content: '';
+        position: absolute;
+        bottom: -50px; right: 120px;
+        width: 140px; height: 140px;
+        background: #EFF6F1;
+        border-radius: 50%;
+        z-index: 0;
+    }
+
+    .fs-pill-tag {
+        display: inline-flex;
+        align-items: center;
+        gap: .5rem;
+        background: #FFF5F8;
+        border: 1.5px solid #F3CFDD;
+        color: #C76A8F;
+        font-family: 'Baloo 2', sans-serif;
+        font-size: .82rem;
+        font-weight: 700;
+        letter-spacing: .08em;
+        text-transform: uppercase;
+        padding: .35rem 1.1rem;
+        border-radius: 50px;
+        margin-bottom: 1rem;
+    }
+
+    .fs-hero-title {
+        font-family: 'Baloo 2', sans-serif;
+        font-size: 2.4rem;
+        font-weight: 800;
+        color: #211A16;
+        line-height: 1.15;
+        margin-bottom: .6rem;
+    }
+    .fs-hero-title .highlight-pink {
+        color: #C76A8F;
+    }
+
+    .fs-hero-subtitle {
+        color: #6E665E;
+        font-size: 1.05rem;
+        max-width: 620px;
+        margin: 0;
+        line-height: 1.5;
+    }
+
+    /* Floating Status Card in Hero */
+    .hero-floating-card {
+        background: #FFFFFF;
+        border: 1.5px solid #EFE4D6;
+        border-radius: 20px;
+        padding: 1.1rem 1.4rem;
+        box-shadow: 0 12px 30px rgba(33, 26, 22, 0.08);
+        display: inline-flex;
+        align-items: center;
+        gap: 1rem;
+        position: relative;
+        z-index: 1;
+    }
+    .floating-card-icon {
+        width: 46px; height: 46px;
+        border-radius: 14px;
+        background: #FDF0F5;
+        color: #C76A8F;
+        display: flex; align-items: center; justify-content: center;
+        font-size: 1.25rem;
+    }
+
+    /* ---- Organic Stat Cards ---- */
+    .fs-stat-card {
+        background: #FFFFFF;
+        border-radius: 22px;
+        padding: 1.5rem 1.3rem;
+        transition: all .22s ease;
+        display: flex;
+        align-items: center;
+        gap: 1.1rem;
+        text-decoration: none;
+        box-shadow: 0 4px 16px rgba(33, 26, 22, 0.04);
+        position: relative;
+    }
+    .fs-stat-card:hover {
+        transform: translateY(-4px);
+        box-shadow: 0 14px 32px rgba(33, 26, 22, 0.08);
+    }
+    .fs-stat-icon-wrap {
+        width: 52px; height: 52px;
+        border-radius: 16px;
+        display: flex; align-items: center; justify-content: center;
+        font-size: 1.4rem;
+        flex-shrink: 0;
+    }
+    .fs-stat-num {
+        font-family: 'Baloo 2', sans-serif;
+        font-size: 2.1rem;
+        font-weight: 800;
+        line-height: 1;
+        margin-bottom: .2rem;
+    }
+    .fs-stat-title {
+        font-size: .82rem;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: .06em;
+    }
+
+    /* Color variations matching home palette */
+    .card-pink   { background: #FFF5F9; border: 1.5px solid #F8D3E4; color: #8F325C; }
+    .card-pink .fs-stat-icon-wrap { background: #FFFFFF; color: #C76A8F; box-shadow: 0 4px 10px rgba(199,106,143,.15); }
+    .card-pink .fs-stat-num { color: #8F325C; }
+
+    .card-sage   { background: #F2F8F4; border: 1.5px solid #D7E8DC; color: #2B5738; }
+    .card-sage .fs-stat-icon-wrap { background: #FFFFFF; color: #74987E; box-shadow: 0 4px 10px rgba(116,152,126,.15); }
+    .card-sage .fs-stat-num { color: #2B5738; }
+
+    .card-amber  { background: #FFF9EE; border: 1.5px solid #FDE7C4; color: #8C5B17; }
+    .card-amber .fs-stat-icon-wrap { background: #FFFFFF; color: #D98829; box-shadow: 0 4px 10px rgba(217,136,41,.15); }
+    .card-amber .fs-stat-num { color: #8C5B17; }
+
+    .card-sky    { background: #F1F8FC; border: 1.5px solid #D6EBF8; color: #1E5C82; }
+    .card-sky .fs-stat-icon-wrap { background: #FFFFFF; color: #3587B8; box-shadow: 0 4px 10px rgba(53,135,184,.15); }
+    .card-sky .fs-stat-num { color: #1E5C82; }
+
+    .card-lilac  { background: #F7F4FD; border: 1.5px solid #E7DCFA; color: #4B3A82; }
+    .card-lilac .fs-stat-icon-wrap { background: #FFFFFF; color: #7A5DB8; box-shadow: 0 4px 10px rgba(122,93,184,.15); }
+    .card-lilac .fs-stat-num { color: #4B3A82; }
+
+    .card-dark   { background: #211A16; border: 1.5px solid #211A16; color: #FFFFFF; }
+    .card-dark .fs-stat-icon-wrap { background: rgba(255,255,255,.15); color: #FFFFFF; }
+    .card-dark .fs-stat-num { color: #FFFFFF; }
+    .card-dark .fs-stat-title { color: rgba(255,255,255,.75); }
+
+    /* ---- Action Blocks ---- */
+    .fs-panel-card {
+        background: #FFFFFF;
+        border: 1.5px solid #EFE4D6;
+        border-radius: 26px;
+        padding: 2rem;
+        box-shadow: 0 6px 24px rgba(33, 26, 22, 0.04);
+    }
+    .fs-panel-header {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        margin-bottom: 1.5rem;
+        padding-bottom: 1rem;
+        border-bottom: 1.5px solid #F5EDE0;
+    }
+    .fs-panel-title {
+        font-family: 'Baloo 2', sans-serif;
+        font-size: 1.35rem;
+        font-weight: 800;
+        color: #211A16;
+        margin: 0;
+        display: flex;
+        align-items: center;
+        gap: .6rem;
+    }
+
+    /* Action Pill Buttons */
+    .fs-action-pill {
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+        padding: 1.1rem 1.3rem;
+        background: #FFFFFF;
+        border: 1.5px solid #EADFCF;
+        border-radius: 20px;
+        text-decoration: none;
+        color: #211A16;
+        font-weight: 700;
+        font-size: .95rem;
+        transition: all .2s ease;
+    }
+    .fs-action-pill:hover {
+        background: #211A16;
+        color: #FFFFFF !important;
+        border-color: #211A16;
+        transform: translateY(-3px);
+        box-shadow: 0 10px 24px rgba(33, 26, 22, 0.14);
+    }
+    .fs-action-pill:hover .action-pill-icon {
+        background: rgba(255,255,255,.2);
+        color: #FFFFFF;
+    }
+    .action-pill-icon {
+        width: 44px; height: 44px;
+        border-radius: 12px;
+        background: #FDF0F5;
+        color: #C76A8F;
+        display: flex; align-items: center; justify-content: center;
+        font-size: 1.25rem;
+        flex-shrink: 0;
+        transition: all .2s ease;
+    }
+
+    /* Pill Buttons matching Home */
+    .btn-fs-pink {
+        background: #C76A8F;
+        color: #FFFFFF !important;
+        border: none;
+        border-radius: 50px;
+        padding: 10px 26px;
+        font-weight: 700;
+        font-size: .92rem;
+        box-shadow: 0 4px 14px rgba(199, 106, 143, 0.3);
+        transition: all .2s;
+        text-decoration: none;
+        display: inline-flex;
+        align-items: center;
+        gap: .5rem;
+    }
+    .btn-fs-pink:hover {
+        background: #B35478;
+        color: #FFFFFF !important;
+        transform: translateY(-2px);
+        box-shadow: 0 8px 20px rgba(199, 106, 143, 0.4);
+    }
+
+    .btn-fs-dark {
+        background: #FFFFFF;
+        color: #211A16 !important;
+        border: 1.5px solid #EADFCF;
+        border-radius: 50px;
+        padding: 10px 24px;
+        font-weight: 700;
+        font-size: .92rem;
+        transition: all .2s;
+        text-decoration: none;
+        display: inline-flex;
+        align-items: center;
+        gap: .5rem;
+    }
+    .btn-fs-dark:hover {
+        background: #211A16;
+        color: #FFFFFF !important;
+        border-color: #211A16;
+        transform: translateY(-2px);
+    }
+
+    /* User Row Pill */
+    .fs-user-pill {
+        display: flex;
+        align-items: center;
+        gap: .9rem;
+        padding: .85rem 1rem;
+        background: #FAF6F0;
+        border: 1.5px solid #F0E6D8;
+        border-radius: 16px;
+        transition: all .15s ease;
+    }
+    .fs-user-pill:hover {
+        background: #FFFFFF;
+        border-color: #C76A8F;
+    }
+    .fs-user-avatar {
+        width: 40px; height: 40px;
+        border-radius: 50%;
+        background: #C76A8F;
+        color: #FFFFFF;
+        display: flex; align-items: center; justify-content: center;
+        font-weight: 800;
+        font-family: 'Baloo 2', sans-serif;
+        font-size: 1rem;
+        flex-shrink: 0;
+    }
+
+    @@media (max-width: 768px) {
+        .home-theme-hero { padding: 1.6rem 1.4rem; }
+        .fs-hero-title { font-size: 1.75rem; }
+    }
+</style>
+
+<!-- Hero Section with Home Theme Styling -->
+<div class="home-theme-hero">
+    <div class="row align-items-center position-relative" style="z-index: 1;">
+        <div class="col-lg-8">
+            <div class="fs-pill-tag">
+                <i class="bi bi-shield-lock-fill"></i> FurShield Platform Admin
+            </div>
+            <h1 class="fs-hero-title">
+                Platform control <span class="highlight-pink">at your fingertips.</span>
+            </h1>
+            <p class="fs-hero-subtitle">
+                Monitor platform growth, verify shelters &amp; veterinarians, manage adoption listings and supervise orders in one unified space.
+            </p>
+        </div>
+        <div class="col-lg-4 text-lg-end mt-3 mt-lg-0">
+            <div class="hero-floating-card text-start">
+                <div class="floating-card-icon">
+                    <i class="bi bi-activity"></i>
+                </div>
+                <div>
+                    <small class="text-muted d-block fw-semibold" style="font-size:.75rem;">System Health</small>
+                    <strong style="font-size:.95rem; color:#211A16;">100% Operational</strong>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- 6 Stat Cards in Home Pastel Palette -->
+<div class="row g-3 mb-4">
+    <div class="col-xxl-2 col-xl-4 col-md-4 col-sm-6 col-12">
+        <a asp-action="Users" class="fs-stat-card card-pink">
+            <div class="fs-stat-icon-wrap"><i class="bi bi-people-fill"></i></div>
+            <div>
+                <div class="fs-stat-num">@ViewBag.TotalPetOwners</div>
+                <div class="fs-stat-title" title="Pet Owners">Pet Owners</div>
+            </div>
+        </a>
+    </div>
+
+    <div class="col-xxl-2 col-xl-4 col-md-4 col-sm-6 col-12">
+        <a asp-action="SheltersAndVets" class="fs-stat-card card-sage">
+            <div class="fs-stat-icon-wrap"><i class="bi bi-hospital-fill"></i></div>
+            <div>
+                <div class="fs-stat-num">@ViewBag.TotalVets</div>
+                <div class="fs-stat-title" title="Veterinarians">Veterinarians</div>
+            </div>
+        </a>
+    </div>
+
+    <div class="col-xxl-2 col-xl-4 col-md-4 col-sm-6 col-12">
+        <a asp-action="SheltersAndVets" class="fs-stat-card card-amber">
+            <div class="fs-stat-icon-wrap"><i class="bi bi-house-heart-fill"></i></div>
+            <div>
+                <div class="fs-stat-num">@ViewBag.TotalShelters</div>
+                <div class="fs-stat-title" title="Shelters">Shelters</div>
+            </div>
+        </a>
+    </div>
+
+    <div class="col-xxl-2 col-xl-4 col-md-4 col-sm-6 col-12">
+        <div class="fs-stat-card card-lilac">
+            <div class="fs-stat-icon-wrap"><i class="bi bi-heart-fill"></i></div>
+            <div>
+                <div class="fs-stat-num">@ViewBag.TotalPets</div>
+                <div class="fs-stat-title" title="Pets Enrolled">Pets Enrolled</div>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-xxl-2 col-xl-4 col-md-4 col-sm-6 col-12">
+        <a asp-action="Appointments" class="fs-stat-card card-sky">
+            <div class="fs-stat-icon-wrap"><i class="bi bi-calendar2-check-fill"></i></div>
+            <div>
+                <div class="fs-stat-num">@ViewBag.TotalAppointments</div>
+                <div class="fs-stat-title" title="Bookings">Bookings</div>
+            </div>
+        </a>
+    </div>
+
+    <div class="col-xxl-2 col-xl-4 col-md-4 col-sm-6 col-12">
+        <a asp-action="Orders" class="fs-stat-card card-dark">
+            <div class="fs-stat-icon-wrap"><i class="bi bi-bag-check-fill"></i></div>
+            <div>
+                <div class="fs-stat-num">@ViewBag.TotalOrders</div>
+                <div class="fs-stat-title" title="Shop Orders">Shop Orders</div>
+            </div>
+        </a>
+    </div>
+</div>
+
+<div class="row g-4">
+    <!-- Quick Management Action Grid -->
+    <div class="col-lg-8">
+        <div class="fs-panel-card h-100">
+            <div class="fs-panel-header">
+                <h3 class="fs-panel-title">
+                    <i class="bi bi-grid-fill text-warning"></i> Platform Quick Access
+                </h3>
+                <span class="badge bg-light text-dark px-3 py-2 rounded-pill fw-semibold" style="border: 1px solid #EADFCF;">
+                    Admin Level
+                </span>
+            </div>
+            
+            <div class="row g-3">
+                <div class="col-md-6">
+                    <a asp-action="Users" class="fs-action-pill">
+                        <div class="action-pill-icon"><i class="bi bi-people-fill"></i></div>
+                        <div>
+                            <div>Manage Pet Owners</div>
+                            <small class="text-muted fw-normal" style="font-size:.8rem;">View accounts &amp; toggle access</small>
+                        </div>
+                    </a>
+                </div>
+
+                <div class="col-md-6">
+                    <a asp-action="SheltersAndVets" class="fs-action-pill">
+                        <div class="action-pill-icon" style="background:#EFF6F1; color:#74987E;"><i class="bi bi-buildings-fill"></i></div>
+                        <div>
+                            <div>Shelters &amp; Vets</div>
+                            <small class="text-muted fw-normal" style="font-size:.8rem;">Clinics, doctors &amp; shelter houses</small>
+                        </div>
+                    </a>
+                </div>
+
+                <div class="col-md-6">
+                    <a asp-action="Adoptions" class="fs-action-pill">
+                        <div class="action-pill-icon" style="background:#FFF9EE; color:#D98829;"><i class="bi bi-heart-pulse-fill"></i></div>
+                        <div>
+                            <div>Adoption Listings</div>
+                            <small class="text-muted fw-normal" style="font-size:.8rem;">Review shelter adoption profiles</small>
+                        </div>
+                    </a>
+                </div>
+
+                <div class="col-md-6">
+                    <a asp-action="Products" class="fs-action-pill">
+                        <div class="action-pill-icon" style="background:#F1F8FC; color:#3587B8;"><i class="bi bi-box-seam-fill"></i></div>
+                        <div>
+                            <div>Manage Products</div>
+                            <small class="text-muted fw-normal" style="font-size:.8rem;">Pet store inventory &amp; catalog</small>
+                        </div>
+                    </a>
+                </div>
+
+                <div class="col-md-6">
+                    <a asp-action="Appointments" class="fs-action-pill">
+                        <div class="action-pill-icon" style="background:#F7F4FD; color:#7A5DB8;"><i class="bi bi-calendar-event-fill"></i></div>
+                        <div>
+                            <div>Vet Appointments</div>
+                            <small class="text-muted fw-normal" style="font-size:.8rem;">Overview of clinic visits</small>
+                        </div>
+                    </a>
+                </div>
+
+                <div class="col-md-6">
+                    <a asp-action="Orders" class="fs-action-pill">
+                        <div class="action-pill-icon" style="background:#211A16; color:#FFFFFF;"><i class="bi bi-bag-check-fill"></i></div>
+                        <div>
+                            <div>Customer Orders</div>
+                            <small class="text-muted fw-normal" style="font-size:.8rem;">Track purchases &amp; revenue</small>
+                        </div>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Recent Registered Users -->
+    <div class="col-lg-4">
+        <div class="fs-panel-card h-100">
+            <div class="fs-panel-header">
+                <h3 class="fs-panel-title">
+                    <i class="bi bi-person-lines-fill" style="color:#C76A8F;"></i> Recent Owners
+                </h3>
+            </div>
+
+            @if (ViewBag.RecentUsers != null)
+            {
+                <div class="d-flex flex-column gap-2 mb-3">
+                    @foreach (var u in ViewBag.RecentUsers)
+                    {
+                        <div class="fs-user-pill">
+                            <div class="fs-user-avatar">
+                                @(u.FullName != null && u.FullName.Length > 0 ? u.FullName[0].ToString().ToUpper() : "U")
+                            </div>
+                            <div class="overflow-hidden">
+                                <div class="fw-bold text-truncate" style="font-size:.9rem; color:#211A16;">@(u.FullName ?? u.UserName)</div>
+                                <div class="text-muted text-truncate" style="font-size:.78rem;">@u.Email</div>
+                            </div>
+                        </div>
+                    }
+                </div>
+            }
+            else
+            {
+                <p class="text-muted small mb-0">No recent users.</p>
+            }
+
+            <a asp-action="Users" class="btn-fs-dark w-100 justify-content-center mt-2">
+                View All Users <i class="bi bi-arrow-right"></i>
+            </a>
+        </div>
+    </div>
+</div>

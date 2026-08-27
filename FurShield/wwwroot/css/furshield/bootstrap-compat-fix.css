@@ -1,0 +1,285 @@
+/* =========================================================
+   FurShield — Bootstrap Compatibility Fix & Modern Theming
+   ========================================================= */
+
+/* 1) Standard responsive container styling */
+.container {
+    width: 100%;
+    margin-right: auto;
+    margin-left: auto;
+    padding-right: var(--bs-gutter-x, 1rem);
+    padding-left: var(--bs-gutter-x, 1rem);
+}
+@media (min-width: 576px) { .container { max-width: 540px; } }
+@media (min-width: 768px) { .container { max-width: 720px; } }
+@media (min-width: 992px) { .container { max-width: 960px; } }
+@media (min-width: 1200px) { .container { max-width: 1140px; } }
+@media (min-width: 1400px) { .container { max-width: 1280px; } }
+
+/* 2) Button refinements - maintain FurShield signature rounded pill buttons */
+.btn {
+    border-radius: 999px !important;
+    font-weight: 700;
+    transition: all .25s ease;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+}
+.btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 10px 22px rgba(33, 26, 22, 0.12);
+}
+.btn-primary {
+    background-color: var(--fs-pink-dark, #CE7CA6) !important;
+    border-color: var(--fs-pink-dark, #CE7CA6) !important;
+    color: #ffffff !important;
+}
+.btn-primary:hover {
+    background-color: var(--fs-ink, #211A16) !important;
+    border-color: var(--fs-ink, #211A16) !important;
+    color: #ffffff !important;
+}
+.btn-success, .btn-green {
+    background-color: var(--fs-sage-dark, #5F9C82) !important;
+    border-color: var(--fs-sage-dark, #5F9C82) !important;
+    color: #ffffff !important;
+}
+.btn-success:hover, .btn-green:hover {
+    background-color: var(--fs-ink, #211A16) !important;
+    border-color: var(--fs-ink, #211A16) !important;
+    color: #ffffff !important;
+}
+.btn-outline-primary {
+    color: var(--fs-pink-dark, #CE7CA6) !important;
+    border-color: var(--fs-pink-dark, #CE7CA6) !important;
+    background: transparent;
+}
+.btn-outline-primary:hover {
+    background-color: var(--fs-pink-dark, #CE7CA6) !important;
+    color: #ffffff !important;
+}
+.btn-outline-success {
+    color: var(--fs-sage-dark, #5F9C82) !important;
+    border-color: var(--fs-sage-dark, #5F9C82) !important;
+    background: transparent;
+}
+.btn-outline-success:hover {
+    background-color: var(--fs-sage-dark, #5F9C82) !important;
+    color: #ffffff !important;
+}
+.btn-outline-secondary {
+    color: var(--fs-ink, #211A16) !important;
+    border-color: var(--line, #EADFCF) !important;
+    background: #ffffff;
+}
+.btn-outline-secondary:hover {
+    border-color: var(--fs-pink-dark, #CE7CA6) !important;
+    color: var(--fs-pink-dark, #CE7CA6) !important;
+}
+
+/* 3) Navbar polish */
+header .navbar {
+    background: rgba(251, 241, 226, 0.95) !important;
+    backdrop-filter: blur(16px);
+    border-bottom: 1px solid var(--fs-cream-2, #F6E9D6) !important;
+}
+header .navbar .navbar-brand {
+    color: var(--fs-ink, #211A16) !important;
+    font-family: 'Fraunces', 'Baloo 2', serif;
+    font-weight: 800;
+    font-size: 22px;
+}
+header .navbar .nav-link {
+    color: var(--fs-ink, #211A16) !important;
+    font-weight: 600;
+    padding: 8px 14px !important;
+    transition: color .2s ease;
+}
+header .navbar .nav-link:hover {
+    color: var(--fs-pink-dark, #CE7CA6) !important;
+}
+
+/* 4) Footer branding */
+footer.footer {
+    background: var(--fs-charcoal-2, #141210) !important;
+    color: #cfc7bd !important;
+}
+footer.footer a {
+    color: var(--fs-pink, #E7A9C9) !important;
+    text-decoration: none;
+}
+footer.footer a:hover {
+    color: #ffffff !important;
+}
+
+/* 5) Reset margin */
+body { margin-bottom: 0 !important; }
+
+/* 6) Global Hover Contrast Resets - Prevent Disappearing Text on Hover */
+a {
+    transition: color 0.2s ease, background-color 0.2s ease;
+}
+a:hover {
+    color: var(--fs-pink-dark, #CE7CA6);
+}
+.btn-outline-secondary:hover {
+    background-color: var(--fs-ink, #211A16) !important;
+    border-color: var(--fs-ink, #211A16) !important;
+    color: #ffffff !important;
+}
+.btn-light:hover {
+    background-color: var(--fs-ink, #211A16) !important;
+    border-color: var(--fs-ink, #211A16) !important;
+    color: #ffffff !important;
+}
+.dropdown-item {
+    color: var(--fs-ink, #211A16) !important;
+    font-weight: 500;
+}
+.dropdown-item:hover, .dropdown-item:focus {
+    background-color: var(--fs-pink-tint, #F7E1EC) !important;
+    color: var(--fs-pink-dark, #CE7CA6) !important;
+}
+.table-hover tbody tr:hover {
+    background-color: rgba(231, 169, 201, 0.08) !important;
+    color: var(--fs-ink, #211A16) !important;
+}
+.table-hover tbody tr:hover td {
+    color: var(--fs-ink, #211A16) !important;
+}
+.card:hover a.text-dark, .card:hover .text-dark {
+    color: var(--fs-ink, #211A16) !important;
+}
+.badge {
+    font-weight: 700;
+}
+
+/* 7) Unified Responsive Stat Cards */
+.fs-stat-card {
+    background: #FFFFFF;
+    border-radius: 22px;
+    padding: 1.15rem 1rem;
+    transition: all .22s ease;
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    text-decoration: none;
+    box-shadow: 0 4px 16px rgba(33, 26, 22, 0.04);
+    position: relative;
+    min-width: 0;
+    width: 100%;
+    overflow: hidden;
+}
+.fs-stat-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 14px 32px rgba(33, 26, 22, 0.08);
+}
+.fs-stat-icon-wrap {
+    width: 44px;
+    height: 44px;
+    border-radius: 14px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.25rem;
+    flex-shrink: 0;
+}
+.fs-stat-card > div:not(.fs-stat-icon-wrap) {
+    min-width: 0;
+    flex: 1 1 auto;
+    overflow: hidden;
+}
+.fs-stat-num {
+    font-family: 'Baloo 2', sans-serif;
+    font-size: 1.75rem;
+    font-weight: 800;
+    line-height: 1;
+    margin-bottom: .2rem;
+}
+.fs-stat-title {
+    font-size: .75rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: .02em;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    line-height: 1.2;
+}
+
+.card-pink   { background: #FFF5F9 !important; border: 1.5px solid #F8D3E4 !important; color: #8F325C !important; }
+.card-pink .fs-stat-icon-wrap { background: #FFFFFF !important; color: #C76A8F !important; box-shadow: 0 4px 10px rgba(199,106,143,.15); }
+.card-pink .fs-stat-num { color: #8F325C !important; }
+.card-pink .fs-stat-title { color: #8F325C !important; }
+
+.card-sage   { background: #F2F8F4 !important; border: 1.5px solid #D7E8DC !important; color: #2B5738 !important; }
+.card-sage .fs-stat-icon-wrap { background: #FFFFFF !important; color: #74987E !important; box-shadow: 0 4px 10px rgba(116,152,126,.15); }
+.card-sage .fs-stat-num { color: #2B5738 !important; }
+.card-sage .fs-stat-title { color: #2B5738 !important; }
+
+.card-amber  { background: #FFF9EE !important; border: 1.5px solid #FDE7C4 !important; color: #8C5B17 !important; }
+.card-amber .fs-stat-icon-wrap { background: #FFFFFF !important; color: #D98829 !important; box-shadow: 0 4px 10px rgba(217,136,41,.15); }
+.card-amber .fs-stat-num { color: #8C5B17 !important; }
+.card-amber .fs-stat-title { color: #8C5B17 !important; }
+
+.card-sky    { background: #F1F8FC !important; border: 1.5px solid #D6EBF8 !important; color: #1E5C82 !important; }
+.card-sky .fs-stat-icon-wrap { background: #FFFFFF !important; color: #3587B8 !important; box-shadow: 0 4px 10px rgba(53,135,184,.15); }
+.card-sky .fs-stat-num { color: #1E5C82 !important; }
+.card-sky .fs-stat-title { color: #1E5C82 !important; }
+
+.card-lilac  { background: #F7F4FD !important; border: 1.5px solid #E7DCFA !important; color: #4B3A82 !important; }
+.card-lilac .fs-stat-icon-wrap { background: #FFFFFF !important; color: #7A5DB8 !important; box-shadow: 0 4px 10px rgba(122,93,184,.15); }
+.card-lilac .fs-stat-num { color: #4B3A82 !important; }
+.card-lilac .fs-stat-title { color: #4B3A82 !important; }
+
+.card-dark   { background: #211A16 !important; border: 1.5px solid #211A16 !important; color: #FFFFFF !important; }
+.card-dark .fs-stat-icon-wrap { background: rgba(255,255,255,.15) !important; color: #FFFFFF !important; }
+.card-dark .fs-stat-num { color: #FFFFFF !important; }
+.card-dark .fs-stat-title { color: rgba(255,255,255,.85) !important; }
+
+/* 8) Black Banner Background for Non-Home Frontend Pages (Pet Shop, Adoption, Find Vets, About, Contact) */
+.dark-hero-card {
+    background: #141210 !important; /* Solid charcoal black */
+    background: linear-gradient(135deg, #1B1815 0%, #100E0C 100%) !important;
+    border: 1px solid rgba(255, 255, 255, 0.08) !important;
+    border-radius: 28px !important;
+    padding: 3rem 3.5rem !important;
+    box-shadow: 0 16px 40px rgba(0, 0, 0, 0.35) !important;
+    color: #ffffff !important;
+    position: relative;
+    overflow: hidden;
+}
+
+.dark-hero-card h1, 
+.dark-hero-card h2, 
+.dark-hero-card h3 {
+    color: #ffffff !important;
+    font-family: 'Baloo 2', sans-serif !important;
+}
+
+.dark-hero-card p {
+    color: rgba(255, 255, 255, 0.88) !important;
+}
+
+.dark-hero-card .breadcrumb, 
+.dark-hero-card .breadcrumb a {
+    color: rgba(255, 255, 255, 0.7) !important;
+}
+.dark-hero-card .breadcrumb a:hover {
+    color: #E7A9C9 !important;
+}
+
+.dark-hero-card .eyebrow {
+    color: #E7A9C9 !important;
+}
+
+@media (max-width: 991.98px) {
+    .dark-hero-card {
+        padding: 2rem 1.5rem !important;
+        text-align: center;
+    }
+    .dark-hero-card .breadcrumb {
+        justify-content: center;
+    }
+}

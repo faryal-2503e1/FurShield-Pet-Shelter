@@ -1,0 +1,65 @@
+﻿@model FurShield.Data.AdoptionListing
+
+@{
+    ViewData["Title"] = "Add New Pet";
+    Layout = "~/Views/Shared/_ShelterLayout.cshtml";
+}
+
+<div class="container py-4">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <div class="card border-0 shadow-sm">
+                <div class="card-header bg-success text-white">
+                    <h5 class="mb-0 fw-bold"><i class="bi bi-plus-circle me-2"></i>Post Pet for Adoption</h5>
+                </div>
+                <div class="card-body p-4">
+                    <form asp-action="Create" enctype="multipart/form-data" method="post">
+                        <div class="row g-3">
+                            <div class="col-md-6">
+                                <label asp-for="PetName" class="form-label fw-bold"></label>
+                                <input asp-for="PetName" class="form-control" placeholder="e.g. Max" required />
+                            </div>
+                            <div class="col-md-6">
+                                <label asp-for="Species" class="form-label fw-bold"></label>
+                                <select asp-for="Species" class="form-select" required>
+                                    <option value="">-- Select Pet Type --</option>
+                                    <option value="Dog">🐶 Dog</option>
+                                    <option value="Cat">🐱 Cat</option>
+                                    <option value="Rabbit">🐰 Rabbit</option>
+                                    <option value="Bird">🐦 Bird</option>
+                                </select>
+                            </div>
+                            <div class="col-md-6">
+                                <label asp-for="Breed" class="form-label fw-bold"></label>
+                                <input asp-for="Breed" class="form-control" placeholder="e.g. Labrador" />
+                            </div>
+                            <div class="col-md-3">
+                                <label asp-for="Age" class="form-label fw-bold"></label>
+                                <input asp-for="Age" type="number" class="form-control" min="0" required />
+                            </div>
+                            <div class="col-md-3">
+                                <label asp-for="Gender" class="form-label fw-bold"></label>
+                                <select asp-for="Gender" class="form-select">
+                                    <option value="Male">Male</option>
+                                    <option value="Female">Female</option>
+                                </select>
+                            </div>
+                            <div class="col-12">
+                                <label asp-for="HealthStatus" class="form-label fw-bold">Health Status / Care Notes</label>
+                                <textarea asp-for="HealthStatus" class="form-control" rows="2" placeholder="Vaccinated, Neutered, Healthy, etc."></textarea>
+                            </div>
+                            <div class="col-12">
+                                <label class="form-label fw-bold">Pet Photo</label>
+                                <input type="file" name="PetImage" class="form-control" accept="image/*" />
+                            </div>
+                            <div class="col-12 d-flex justify-content-between mt-4">
+                                <a asp-action="Index" class="btn btn-outline-secondary">Cancel</a>
+                                <button type="submit" class="btn btn-success fw-bold px-4">Save & Post Pet</button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

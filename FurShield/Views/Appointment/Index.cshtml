@@ -1,0 +1,105 @@
+@model IEnumerable<FurShield.Data.Appointment>
+
+@{
+    ViewData["Title"] = "My Appointments";
+    Layout = "~/Views/Shared/_PetOwnerLayout.cshtml";
+    bool isInFamily = (bool)(ViewBag.IsInFamily ?? false);
+    string currentUserId = ViewBag.CurrentUserId ?? "";
+}
+
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <div>
+        <h2 class="fw-bold mb-0 text-dark"><i class="bi bi-calendar-check text-success me-2"></i>
+            @(isInFamily ? "Family Appointments" : "My Appointments")
+        </h2>
+        <p class="text-muted small mb-0">
+            @if (isInFamily)
+            {
+                <text>Appointments booked by you and every member of your family group</text>
+            }
+            else
+            {
+                <text>View and schedule vet consultation appointments</text>
+            }
+        </p>
+    </div>
+    <a asp-action="Create" class="btn btn-success fw-semibold shadow-sm">
+        <i class="bi bi-plus-circle me-1"></i> Book New Appointment
+    </a>
+</div>
+
+<div class="card border-0 shadow-sm">
+    <div class="card-body p-0">
+        <div class="table-responsive">
+            <table class="table table-hover align-middle mb-0">
+                <thead class="table-dark">
+                    <tr>
+                        <th class="ps-3">Date & Time</th>
+                        <th>Pet Name</th>
+                        <th>Reason</th>
+                        @if (isInFamily)
+                        {
+                            <th>Booked By</th>
+                        }
+                        <th>Status</th>
+                        <th class="text-end pe-3">Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @if (Model != null && Model.Any())
+                    {
+                        @foreach (var item in Model)
+                        {
+                            bool isMine = item.OwnerId == currentUserId;
+                            <tr class="@(isMine ? "" : "table-light")">
+                                <td class="ps-3 fw-bold">@item.AppointmentDate.ToString("dd MMM yyyy - hh:mm tt")</td>
+                                <td><span class="badge bg-info text-dark">@(item.Pet != null ? item.Pet.Name : "N/A")</span></td>
+                                <td>@item.Reason</td>
+                                @if (isInFamily)
+                                {
+                                    <td>
+                                        @if (isMine)
+                                        {
+                                            <span class="badge bg-primary"><i class="bi bi-person-fill"></i> You</span>
+                                        }
+                                        else
+                                        {
+                                            <span class="text-muted"><i class="bi bi-people-fill text-primary"></i> @(item.Owner?.FullName ?? item.Owner?.UserName ?? "Family member")</span>
+                                        }
+                                    </td>
+                                }
+                                <td>
+                                    <span class="badge @(item.Status == "Approved" ? "bg-success" : item.Status == "Cancelled" ? "bg-danger" : item.Status == "Rescheduled" ? "bg-primary" : item.Status == "Completed" ? "bg-info text-dark" : "bg-warning text-dark")">
+                                        @item.Status
+                                    </span>
+                                </td>
+                                <td class="text-end pe-3">
+                                    <div class="btn-group btn-group-sm">
+                                        <a asp-action="Details" asp-route-id="@item.AppointmentId" class="btn btn-outline-info"><i class="bi bi-eye"></i> Details</a>
+                                        @if (isMine && (item.Status == "Pending" || item.Status == "Rescheduled"))
+                                        {
+                                            <form asp-action="ChangeStatus" method="post" class="d-inline" onsubmit="return confirm('Cancel this appointment?');">
+                                                <input type="hidden" name="id" value="@item.AppointmentId" />
+                                                <input type="hidden" name="status" value="Cancelled" />
+                                                <button type="submit" class="btn btn-outline-danger"><i class="bi bi-x-circle"></i> Cancel</button>
+                                            </form>
+                                        }
+                                    </div>
+                                </td>
+                            </tr>
+                        }
+                    }
+                    else
+                    {
+                        <tr>
+                            <td colspan="@(isInFamily ? 6 : 5)" class="text-center text-muted py-5">
+                                <i class="bi bi-calendar-x display-5 text-secondary d-block mb-2"></i>
+                                No appointments booked yet. Click <strong>"Book New Appointment"</strong> to schedule one.
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>

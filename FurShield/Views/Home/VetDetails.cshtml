@@ -1,0 +1,67 @@
+@model FurShield.Data.Veterinarian
+
+@{
+    ViewData["Title"] = "Dr. " + (Model.User?.FullName ?? Model.User?.UserName ?? "Doctor");
+}
+
+<section class="section">
+    <div class="container" style="max-width:850px;">
+        <div class="mb-3">
+            <a asp-controller="Home" asp-action="Vets" class="btn btn-outline btn-sm">
+                <i class="fa-solid fa-arrow-left me-1"></i> Back to Veterinarians
+            </a>
+        </div>
+
+        <div class="card border-0 shadow-sm rounded-4 p-4 p-md-5 bg-white mb-4">
+            <div class="d-flex flex-column flex-md-row align-items-center gap-4 mb-4 pb-4 border-bottom">
+                <div class="rounded-circle d-grid place-items-center shadow-sm"
+                     style="width:90px;height:90px;background:var(--fs-sage-tint);color:var(--fs-sage-dark);font-size:38px;display:grid;place-items:center;flex-shrink:0;">
+                    <i class="fa-solid fa-user-doctor"></i>
+                </div>
+                <div>
+                    <span class="badge bg-success-subtle text-success px-3 py-1 rounded-pill mb-2 fw-bold">
+                        <i class="fa-solid fa-circle-check me-1"></i> Verified Practitioner
+                    </span>
+                    <h2 class="fw-bold mb-1" style="font-family:'Baloo 2',sans-serif;">
+                        Dr. @(Model.User?.FullName ?? Model.User?.UserName ?? "Doctor")
+                    </h2>
+                    <p class="text-muted mb-0">
+                        <strong class="text-dark">Specialization:</strong> @Model.Specialization &middot; 
+                        <strong class="text-dark">Experience:</strong> @Model.Experience years
+                    </p>
+                </div>
+            </div>
+
+            @if (!string.IsNullOrEmpty(Model.Bio))
+            {
+                <div class="mb-4">
+                    <h5 class="fw-bold mb-2">About the Doctor</h5>
+                    <p class="text-muted" style="line-height:1.7;">@Model.Bio</p>
+                </div>
+            }
+
+            @if (!string.IsNullOrEmpty(Model.Address))
+            {
+                <div class="mb-4 p-3 rounded-3" style="background:var(--fs-cream);">
+                    <h6 class="fw-bold mb-1"><i class="fa-solid fa-location-dot text-danger me-2"></i>Clinic Address</h6>
+                    <p class="text-muted small mb-0">@Model.Address</p>
+                </div>
+            }
+
+            <div class="mt-3">
+                <a asp-controller="Appointment" asp-action="Create" asp-route-vetId="@Model.VeterinarianId"
+                   class="btn btn-primary btn-lg w-100 py-3 shadow-sm">
+                    <i class="fa-solid fa-calendar-check me-2"></i> Book Appointment with Dr. @(Model.User?.FullName ?? Model.User?.UserName ?? "Doctor")
+                </a>
+            </div>
+        </div>
+
+        @if (ViewBag.RatingWidget != null)
+        {
+            <div class="card border-0 shadow-sm rounded-4 p-4 bg-white">
+                @await Html.PartialAsync("_RatingWidget", (FurShield.Models.RatingWidgetViewModel)ViewBag.RatingWidget)
+            </div>
+        }
+    </div>
+</section>
+

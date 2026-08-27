@@ -1,0 +1,360 @@
+@{
+    ViewData["Title"] = "Pet Care & Health Guide";
+    Layout = "~/Views/Shared/_PetOwnerLayout.cshtml";
+}
+
+<div class="container py-4">
+    <div class="text-center mb-5">
+        <h2 class="fw-bold text-success"><i class="bi bi-heart-pulse-fill me-2"></i>Pet Care & Health Knowledge Base</h2>
+        <p class="text-muted fs-5">Explore articles, video tutorials, and answers to common pet health questions.</p>
+    </div>
+
+    <!-- Nav Tabs -->
+    <ul class="nav nav-pills justify-content-center mb-4 gap-2" id="careTabs" role="tablist">
+        <li class="nav-item" role="presentation">
+            <button class="nav-link active fw-bold px-4 py-2" id="articles-tab" data-bs-toggle="tab" data-bs-target="#articles" type="button"><i class="bi bi-journal-richtext me-2"></i>Articles & Guides</button>
+        </li>
+        <li class="nav-item" role="presentation">
+            <button class="nav-link fw-bold px-4 py-2" id="videos-tab" data-bs-toggle="tab" data-bs-target="#videos" type="button"><i class="bi bi-play-btn-fill me-2"></i>Video Guides</button>
+        </li>
+        <li class="nav-item" role="presentation">
+            <button class="nav-link fw-bold px-4 py-2" id="faqs-tab" data-bs-toggle="tab" data-bs-target="#faqs" type="button"><i class="bi bi-question-circle-fill me-2"></i>FAQs</button>
+        </li>
+    </ul>
+
+    <div class="tab-content" id="careTabsContent">
+
+        <!-- ================= SECTION 1: ARTICLES ================= -->
+        <div class="tab-pane fade show active" id="articles" role="tabpanel">
+            <div class="row g-4">
+
+                <!-- Article 1: Feeding -->
+                <div class="col-md-4">
+                    <div class="card h-100 border-0 shadow-sm rounded-4 overflow-hidden">
+                        <div class="bg-success text-white p-3 text-center">
+                            <i class="bi bi-egg-fried display-5"></i>
+                        </div>
+                        <div class="card-body d-flex flex-column">
+                            <span class="badge bg-success w-auto align-self-start mb-2">Feeding & Nutrition</span>
+                            <h5 class="fw-bold">Balanced Nutrition Guide</h5>
+                            <p class="text-muted small flex-grow-1">Macronutrients, portion control, age-based feeding, and toxic foods to avoid.</p>
+                            <button class="btn btn-outline-success w-100 fw-bold rounded-pill mt-3" data-bs-toggle="modal" data-bs-target="#art1">
+                                Read Article <i class="bi bi-arrow-right ms-1"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Article 2: Hygiene -->
+                <div class="col-md-4">
+                    <div class="card h-100 border-0 shadow-sm rounded-4 overflow-hidden">
+                        <div class="bg-info text-dark p-3 text-center">
+                            <i class="bi bi-droplet-half display-5"></i>
+                        </div>
+                        <div class="card-body d-flex flex-column">
+                            <span class="badge bg-info text-dark w-auto align-self-start mb-2">Hygiene & Grooming</span>
+                            <h5 class="fw-bold">Essential Pet Grooming</h5>
+                            <p class="text-muted small flex-grow-1">Bathing schedules, dental hygiene, ear cleaning, and nail trimming tips.</p>
+                            <button class="btn btn-outline-info w-100 fw-bold rounded-pill mt-3 text-dark" data-bs-toggle="modal" data-bs-target="#art2">
+                                Read Article <i class="bi bi-arrow-right ms-1"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Article 3: Exercise -->
+                <div class="col-md-4">
+                    <div class="card h-100 border-0 shadow-sm rounded-4 overflow-hidden">
+                        <div class="bg-warning text-dark p-3 text-center">
+                            <i class="bi bi-activity display-5"></i>
+                        </div>
+                        <div class="card-body d-flex flex-column">
+                            <span class="badge bg-warning text-dark w-auto align-self-start mb-2">Exercise & Fitness</span>
+                            <h5 class="fw-bold">Daily Fitness Routines</h5>
+                            <p class="text-muted small flex-grow-1">Activity requirements, outdoor walking, indoor mental puzzles, and weight management.</p>
+                            <button class="btn btn-outline-warning text-dark w-100 fw-bold rounded-pill mt-3" data-bs-toggle="modal" data-bs-target="#art3">
+                                Read Article <i class="bi bi-arrow-right ms-1"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Article 4: Emergency First Aid -->
+                <div class="col-md-4">
+                    <div class="card h-100 border-0 shadow-sm rounded-4 overflow-hidden">
+                        <div class="bg-danger text-white p-3 text-center">
+                            <i class="bi bi-bandaid display-5"></i>
+                        </div>
+                        <div class="card-body d-flex flex-column">
+                            <span class="badge bg-danger w-auto align-self-start mb-2">Emergency Care</span>
+                            <h5 class="fw-bold">Pet First Aid Essentials</h5>
+                            <p class="text-muted small flex-grow-1">Handling minor cuts, heatstroke prevention, choking response, and emergency steps.</p>
+                            <button class="btn btn-outline-danger w-100 fw-bold rounded-pill mt-3" data-bs-toggle="modal" data-bs-target="#art4">
+                                Read Article <i class="bi bi-arrow-right ms-1"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Article 5: Senior Pet Care -->
+                <div class="col-md-4">
+                    <div class="card h-100 border-0 shadow-sm rounded-4 overflow-hidden">
+                        <div class="bg-secondary text-white p-3 text-center">
+                            <i class="bi bi-heart pulse display-5"></i>
+                        </div>
+                        <div class="card-body d-flex flex-column">
+                            <span class="badge bg-secondary w-auto align-self-start mb-2">Senior Pets</span>
+                            <h5 class="fw-bold">Caring for Aging Pets</h5>
+                            <p class="text-muted small flex-grow-1">Managing arthritis, senior diet adjustments, vision loss, and frequent vet visits.</p>
+                            <button class="btn btn-outline-secondary w-100 fw-bold rounded-pill mt-3" data-bs-toggle="modal" data-bs-target="#art5">
+                                Read Article <i class="bi bi-arrow-right ms-1"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Article 6: Mental Health -->
+                <div class="col-md-4">
+                    <div class="card h-100 border-0 shadow-sm rounded-4 overflow-hidden">
+                        <div class="bg-primary text-white p-3 text-center">
+                            <i class="bi bi-emoji-smile display-5"></i>
+                        </div>
+                        <div class="card-body d-flex flex-column">
+                            <span class="badge bg-primary w-auto align-self-start mb-2">Behavior & Mind</span>
+                            <h5 class="fw-bold">Reducing Pet Anxiety</h5>
+                            <p class="text-muted small flex-grow-1">Identifying separation anxiety, noise sensitivity, and ways to keep pets calm.</p>
+                            <button class="btn btn-outline-primary w-100 fw-bold rounded-pill mt-3" data-bs-toggle="modal" data-bs-target="#art6">
+                                Read Article <i class="bi bi-arrow-right ms-1"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+        <!-- ================= SECTION 2: VIDEOS ================= -->
+        <div class="tab-pane fade" id="videos" role="tabpanel">
+            <div class="row g-4">
+                <div class="col-md-6">
+                    <div class="card border-0 shadow-sm rounded-4 overflow-hidden">
+                        <div class="ratio ratio-16x9">
+                            <iframe src="https://www.youtube.com/embed/3J30yUdfn5s" title="Bathing Tips" allowfullscreen></iframe>
+                        </div>
+                        <div class="card-body">
+                            <h6 class="fw-bold mb-1"><i class="bi bi-play-circle-fill text-danger me-2"></i>How to Safely Bathe Your Pet at Home</h6>
+                            <p class="text-muted small mb-0">Professional water temperature, shampoo choice, and drying techniques.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-md-6">
+                    <div class="card border-0 shadow-sm rounded-4 overflow-hidden">
+                        <div class="ratio ratio-16x9">
+                            <iframe src="https://youtu.be/Tn3lZE0rRBs?si=h7zbV3Mu-BbT3Fby" title="Puppy Training" allowfullscreen></iframe>
+                        </div>
+                        <div class="card-body">
+                            <h6 class="fw-bold mb-1"><i class="bi bi-play-circle-fill text-danger me-2"></i>Basic Obedience Training Commands</h6>
+                            <p class="text-muted small mb-0">Positive reinforcement methods to teach sit, stay, and leash walking.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-md-6">
+                    <div class="card border-0 shadow-sm rounded-4 overflow-hidden">
+                        <div class="ratio ratio-16x9">
+                            <iframe src="https://www.youtube.com/embed/wD2Lms35s8w" title="Dental Care" allowfullscreen></iframe>
+                        </div>
+                        <div class="card-body">
+                            <h6 class="fw-bold mb-1"><i class="bi bi-play-circle-fill text-danger me-2"></i>How to Brush Your Pet's Teeth</h6>
+                            <p class="text-muted small mb-0">Easy step-by-step dental cleaning demonstration to prevent gum disease.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-md-6">
+                    <div class="card border-0 shadow-sm rounded-4 overflow-hidden">
+                        <div class="ratio ratio-16x9">
+                            <iframe src="https://www.youtube.com/embed/O41jY4_O4G8" title="First Aid Video" allowfullscreen></iframe>
+                        </div>
+                        <div class="card-body">
+                            <h6 class="fw-bold mb-1"><i class="bi bi-play-circle-fill text-danger me-2"></i>Emergency Pet First Aid Tips</h6>
+                            <p class="text-muted small mb-0">What to do in case of choking, cuts, or sudden weakness before seeing a vet.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ================= SECTION 3: FAQS ================= -->
+        <div class="tab-pane fade" id="faqs" role="tabpanel">
+            <div class="accordion shadow-sm rounded-4 overflow-hidden" id="faqAccordion">
+
+                <div class="accordion-item border-0 border-bottom">
+                    <h2 class="accordion-header">
+                        <button class="accordion-button fw-bold text-dark" type="button" data-bs-toggle="collapse" data-bs-target="#q1">
+                            <i class="bi bi-question-circle text-success me-2"></i>How often should I take my pet for a routine checkup?
+                        </button>
+                    </h2>
+                    <div id="q1" class="accordion-collapse collapse show" data-bs-parent="#faqAccordion">
+                        <div class="accordion-body text-secondary">
+                            Puppies/kittens and senior pets (7+ years) should visit every 6 months. Healthy adult pets need an annual wellness checkup.
+                        </div>
+                    </div>
+                </div>
+
+                <div class="accordion-item border-0 border-bottom">
+                    <h2 class="accordion-header">
+                        <button class="accordion-button collapsed fw-bold text-dark" type="button" data-bs-toggle="collapse" data-bs-target="#q2">
+                            <i class="bi bi-shield-check text-success me-2"></i>What core vaccinations are required annually?
+                        </button>
+                    </h2>
+                    <div id="q2" class="accordion-collapse collapse" data-bs-parent="#faqAccordion">
+                        <div class="accordion-body text-secondary">
+                            Rabies is mandatory. Dogs need DHPP (Distemper, Hepatitis, Parvovirus, Parainfluenza), while cats need FVRCP vaccines.
+                        </div>
+                    </div>
+                </div>
+
+                <div class="accordion-item border-0 border-bottom">
+                    <h2 class="accordion-header">
+                        <button class="accordion-button collapsed fw-bold text-dark" type="button" data-bs-toggle="collapse" data-bs-target="#q3">
+                            <i class="bi bi-exclamation-triangle text-danger me-2"></i>Which human foods are highly toxic to pets?
+                        </button>
+                    </h2>
+                    <div id="q3" class="accordion-collapse collapse" data-bs-parent="#faqAccordion">
+                        <div class="accordion-body text-secondary">
+                            Chocolate, onions, garlic, grapes, raisins, avocado, caffeine, cooked bones, and artificial sweeteners like Xylitol are dangerous.
+                        </div>
+                    </div>
+                </div>
+
+                <div class="accordion-item border-0 border-bottom">
+                    <h2 class="accordion-header">
+                        <button class="accordion-button collapsed fw-bold text-dark" type="button" data-bs-toggle="collapse" data-bs-target="#q4">
+                            <i class="bi bi-bug text-warning me-2"></i>How do I control fleas and ticks?
+                        </button>
+                    </h2>
+                    <div id="q4" class="accordion-collapse collapse" data-bs-parent="#faqAccordion">
+                        <div class="accordion-body text-secondary">
+                            Use monthly vet-approved topical treatments, oral chewables, or collars. Regularly wash pet bedding and vacuum carpets.
+                        </div>
+                    </div>
+                </div>
+
+                <div class="accordion-item border-0 border-bottom">
+                    <h2 class="accordion-header">
+                        <button class="accordion-button collapsed fw-bold text-dark" type="button" data-bs-toggle="collapse" data-bs-target="#q5">
+                            <i class="bi bi-heart text-primary me-2"></i>How do I know if my pet is in pain?
+                        </button>
+                    </h2>
+                    <div id="q5" class="accordion-collapse collapse" data-bs-parent="#faqAccordion">
+                        <div class="accordion-body text-secondary">
+                            Signs include hiding, reduced appetite, restlessness, panting, reluctance to jump/walk, or unusual aggression when touched.
+                        </div>
+                    </div>
+                </div>
+
+                <div class="accordion-item border-0">
+                    <h2 class="accordion-header">
+                        <button class="accordion-button collapsed fw-bold text-dark" type="button" data-bs-toggle="collapse" data-bs-target="#q6">
+                            <i class="bi bi-airplane text-info me-2"></i>What should I prepare before traveling with a pet?
+                        </button>
+                    </h2>
+                    <div id="q6" class="accordion-collapse collapse" data-bs-parent="#faqAccordion">
+                        <div class="accordion-body text-secondary">
+                            Carry updated vaccination records, a secure carrier, adequate food/water, familiar toys, and ensure microchip information is up to date.
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+    </div>
+</div>
+
+<!-- ================= ARTICLE MODALS ================= -->
+<div class="modal fade" id="art1" tabindex="-1">
+    <div class="modal-dialog modal-lg modal-dialog-scrollable">
+        <div class="modal-content border-0 rounded-4">
+            <div class="modal-header bg-success text-white">
+                <h5 class="fw-bold mb-0">Balanced Nutrition Guide</h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body p-4">
+                <p>Provide balanced proteins, carbohydrates, and minerals matching your pet's life stage. Never feed toxic foods like onions, chocolate, or grapes.</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="art2" tabindex="-1">
+    <div class="modal-dialog modal-lg modal-dialog-scrollable">
+        <div class="modal-content border-0 rounded-4">
+            <div class="modal-header bg-info text-dark">
+                <h5 class="fw-bold mb-0">Essential Pet Grooming</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body p-4">
+                <p>Bathe dogs every 3-4 weeks with pet shampoo. Brush teeth 2-3 times weekly and trim nails every fortnight.</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="art3" tabindex="-1">
+    <div class="modal-dialog modal-lg modal-dialog-scrollable">
+        <div class="modal-content border-0 rounded-4">
+            <div class="modal-header bg-warning text-dark">
+                <h5 class="fw-bold mb-0">Daily Fitness Routines</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body p-4">
+                <p>Dogs need 30-60 minutes of walks daily. Cats benefit from interactive toy play sessions to avoid lethargy.</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="art4" tabindex="-1">
+    <div class="modal-dialog modal-lg modal-dialog-scrollable">
+        <div class="modal-content border-0 rounded-4">
+            <div class="modal-header bg-danger text-white">
+                <h5 class="fw-bold mb-0">Pet First Aid Essentials</h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body p-4">
+                <p>Keep minor wound cleaning kits at home. In heatstroke cases, wrap in a damp cool towel and rush to a veterinarian.</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="art5" tabindex="-1">
+    <div class="modal-dialog modal-lg modal-dialog-scrollable">
+        <div class="modal-content border-0 rounded-4">
+            <div class="modal-header bg-secondary text-white">
+                <h5 class="fw-bold mb-0">Caring for Aging Pets</h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body p-4">
+                <p>Provide orthopedic bedding for joint comfort, low-calorie senior diet foods, and schedule bi-annual health screenings.</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="art6" tabindex="-1">
+    <div class="modal-dialog modal-lg modal-dialog-scrollable">
+        <div class="modal-content border-0 rounded-4">
+            <div class="modal-header bg-primary text-white">
+                <h5 class="fw-bold mb-0">Reducing Pet Anxiety</h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body p-4">
+                <p>Use pheromone diffusers, safe indoor hiding spaces during thunderstorms, and puzzle toys for mental engagement.</p>
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,82 @@
+@page
+@model RegisterModel
+@{
+    ViewData["Title"] = "Create an Account";
+}
+
+<div class="container py-5 d-flex justify-content-center align-items-center" style="min-height: 75vh;">
+    <div class="auth shadow-sm" style="width: min(560px, 100%);">
+        <div class="eyebrow">Join FurShield</div>
+        <h1 class="fw-bold mb-1" style="font-family:'Baloo 2',sans-serif;font-size:36px;">Create Account</h1>
+        <p class="text-muted small mb-4">Select your role and create your FurShield profile.</p>
+
+        <form id="registerForm" asp-route-returnUrl="@Model.ReturnUrl" method="post">
+            <div asp-validation-summary="ModelOnly" class="alert alert-danger rounded-3 mb-3 small" role="alert"></div>
+
+            <!-- Role Selection -->
+            <div class="field mb-3">
+                <label class="fw-bold small mb-1">Account Role <span class="text-danger">*</span></label>
+                <select asp-for="Input.Role" asp-items="Model.RolesList" class="form-select py-3" aria-required="true">
+                    <option value="" disabled selected>-- Select Your Account Role --</option>
+                </select>
+                <span asp-validation-for="Input.Role" class="text-danger small"></span>
+            </div>
+
+            <div class="row g-3 mb-3">
+                <div class="col-md-6 field">
+                    <label class="fw-bold small mb-1">Full Name <span class="text-danger">*</span></label>
+                    <input asp-for="Input.FullName" class="form-control py-3" autocomplete="name" aria-required="true" placeholder="e.g. Ayesha Khan" />
+                    <span asp-validation-for="Input.FullName" class="text-danger small"></span>
+                </div>
+                <div class="col-md-6 field">
+                    <label class="fw-bold small mb-1">Email Address <span class="text-danger">*</span></label>
+                    <input asp-for="Input.Email" class="form-control py-3" autocomplete="username" aria-required="true" placeholder="ayesha@example.com" />
+                    <span asp-validation-for="Input.Email" class="text-danger small"></span>
+                </div>
+            </div>
+
+            <div class="row g-3 mb-3">
+                <div class="col-md-6 field">
+                    <label class="fw-bold small mb-1">Phone Number <span class="text-danger">*</span></label>
+                    <input asp-for="Input.PhoneNumber" class="form-control py-3" autocomplete="tel" aria-required="true" placeholder="0300-1234567" />
+                    <span asp-validation-for="Input.PhoneNumber" class="text-danger small"></span>
+                </div>
+                <div class="col-md-6 field">
+                    <label class="fw-bold small mb-1">Address / City <span class="text-danger">*</span></label>
+                    <input asp-for="Input.Address" class="form-control py-3" autocomplete="street-address" aria-required="true" placeholder="Clifton, Karachi" />
+                    <span asp-validation-for="Input.Address" class="text-danger small"></span>
+                </div>
+            </div>
+
+            <div class="row g-3 mb-4">
+                <div class="col-md-6 field">
+                    <label class="fw-bold small mb-1">Password <span class="text-danger">*</span></label>
+                    <input asp-for="Input.Password" class="form-control py-3" autocomplete="new-password" aria-required="true" placeholder="••••••••" />
+                    <span asp-validation-for="Input.Password" class="text-danger small"></span>
+                </div>
+                <div class="col-md-6 field">
+                    <label class="fw-bold small mb-1">Confirm Password <span class="text-danger">*</span></label>
+                    <input asp-for="Input.ConfirmPassword" class="form-control py-3" autocomplete="new-password" aria-required="true" placeholder="••••••••" />
+                    <span asp-validation-for="Input.ConfirmPassword" class="text-danger small"></span>
+                </div>
+            </div>
+
+            <button id="registerSubmit" type="submit" class="btn btn-primary btn-lg w-100 py-3 mb-3 shadow-sm">
+                <i class="fa-solid fa-user-plus me-2"></i> Complete Registration
+            </button>
+
+            <div class="text-center pt-2 border-top">
+                <p class="text-muted small mb-0">
+                    Already registered?
+                    <a asp-page="./Login" asp-route-returnUrl="@Model.ReturnUrl" class="fw-bold" style="color:var(--fs-pink-dark);text-decoration:none;">
+                        Sign in here &rarr;
+                    </a>
+                </p>
+            </div>
+        </form>
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

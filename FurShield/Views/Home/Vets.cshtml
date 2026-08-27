@@ -1,0 +1,97 @@
+@model IEnumerable<FurShield.Data.Veterinarian>
+
+@{
+    ViewData["Title"] = "Find Certified Veterinarians";
+}
+
+<!-- Dark Hero Card -->
+<section class="py-4 py-md-5">
+    <div class="container">
+        <div class="dark-hero-card d-flex flex-column flex-lg-row align-items-center justify-content-between">
+            <div>
+                <div class="breadcrumb" style="color:rgba(255,255,255,0.7);font-size:14px;margin-bottom:12px;">
+                    <a asp-controller="Home" asp-action="Index" style="color:rgba(255,255,255,0.7);text-decoration:none;">Home</a> / Find Vets
+                </div>
+                <div class="eyebrow" style="color:#ff85a2;letter-spacing:1.5px;font-size:13px;font-weight:700;margin-bottom:16px;">VETERINARY DIRECTORY</div>
+                <h1 style="color:#fff;font-size:clamp(36px,5vw,56px);font-weight:700;line-height:1.15;margin-bottom:18px;">
+                    Certified Doctors For<br><span style="color:#ff85a2">Your Pet's Lifelong Care.</span>
+                </h1>
+                <p style="color:rgba(255,255,255,0.85);font-size:1.05rem;max-width:520px;margin-bottom:0;">
+                    Connect with certified, compassionate veterinary practitioners for checkups, vaccinations, diagnoses, and specialized treatments.
+                </p>
+            </div>
+            <div class="dark-hero-img-wrap mt-4 mt-lg-0" style="position:relative;width:240px;height:240px;border-radius:50%;overflow:hidden;border:4px solid rgba(255,255,255,0.2);box-shadow:0 12px 30px rgba(0,0,0,0.3);flex-shrink:0;">
+                <img src="https://images.unsplash.com/photo-1628009368231-7bb7cfcb0def?auto=format&fit=crop&w=600&q=85"
+                     alt="Veterinarian examining a patient" style="width:100%;height:100%;object-fit:cover;" />
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Veterinarians Directory Grid -->
+<section class="section">
+    <div class="container">
+        <div class="section-head">
+            <div>
+                <div class="eyebrow">Available Specialists</div>
+                <h2>Verified Veterinary Practitioners</h2>
+            </div>
+            <p>Select a specialist to view ratings or schedule an appointment slot.</p>
+        </div>
+
+        <div class="row row-cols-1 row-cols-md-3 g-4">
+            @if (Model != null && Model.Any())
+            {
+                @foreach (var vet in Model)
+                {
+                    <div class="col">
+                        <div class="card h-100 border-0 shadow-sm rounded-4 p-4 bg-white" style="transition: transform .3s ease, box-shadow .3s ease;">
+                            <div class="d-flex align-items-center mb-3">
+                                <div class="rounded-circle d-grid place-items-center me-3 shadow-sm"
+                                     style="width:62px;height:62px;background:var(--fs-sage-tint);color:var(--fs-sage-dark);font-size:24px;display:grid;place-items:center;flex-shrink:0;">
+                                    <i class="fa-solid fa-user-doctor"></i>
+                                </div>
+                                <div>
+                                    <h5 class="fw-bold mb-0" style="font-family:'Baloo 2',sans-serif;font-size:20px;">
+                                        Dr. @(vet.User?.FullName ?? vet.User?.UserName ?? "Doctor")
+                                    </h5>
+                                    <span class="badge bg-light text-dark border small mt-1">@vet.Specialization</span>
+                                </div>
+                            </div>
+
+                            <p class="text-muted small mb-2">
+                                <i class="fa-solid fa-award text-warning me-1"></i> <strong>@vet.Experience Years</strong> of veterinary medical experience.
+                            </p>
+
+                            @if (!string.IsNullOrEmpty(vet.Address))
+                            {
+                                <p class="text-muted small mb-3 text-truncate">
+                                    <i class="fa-solid fa-location-dot text-danger me-1"></i> @vet.Address
+                                </p>
+                            }
+
+                            <div class="mt-auto d-grid gap-2 pt-2 border-top">
+                                <a asp-controller="Appointment" asp-action="Create" asp-route-vetId="@vet.VeterinarianId" class="btn btn-green w-100">
+                                    <i class="fa-solid fa-calendar-check me-1"></i> Book Appointment
+                                </a>
+                                <a asp-controller="Home" asp-action="VetDetails" asp-route-id="@vet.VeterinarianId" class="btn btn-outline w-100">
+                                    <i class="fa-solid fa-star me-1 text-warning"></i> View Profile &amp; Ratings
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                }
+            }
+            else
+            {
+                <div class="col-12 text-center py-5">
+                    <div class="p-4 bg-white rounded-4 shadow-sm d-inline-block">
+                        <i class="fa-solid fa-user-doctor fs-1 text-muted mb-2"></i>
+                        <p class="text-muted mb-0">No veterinarians registered in the directory yet.</p>
+                    </div>
+                </div>
+            }
+        </div>
+    </div>
+</section>
+

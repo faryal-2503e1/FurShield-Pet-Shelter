@@ -1,0 +1,271 @@
+@model FurShield.Data.HealthRecord
+@using Microsoft.AspNetCore.Mvc.Rendering
+
+@{
+    ViewData["Title"] = "Edit Health Record";
+    Layout = "~/Views/Shared/_PetOwnerLayout.cshtml";
+}
+
+<div class="row justify-content-center">
+    <div class="col-md-8">
+        <div class="card border-0 shadow-sm">
+            <div class="card-header bg-primary text-white py-3">
+                <h4 class="mb-0 fw-bold"><i class="bi bi-pencil-square me-2"></i>Edit Health Record</h4>
+            </div>
+            <div class="card-body p-4">
+                <form asp-action="Edit" method="post">
+                    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                    <input type="hidden" asp-for="HealthRecordId" />
+
+                    <div class="row">
+                        <div class="form-group mb-3 col-md-6">
+                            <label class="control-label fw-bold">Pet</label>
+                            <select name="PetId" asp-items="@(ViewBag.PetList as SelectList)" class="form-select"></select>
+                        </div>
+
+                        <div class="form-group mb-3 col-md-6">
+                            <label class="control-label fw-bold">Veterinarian (optional)</label>
+                            <select name="VeterinarianId" asp-items="@(ViewBag.VetList as SelectList)" class="form-select">
+                                <option value="">-- None / Self-reported --</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="form-group mb-3">
+                        <label asp-for="VisitDate" class="control-label fw-bold"></label>
+                        <input asp-for="VisitDate" class="form-control" type="date" value="@Model.VisitDate.ToString("yyyy-MM-dd")" />
+                        <span asp-validation-for="VisitDate" class="text-danger"></span>
+                    </div>
+
+                    <div class="form-group mb-3">
+                        <label asp-for="Symptoms" class="control-label fw-bold"></label>
+                        <textarea asp-for="Symptoms" class="form-control" rows="2"></textarea>
+                        <span asp-validation-for="Symptoms" class="text-danger"></span>
+                    </div>
+
+                    <div class="form-group mb-3">
+                        <label asp-for="Diagnosis" class="control-label fw-bold"></label>
+                        <textarea asp-for="Diagnosis" class="form-control" rows="2"></textarea>
+                        <span asp-validation-for="Diagnosis" class="text-danger"></span>
+                    </div>
+
+                    <div class="form-group mb-3">
+                        <label asp-for="Treatment" class="control-label fw-bold"></label>
+                        <textarea asp-for="Treatment" class="form-control" rows="2"></textarea>
+                        <span asp-validation-for="Treatment" class="text-danger"></span>
+                    </div>
+
+                    <div class="form-group mb-3">
+                        <label asp-for="Vaccination" class="form-label fw-bold d-flex justify-content-between align-items-center">
+                            <span><i class="bi bi-shield-plus text-primary me-1"></i> Vaccination Administered</span>
+                            <small class="text-muted fw-normal">Select from dropdown, check boxes, or type custom</small>
+                        </label>
+                        
+                        <!-- Common Vaccine Quick Selector Dropdown -->
+                        <div class="input-group mb-2">
+                            <span class="input-group-text bg-light"><i class="bi bi-list-check text-primary"></i></span>
+                            <select id="vaccineDropdown" class="form-select">
+                                <option value="">-- Quick Select Suggested Vaccine --</option>
+                                <optgroup label="Canine (Dog) Core & Lifestyle">
+                                    <option value="Rabies Vaccine">Rabies Vaccine</option>
+                                    <option value="DHPP (Distemper, Hepatitis, Parvovirus, Parainfluenza)">DHPP (5-in-1 Combo)</option>
+                                    <option value="Parvovirus Vaccine">Parvovirus Vaccine</option>
+                                    <option value="Bordetella (Kennel Cough)">Bordetella (Kennel Cough)</option>
+                                    <option value="Leptospirosis Vaccine">Leptospirosis Vaccine</option>
+                                    <option value="Canine Influenza">Canine Influenza</option>
+                                    <option value="Lyme Disease Vaccine">Lyme Disease Vaccine</option>
+                                </optgroup>
+                                <optgroup label="Feline (Cat) Core & Lifestyle">
+                                    <option value="FVRCP (Feline Viral Rhinotracheitis, Calicivirus, Panleukopenia)">FVRCP (Feline 3-in-1)</option>
+                                    <option value="FeLV (Feline Leukemia)">FeLV (Feline Leukemia)</option>
+                                    <option value="Rabies (Feline)">Rabies (Feline)</option>
+                                    <option value="Feline Bordetella">Feline Bordetella</option>
+                                </optgroup>
+                                <optgroup label="Preventative & Boosters">
+                                    <option value="Deworming (Broad Spectrum)">Deworming (Broad Spectrum)</option>
+                                    <option value="Annual Core Booster">Annual Core Booster</option>
+                                    <option value="Anti-Parasitic Treatment">Anti-Parasitic Treatment</option>
+                                </optgroup>
+                            </select>
+                            <button type="button" id="addDropdownVaccineBtn" class="btn btn-outline-primary">
+                                <i class="bi bi-plus-circle me-1"></i> Add Vaccine
+                            </button>
+                        </div>
+
+                        <!-- Quick Checkboxes for Common Vaccines -->
+                        <div class="card bg-light border-0 p-3 mb-2">
+                            <small class="text-muted d-block mb-2 fw-bold"><i class="bi bi-check2-square text-primary me-1"></i> Common Vaccines (Select one or multiple):</small>
+                            <div class="row g-2">
+                                <div class="col-6 col-sm-4">
+                                    <div class="form-check">
+                                        <input class="form-check-input vaccine-checkbox" type="checkbox" id="vacRabies" value="Rabies Vaccine">
+                                        <label class="form-check-label small fw-semibold" for="vacRabies">Rabies</label>
+                                    </div>
+                                </div>
+                                <div class="col-6 col-sm-4">
+                                    <div class="form-check">
+                                        <input class="form-check-input vaccine-checkbox" type="checkbox" id="vacParvo" value="Parvovirus Vaccine">
+                                        <label class="form-check-label small fw-semibold" for="vacParvo">Parvovirus</label>
+                                    </div>
+                                </div>
+                                <div class="col-6 col-sm-4">
+                                    <div class="form-check">
+                                        <input class="form-check-input vaccine-checkbox" type="checkbox" id="vacDHPP" value="DHPP Vaccine">
+                                        <label class="form-check-label small fw-semibold" for="vacDHPP">DHPP (5-in-1)</label>
+                                    </div>
+                                </div>
+                                <div class="col-6 col-sm-4">
+                                    <div class="form-check">
+                                        <input class="form-check-input vaccine-checkbox" type="checkbox" id="vacBordetella" value="Bordetella Vaccine">
+                                        <label class="form-check-label small fw-semibold" for="vacBordetella">Bordetella</label>
+                                    </div>
+                                </div>
+                                <div class="col-6 col-sm-4">
+                                    <div class="form-check">
+                                        <input class="form-check-input vaccine-checkbox" type="checkbox" id="vacFeLV" value="Feline Leukemia (FeLV)">
+                                        <label class="form-check-label small fw-semibold" for="vacFeLV">Feline Leukemia</label>
+                                    </div>
+                                </div>
+                                <div class="col-6 col-sm-4">
+                                    <div class="form-check">
+                                        <input class="form-check-input vaccine-checkbox" type="checkbox" id="vacFVRCP" value="FVRCP Vaccine">
+                                        <label class="form-check-label small fw-semibold" for="vacFVRCP">FVRCP (3-in-1)</label>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Clickable Suggestion Chips -->
+                        <div class="mb-2">
+                            <small class="text-muted d-block mb-1 fw-semibold">Quick suggestion tags (click to add):</small>
+                            <div class="d-flex flex-wrap gap-1" id="vaccineChipsContainer">
+                                <button type="button" class="btn btn-sm btn-light border py-0 px-2 vaccine-chip" data-vaccine="Rabies Vaccine">+ Rabies</button>
+                                <button type="button" class="btn btn-sm btn-light border py-0 px-2 vaccine-chip" data-vaccine="DHPP Vaccine">+ DHPP</button>
+                                <button type="button" class="btn btn-sm btn-light border py-0 px-2 vaccine-chip" data-vaccine="Parvovirus Vaccine">+ Parvo</button>
+                                <button type="button" class="btn btn-sm btn-light border py-0 px-2 vaccine-chip" data-vaccine="Bordetella Vaccine">+ Bordetella</button>
+                                <button type="button" class="btn btn-sm btn-light border py-0 px-2 vaccine-chip" data-vaccine="FVRCP Vaccine">+ FVRCP</button>
+                                <button type="button" class="btn btn-sm btn-light border py-0 px-2 vaccine-chip" data-vaccine="Feline Leukemia (FeLV)">+ Feline Leukemia</button>
+                                <button type="button" class="btn btn-sm btn-light border py-0 px-2 vaccine-chip" data-vaccine="Deworming">+ Deworming</button>
+                                <button type="button" class="btn btn-sm btn-light border py-0 px-2 vaccine-chip" data-vaccine="Annual Booster">+ Booster</button>
+                            </div>
+                        </div>
+
+                        <input asp-for="Vaccination" id="vaccinationInput" class="form-control" placeholder="e.g. Rabies Vaccine, DHPP (or type custom vaccines here)" />
+                        <span asp-validation-for="Vaccination" class="text-danger"></span>
+                    </div>
+
+                    <div class="form-group mb-3">
+                        <label asp-for="LabResults" class="control-label fw-bold"></label>
+                        <textarea asp-for="LabResults" class="form-control" rows="2"></textarea>
+                        <span asp-validation-for="LabResults" class="text-danger"></span>
+                    </div>
+
+                    <div class="form-group mb-3">
+                        <label asp-for="Prescription" class="control-label fw-bold"></label>
+                        <textarea asp-for="Prescription" class="form-control" rows="2"></textarea>
+                        <span asp-validation-for="Prescription" class="text-danger"></span>
+                    </div>
+
+                    <div class="form-group mb-3">
+                        <label asp-for="Notes" class="control-label fw-bold"></label>
+                        <textarea asp-for="Notes" class="form-control" rows="2"></textarea>
+                        <span asp-validation-for="Notes" class="text-danger"></span>
+                    </div>
+
+                    <div class="form-group mb-3">
+                        <label asp-for="NextDueDate" class="control-label fw-bold">Next Vaccination / Follow-up Due Date</label>
+                        <input asp-for="NextDueDate" class="form-control" type="date" value="@(Model.NextDueDate?.ToString("yyyy-MM-dd"))" />
+                        <span asp-validation-for="NextDueDate" class="text-danger"></span>
+                        <div class="form-text text-success"><i class="bi bi-bell-fill me-1"></i> When set, a reminder will be sent to your Notifications page automatically.</div>
+                    </div>
+
+                    <div class="form-group mt-3">
+                        <button type="submit" class="btn btn-primary"><i class="bi bi-check-circle"></i> Save Changes</button>
+                        <a asp-action="Details" asp-route-id="@Model.HealthRecordId" class="btn btn-secondary ms-2">Cancel</a>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+    <script>
+        const vaccinationInput = document.getElementById("vaccinationInput");
+        const vaccineDropdown = document.getElementById("vaccineDropdown");
+        const addDropdownVaccineBtn = document.getElementById("addDropdownVaccineBtn");
+        const vaccineCheckboxes = document.querySelectorAll(".vaccine-checkbox");
+
+        function appendVaccine(vName) {
+            if (!vName) return;
+            const current = vaccinationInput.value.trim();
+            if (!current) {
+                vaccinationInput.value = vName;
+            } else if (!current.toLowerCase().includes(vName.toLowerCase())) {
+                vaccinationInput.value = current + ", " + vName;
+            }
+            syncCheckboxes();
+        }
+
+        function removeVaccine(vName) {
+            if (!vName) return;
+            let currentList = vaccinationInput.value.split(',').map(s => s.trim()).filter(s => s.length > 0);
+            currentList = currentList.filter(s => !s.toLowerCase().includes(vName.toLowerCase()) && !vName.toLowerCase().includes(s.toLowerCase()));
+            vaccinationInput.value = currentList.join(', ');
+            syncCheckboxes();
+        }
+
+        function syncCheckboxes() {
+            const val = vaccinationInput.value.toLowerCase();
+            vaccineCheckboxes.forEach(cb => {
+                const cbVal = cb.value.toLowerCase();
+                const shortVal = cb.id.replace('vac', '').toLowerCase();
+                cb.checked = val.includes(cbVal) || val.includes(shortVal);
+            });
+        }
+
+        // Checkbox toggle handler
+        vaccineCheckboxes.forEach(cb => {
+            cb.addEventListener("change", function() {
+                if (this.checked) {
+                    appendVaccine(this.value);
+                } else {
+                    removeVaccine(this.value);
+                }
+            });
+        });
+
+        // Add from dropdown
+        if (addDropdownVaccineBtn) {
+            addDropdownVaccineBtn.addEventListener("click", function() {
+                if (vaccineDropdown.value) {
+                    appendVaccine(vaccineDropdown.value);
+                }
+            });
+        }
+        if (vaccineDropdown) {
+            vaccineDropdown.addEventListener("change", function() {
+                if (this.value) {
+                    appendVaccine(this.value);
+                }
+            });
+        }
+
+        // Add from suggestion chips
+        document.querySelectorAll(".vaccine-chip").forEach(btn => {
+            btn.addEventListener("click", function() {
+                appendVaccine(this.dataset.vaccine);
+                this.classList.remove("btn-light");
+                this.classList.add("btn-primary", "text-white");
+            });
+        });
+
+        if (vaccinationInput) {
+            vaccinationInput.addEventListener("input", syncCheckboxes);
+            syncCheckboxes();
+        }
+    </script>
+}

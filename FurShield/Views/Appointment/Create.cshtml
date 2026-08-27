@@ -1,0 +1,253 @@
+@model FurShield.Data.Appointment
+
+@{
+    ViewData["Title"] = "Book Vet Consultation";
+    if (User.IsInRole("PetOwner"))
+    {
+        Layout = "~/Views/Shared/_PetOwnerLayout.cshtml";
+    }
+}
+
+<div class="container py-3" style="max-width:900px;">
+    <div class="mb-4">
+        <h2 class="fw-bold mb-1" style="font-family:'Baloo 2',sans-serif;"><i class="fa-solid fa-calendar-check text-danger me-2"></i>Schedule a Consultation</h2>
+        <p class="text-muted small mb-0">Select your pet, choose a certified veterinarian, and pick an available time slot</p>
+    </div>
+
+    <div class="info-card form-card shadow-sm">
+        <div class="eyebrow">Veterinary Appointment</div>
+        <h3 class="fw-bold mb-4">Appointment Details</h3>
+
+        <form asp-action="Create" method="post" id="appointmentForm">
+            <div asp-validation-summary="ModelOnly" class="alert alert-danger rounded-3 mb-3" role="alert"></div>
+
+            <!-- Hidden field to bind the combined DateTime back to Model -->
+            <input type="hidden" asp-for="AppointmentDate" id="finalAppointmentDate" />
+
+            <div class="form-grid">
+                <!-- Select Pet -->
+                <div class="field">
+                    <label class="fw-bold small">Select Your Pet <span class="text-danger">*</span></label>
+                    <select asp-for="PetId" id="petSelect" class="form-select py-3" asp-items="ViewBag.PetId" required>
+                        <option value="">-- Choose a Pet --</option>
+                    </select>
+                    <span asp-validation-for="PetId" class="text-danger small"></span>
+                </div>
+
+                <!-- Select Veterinarian -->
+                <div class="field">
+                    <label class="fw-bold small">Select Veterinarian <span class="text-danger">*</span></label>
+                    <select asp-for="VeterinarianId" id="vetSelect" class="form-select py-3" asp-items="ViewBag.VeterinarianId" required>
+                        <option value="">-- Choose a Doctor --</option>
+                    </select>
+                    <span asp-validation-for="VeterinarianId" class="text-danger small"></span>
+                </div>
+
+                <!-- Suggested Vets Box (Smart dynamic suggestions) -->
+                <div class="field full" id="suggestedVetsBox" style="display:none;">
+                    <div class="p-3 rounded-3 border border-success-subtle bg-light">
+                        <label class="fw-bold text-success small mb-2 d-block">
+                            <i class="fa-solid fa-wand-magic-sparkles me-1"></i> Recommended Veterinarians for You:
+                        </label>
+                        <div id="suggestedVetsList" class="d-flex flex-wrap gap-2"></div>
+                    </div>
+                </div>
+
+                <!-- Date Selection -->
+                <div class="field">
+                    <label class="fw-bold small">Consultation Date <span class="text-danger">*</span></label>
+                    <input type="date" id="appointmentDay" class="form-control py-3" required />
+                </div>
+
+                <!-- Time Slot Dropdown -->
+                <div class="field">
+                    <label class="fw-bold small">Available Time Slot <span class="text-danger">*</span></label>
+                    <select id="timeSlotSelect" class="form-select py-3" required>
+                        <option value="">-- Select Doctor &amp; Date First --</option>
+                    </select>
+                    <span id="slotError" class="text-danger fw-bold small d-block mt-1"></span>
+                </div>
+
+                <!-- Reason / Symptoms -->
+                <div class="field full">
+                    <label class="fw-bold small">Reason for Visit / Symptoms <span class="text-danger">*</span></label>
+                    <textarea asp-for="Reason" id="reasonBox" class="form-control" rows="4"
+                              placeholder="Describe symptoms, routine vaccinations, dental checkup, or dietary advice requirements..." required></textarea>
+                    <span asp-validation-for="Reason" class="text-danger small"></span>
+                </div>
+
+                <!-- Submit and Navigation Actions -->
+                <div class="field full mt-3">
+                    <div class="d-flex flex-column flex-sm-row justify-content-between align-items-center gap-3">
+                        <a asp-action="Index" class="btn btn-outline w-100 w-sm-auto">
+                            <i class="fa-solid fa-arrow-left me-1"></i> My Appointments
+                        </a>
+                        <button type="submit" class="btn btn-primary btn-lg w-100 w-sm-auto px-5 py-3 shadow-sm">
+                            <i class="fa-solid fa-calendar-check me-2"></i> Confirm Booking
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+    <script>
+        const vetSelect = document.getElementById('vetSelect');
+        const dayInput = document.getElementById('appointmentDay');
+        const slotSelect = document.getElementById('timeSlotSelect');
+        const slotError = document.getElementById('slotError');
+        const finalDateInput = document.getElementById('finalAppointmentDate');
+
+        const vetSlotsData = @Html.Raw(System.Text.Json.JsonSerializer.Serialize((object)ViewBag.VetSlotsData));
+        const vets = @Html.Raw(System.Text.Json.JsonSerializer.Serialize((object)ViewBag.VetSuggestData));
+        const pets = @Html.Raw(System.Text.Json.JsonSerializer.Serialize((object)ViewBag.PetsInfo));
+        const ownerAddress = @Html.Raw(System.Text.Json.JsonSerializer.Serialize((object)(ViewBag.OwnerAddress ?? "")));
+
+        // Restrict past dates in datepicker
+        const todayStr = new Date().toISOString().split('T')[0];
+        dayInput.setAttribute('min', todayStr);
+
+        function loadAvailableSlots() {
+            const selectedVetId = parseInt(vetSelect.value);
+            const selectedDateVal = dayInput.value;
+
+            slotSelect.innerHTML = '<option value="">-- Choose Slot --</option>';
+            slotError.innerText = "";
+            finalDateInput.value = "";
+
+            if (!selectedVetId) {
+                slotError.innerText = "Please select a veterinarian first.";
+                return;
+            }
+
+            if (!selectedDateVal) return;
+
+            const selectedDate = new Date(selectedDateVal);
+            const selectedDay = selectedDate.getDay();
+
+            const vetData = vetSlotsData ? vetSlotsData.find(v => v.vetId === selectedVetId) : null;
+
+            if (!vetData || !vetData.slots || vetData.slots.length === 0) {
+                slotError.innerText = "This doctor has not added any available slots.";
+                return;
+            }
+
+            const daySlots = vetData.slots.filter(s => s.dayOfWeek === selectedDay);
+
+            if (daySlots.length === 0) {
+                slotError.innerText = "Doctor is not available on this day of week.";
+                return;
+            }
+
+            daySlots.forEach(slot => {
+                const opt = document.createElement('option');
+                opt.value = slot.startTime;
+                opt.textContent = `${slot.startTime} - ${slot.endTime}`;
+                slotSelect.appendChild(opt);
+            });
+        }
+
+        function updateFinalDateTime() {
+            if (dayInput.value && slotSelect.value) {
+                finalDateInput.value = `${dayInput.value}T${slotSelect.value}`;
+            } else {
+                finalDateInput.value = "";
+            }
+        }
+
+        slotSelect.addEventListener('change', updateFinalDateTime);
+
+        vetSelect.addEventListener('change', function () {
+            loadAvailableSlots();
+        });
+
+        dayInput.addEventListener('change', function () {
+            loadAvailableSlots();
+            updateFinalDateTime();
+        });
+
+        document.getElementById('appointmentForm').addEventListener('submit', function (e) {
+            if (!dayInput.value || !slotSelect.value) {
+                e.preventDefault();
+                slotError.innerText = "Please select both a date and an available slot.";
+                return;
+            }
+            updateFinalDateTime();
+        });
+
+        // Smart Auto-suggest logic
+        function scoreVet(vet, reasonText, petSpecies) {
+            let score = 0;
+            const spec = (vet.specialization || "").toLowerCase();
+            const addr = (vet.address || "").toLowerCase();
+            const reason = (reasonText || "").toLowerCase();
+            const species = (petSpecies || "").toLowerCase();
+
+            if (species && spec.includes(species)) score += 3;
+            if (reason) {
+                reason.split(/\s+/).forEach(word => {
+                    if (word.length > 3 && spec.includes(word)) score += 2;
+                });
+            }
+            if (ownerAddress && addr) {
+                const ownerParts = ownerAddress.toLowerCase().split(/[\s,]+/).filter(w => w.length > 3);
+                if (ownerParts.some(p => addr.includes(p))) score += 2;
+            }
+            score += Math.min(vet.experience || 0, 5) * 0.1;
+            return score;
+        }
+
+        function updateSuggestions() {
+            const petSelectVal = document.getElementById('petSelect').value;
+            const petId = parseInt(petSelectVal);
+            const reasonText = document.getElementById('reasonBox').value.trim();
+            const box = document.getElementById('suggestedVetsBox');
+            const list = document.getElementById('suggestedVetsList');
+
+            if (!petSelectVal && reasonText.length < 3) {
+                box.style.display = 'none';
+                list.innerHTML = '';
+                return;
+            }
+
+            const pet = pets ? pets.find(p => p.id === petId) : null;
+            const species = pet ? pet.species : "";
+
+            if (!vets) return;
+
+            const scored = vets
+                .map(v => ({ vet: v, score: scoreVet(v, reasonText, species) }))
+                .filter(x => x.score > 0)
+                .sort((a, b) => b.score - a.score)
+                .slice(0, 3);
+
+            list.innerHTML = '';
+
+            if (scored.length === 0) {
+                box.style.display = 'none';
+                return;
+            }
+
+            scored.forEach(({ vet }) => {
+                const btn = document.createElement('button');
+                btn.type = 'button';
+                btn.className = 'btn btn-sm btn-outline-success';
+                btn.innerHTML = '<i class="fa-solid fa-user-doctor me-1"></i> Dr. ' + vet.name + (vet.specialization ? ' (' + vet.specialization + ')' : '');
+                btn.onclick = function () {
+                    document.getElementById('vetSelect').value = vet.id;
+                    loadAvailableSlots();
+                };
+                list.appendChild(btn);
+            });
+            box.style.display = 'block';
+        }
+
+        document.getElementById('petSelect').addEventListener('change', updateSuggestions);
+        document.getElementById('reasonBox').addEventListener('input', updateSuggestions);
+    </script>
+}

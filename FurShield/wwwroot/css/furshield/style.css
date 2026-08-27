@@ -1,0 +1,151 @@
+@import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Fraunces:opsz,wght@9..144,600;9..144,700;9..144,800&display=swap');
+:root{--green:#3E6B4F;--green2:#2C4E39;--green3:#E7F0E9;--coral:#F0805B;--coral2:#D9612F;--coral3:#FCE6DC;--cream:#FAF8F3;--ink:#18231D;--muted:#6F7772;--line:#E4E8E3;--white:#fff;--dark:#101713;--shadow:0 24px 60px rgba(24,35,29,.10);--radius:28px}
+*{box-sizing:border-box}html{scroll-behavior:smooth}body{margin:0;background:var(--cream);color:var(--ink);font-family:'DM Sans',sans-serif;line-height:1.65}
+/* NOTE: do not add overflow-x:hidden here — it breaks position:sticky on .header
+   in most browsers by turning body into its own scroll container. Horizontal
+   overflow from decorative shapes is safely clipped on `html` in animations.css. */a{text-decoration:none;color:inherit}img{max-width:100%;display:block}.container{width:min(1180px,calc(100% - 40px));margin:auto}.topbar{background:var(--green2);color:#fff;text-align:center;padding:9px 15px;font-size:13px;letter-spacing:.01em}.topbar b{color:#ffd3c2;margin-left:5px}.header{position:sticky;top:0;z-index:1000;background:rgba(250,248,243,.92);backdrop-filter:blur(18px);border-bottom:1px solid rgba(228,232,227,.85)}.nav{height:82px;display:flex;align-items:center;justify-content:space-between;gap:24px}.brand{display:inline-flex;align-items:center;gap:11px;font-weight:800}.brand-mark{width:46px;height:46px;border-radius:15px;display:grid;place-items:center;background:var(--green);color:#fff;box-shadow:0 10px 25px rgba(62,107,79,.2)}.brand-text{font-family:'Fraunces',serif;font-size:24px;line-height:1}.brand-text small{display:block;font-family:'DM Sans';font-size:9px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);margin-top:5px}.nav-links{display:flex;align-items:center;gap:25px;font-size:14px;font-weight:600}.nav-links a{transition:.25s}.nav-links a:hover{color:var(--coral)!important}.nav-actions{display:flex;align-items:center;gap:9px}.icon-btn{width:42px;height:42px;border:1px solid var(--line);border-radius:50%;display:grid;place-items:center;background:#fff;transition:.25s}.icon-btn:hover{transform:translateY(-2px);border-color:var(--coral);color:var(--coral)}.menu-btn{display:none}.btn{display:inline-flex;align-items:center;justify-content:center;gap:9px;border:0;border-radius:999px;padding:14px 22px;font-weight:700;transition:.25s;cursor:pointer}.btn:hover{transform:translateY(-2px);box-shadow:0 12px 24px rgba(24,35,29,.12)}.btn-sm{padding:10px 15px;font-size:13px}
+.btn-lg{padding:18px 30px;font-size:16px}.btn-primary{background:var(--coral);color:#fff}.btn-primary:hover{background:var(--coral2);color:#fff}.btn-green{background:var(--green);color:#fff}.btn-green:hover{background:var(--green2);color:#fff}.btn-dark{background:var(--ink);color:#fff}.btn-light{background:#fff;color:var(--ink)}.btn-outline{border:1px solid var(--line);background:#fff}.section{padding:92px 0}.section-sm{padding:52px 0}.eyebrow{color:var(--coral2);font-size:12px;font-weight:800;letter-spacing:.14em;text-transform:uppercase;margin-bottom:9px}.section-head{display:flex;align-items:end;justify-content:space-between;gap:30px;margin-bottom:38px}.section-head>p{max-width:520px;color:var(--muted);margin:0}.section h2{font-family:'Fraunces',serif;font-size:clamp(34px,4vw,56px);line-height:1.06;margin:0 0 16px}.section h3,.page-hero h1{font-family:'Fraunces',serif}.hero{padding:26px 0 38px}.hero-panel{min-height:650px;border-radius:34px;overflow:hidden;position:relative;display:grid;grid-template-columns:1fr 1.05fr;background:var(--green2);box-shadow:var(--shadow)}.hero-copy{position:relative;z-index:2;padding:90px 30px 70px 72px;color:#fff;display:flex;flex-direction:column;justify-content:center;background:linear-gradient(90deg,rgba(44,78,57,.98) 0%,rgba(44,78,57,.93) 66%,rgba(44,78,57,.12) 100%)}.hero h1{font-family:'Fraunces',serif;font-size:clamp(46px,6vw,78px);line-height:.98;letter-spacing:-.04em;max-width:700px;margin:20px 0}.hero h1 span{color:#ffad8f}.hero p{font-size:17px;color:rgba(255,255,255,.78);max-width:570px;margin:0 0 28px}.hero-actions{display:flex;flex-wrap:wrap;gap:12px}.trust{display:flex;align-items:center;gap:12px;margin-top:25px;font-size:13px;color:rgba(255,255,255,.78)}.stars{color:#F8B84E;letter-spacing:2px}.hero-media{position:relative;min-height:650px;background:#26372b}.hero-media:after{content:"";position:absolute;inset:0;background:linear-gradient(90deg,rgba(44,78,57,.35),rgba(44,78,57,.02) 55%,rgba(10,16,12,.15));pointer-events:none}.hero-media>img{width:100%;height:100%;object-fit:cover}.hero-float{position:absolute;z-index:3;background:#fff;color:var(--ink);border-radius:18px;padding:13px 15px;display:flex;gap:10px;align-items:center;box-shadow:0 18px 45px rgba(0,0,0,.18);font-size:13px}.hero-float.one{left:-25px;bottom:85px}.hero-float.two{right:28px;top:80px}.float-icon{width:38px;height:38px;border-radius:12px;background:var(--coral3);color:var(--coral2);display:grid;place-items:center}.quick-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:14px}.quick-card,.service-card,.pet-card,.product-card,.blog-card{background:#fff;border:1px solid var(--line);border-radius:24px;overflow:hidden;transition:.3s}.quick-card{padding:24px;position:relative;min-height:190px}.quick-card:hover,.service-card:hover,.pet-card:hover,.product-card:hover,.blog-card:hover{transform:translateY(-6px);box-shadow:var(--shadow)}.round-icon{width:52px;height:52px;border-radius:16px;background:var(--green3);color:var(--green);display:grid;place-items:center;font-size:20px;margin-bottom:18px}.quick-card h3{font-size:20px;margin:0 0 7px}.quick-card p,.service-card p,.card-body p,.blog-card p{color:var(--muted);font-size:14px;margin:0}.arrow{position:absolute;right:18px;top:18px;width:40px;height:40px;border:1px solid var(--line);border-radius:50%;display:grid;place-items:center;font-size:18px}.split{display:grid;grid-template-columns:1fr 1fr;gap:80px;align-items:center}.collage{min-height:510px;position:relative}.blob{position:absolute;width:72%;height:78%;left:0;bottom:0;background:var(--green3);border-radius:45% 55% 50% 45%}.collage img{object-fit:cover;position:absolute;box-shadow:var(--shadow)}.main-img{width:72%;height:410px;left:8%;top:0;border-radius:42% 42% 28px 28px}.small-img{width:42%;height:230px;right:0;bottom:0;border:12px solid var(--cream);border-radius:30px}.experience{position:absolute;left:0;bottom:35px;background:#fff;border-radius:18px;padding:16px 20px;font-weight:800;box-shadow:var(--shadow)}.check-list{display:grid;gap:12px;margin:24px 0 28px}.check-list div{display:flex;align-items:center;gap:10px;font-weight:600}.check-list i{color:var(--coral)}.service-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:18px}.service-card{padding:30px}.service-card h3{font-size:24px;margin:0 0 8px}.service-card a{display:inline-block;color:var(--coral2);font-weight:800;font-size:13px;margin-top:18px}.pet-grid,.product-grid,.blog-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:22px}.card-img{height:250px;overflow:hidden}.card-img img{width:100%;height:100%;object-fit:cover;transition:.5s}.pet-card:hover .card-img img,.product-card:hover .card-img img,.blog-card:hover .card-img img{transform:scale(1.05)}.card-body{padding:22px}.meta{font-size:12px;color:var(--muted);margin-bottom:7px}.pet-card h3,.product-card h3,.blog-card h3{font-size:23px;margin:0 0 4px}.card-row{display:flex;justify-content:space-between;align-items:center;gap:10px;margin-top:16px}.heart{width:40px;height:40px;border-radius:50%;border:1px solid var(--line);background:#fff;font-size:20px}.price{font-weight:900;font-size:22px}.rating{color:#F3A63B;letter-spacing:1px;font-size:13px}.dark-section{border-radius:34px;background:var(--dark);color:#fff;padding:65px}.dark-section>p{color:#9ea9a2;max-width:600px}.feature-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:18px;margin-top:38px}.feature{padding:24px;border:1px solid rgba(255,255,255,.09);border-radius:20px;background:rgba(255,255,255,.035)}.feature .round-icon{background:rgba(255,255,255,.08);color:#ffad8f}.feature h3{font-size:20px;margin:0 0 7px}.feature p{color:#9ea9a2;font-size:13px;margin:0}.stats{display:grid;grid-template-columns:repeat(4,1fr);border:1px solid var(--line);background:#fff;border-radius:24px;overflow:hidden}.stat{padding:32px;text-align:center;border-right:1px solid var(--line)}.stat:last-child{border-right:0}.stat strong{display:block;font-family:'Fraunces',serif;font-size:38px;color:var(--green)}.stat span{font-size:13px;color:var(--muted)}.testimonial{background:#fff;border:1px solid var(--line);border-radius:28px;padding:35px;display:grid;grid-template-columns:1fr 2fr;gap:30px;align-items:center}.avatar{width:58px;height:58px;border-radius:50%;object-fit:cover}.quote{font-family:'Fraunces',serif;font-size:28px;line-height:1.35}.cta{background:var(--coral3);border-radius:32px;display:grid;grid-template-columns:1.1fr .9fr;overflow:hidden;min-height:360px}.cta-copy{padding:55px}.cta-media img{height:100%;width:100%;object-fit:cover}.newsletter{border-radius:30px;background:var(--green2);padding:45px 55px;color:#fff;display:flex;align-items:center;justify-content:space-between;gap:35px}.newsletter p{color:#b9c7be;margin:0}.news-form{display:flex;gap:8px;background:#fff;border-radius:999px;padding:6px;min-width:440px}.news-form input{border:0;outline:0;padding:12px 16px;flex:1;border-radius:999px}.news-form button{border:0;background:var(--coral);color:#fff;border-radius:999px;padding:12px 20px;font-weight:800}.footer{background:#111814;color:#aab4ae;padding:70px 0 25px}.footer .brand-text{color:#fff}.footer-grid{display:grid;grid-template-columns:1.5fr 1fr 1fr 1fr;gap:45px}.footer h3{color:#fff;font-family:'Fraunces',serif;font-size:18px}.footer-grid>div>a:not(.brand){display:block;margin:9px 0;font-size:13px}.footer p{max-width:300px;font-size:13px;line-height:1.8}.footer .icon-btn{background:transparent;border-color:#38443d;color:#fff;display:inline-grid}.footer-bottom{border-top:1px solid #2b342f;margin-top:45px;padding-top:20px;display:flex;justify-content:space-between;font-size:12px}.page-hero{padding:55px 0 35px}.page-hero .inner{min-height:270px;border-radius:30px;background:linear-gradient(135deg,var(--green2),var(--green));color:#fff;padding:55px;display:flex;align-items:end;justify-content:space-between;gap:40px}.page-hero h1{font-size:clamp(45px,6vw,70px);line-height:1;margin:8px 0 0}.page-hero p{max-width:470px;color:#d9e2dc}.breadcrumb{font-size:12px;color:#b9c7be;margin-bottom:18px}.shop-layout{display:grid;grid-template-columns:230px 1fr;gap:30px}.sidebar{background:#fff;border:1px solid var(--line);border-radius:22px;padding:24px;height:max-content}.sidebar label{display:block;font-size:13px;margin:12px 0;color:var(--muted)}.sort-row{display:flex;justify-content:space-between;gap:12px;margin-bottom:20px}.select{border:1px solid var(--line);background:#fff;border-radius:999px;padding:12px 15px;outline:none}.form-control,.form-select{border:1px solid var(--line)!important;border-radius:14px!important;padding:13px 15px!important}.toast{position:fixed;right:25px;bottom:25px;background:var(--ink);color:#fff;padding:14px 18px;border-radius:12px;opacity:0;transform:translateY(15px);transition:.25s;z-index:2000}.toast.show{opacity:1;transform:translateY(0)}.reveal{opacity:1}.hide{display:none!important}.cart-link{position:relative}.cart-dot{position:absolute;top:-6px;right:-6px;min-width:18px;height:18px;padding:0 4px;border-radius:999px;background:var(--coral);color:#fff;font-size:10px;font-weight:800;display:none;align-items:center;justify-content:center;line-height:1}.filters{display:flex;gap:10px;margin-bottom:30px;flex-wrap:wrap}.pill{border:1px solid var(--line);background:#fff;color:var(--muted);padding:10px 22px;border-radius:999px;font-weight:700;font-size:13px;cursor:pointer;transition:.25s}.pill:hover{border-color:var(--coral);color:var(--coral)}.pill.active{background:var(--coral);border-color:var(--coral);color:#fff}
+
+/* =========================================================
+   FurShield Final UI Patch — Contact / Cart / Booking
+   ========================================================= */
+:root{--focus:rgba(240,128,91,.22);--success:#24734a;--danger:#b94a48}
+html{scroll-behavior:smooth}
+button,a,input,select,textarea{font-family:inherit}
+button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-visible{outline:3px solid var(--focus);outline-offset:2px}
+.btn{cursor:pointer;transition:transform .2s ease,box-shadow .2s ease,background .2s ease}
+.btn:hover{transform:translateY(-1px)}
+.btn:disabled{opacity:.65;cursor:not-allowed;transform:none}
+/* `.info-card` and `.form-grid` are used across contact, booking, cart,
+   checkout, pet-details, product-details, service-details and blog-details
+   — but had no rules anywhere, so every one of those panels rendered as
+   unstyled stacked text/inputs. This single fix restores all of them. */
+.info-card{background:#fff;border:1px solid var(--line);border-radius:22px;padding:32px;box-shadow:var(--shadow)}
+.info-card h2,.info-card h3{margin-top:0}
+.info-card>*:last-child{margin-bottom:0}
+.info-card .badge{display:inline-block;background:var(--coral3);color:var(--coral2);font-weight:800;font-size:11px;text-transform:uppercase;letter-spacing:.06em;padding:7px 14px;border-radius:999px;margin-bottom:14px}
+.info-card .price-lg{font-family:'Fraunces',serif;font-size:34px;font-weight:700;margin:6px 0 14px}
+.form-grid{display:grid;grid-template-columns:1fr 1fr;gap:18px 16px}
+.form-grid .field.full{grid-column:1/-1}
+@media(max-width:600px){.form-grid{grid-template-columns:1fr}.form-grid .field.full{grid-column:auto}}
+.form-card{position:relative}
+/* `.product-detail`, `.gallery-main` and `.thumbs` are used on pet-details
+   and product-details but had no CSS anywhere — those pages rendered as an
+   unstyled image tag stacked above plain text instead of a real layout. */
+.product-detail{display:grid;grid-template-columns:1fr 1fr;gap:50px;align-items:start}
+.gallery-main{border-radius:28px;overflow:hidden;box-shadow:var(--shadow)}
+.gallery-main img{width:100%;height:520px;object-fit:cover}
+.thumbs{display:flex;gap:12px;margin-top:14px}
+.thumbs img{width:84px;height:84px;object-fit:cover;border-radius:14px;cursor:pointer;border:2px solid transparent;opacity:.7;transition:.2s}
+.thumbs img:hover{opacity:1}
+.thumbs img.active{border-color:var(--coral);opacity:1}
+@media(max-width:820px){.product-detail{grid-template-columns:1fr}.gallery-main img{height:360px}}
+.form-card .field label{display:block;font-weight:700;font-size:13px;margin-bottom:8px;color:var(--ink)}
+.form-card input,.form-card select,.form-card textarea{
+ width:100%;min-height:48px;border:1px solid #dfe3dc;border-radius:13px;background:#fff;
+ padding:12px 14px;color:var(--ink);transition:border-color .2s,box-shadow .2s,background .2s;
+}
+.form-card textarea{min-height:145px;resize:vertical}
+.form-card input::placeholder,.form-card textarea::placeholder{color:#a3aaa4}
+.form-card input:focus,.form-card select:focus,.form-card textarea:focus{border-color:var(--coral);box-shadow:0 0 0 4px var(--focus);outline:none}
+.form-card input:user-invalid,.form-card select:user-invalid,.form-card textarea:user-invalid{border-color:#d76b68}
+.form-card .btn{min-height:48px}
+.contact-item{display:flex;gap:14px;align-items:center;padding:13px 0;border-bottom:1px solid #ecefe9}
+.contact-item:last-child{border-bottom:0}
+.contact-item i{width:40px;height:40px;border-radius:12px;background:var(--coral3);color:var(--coral2);display:grid;place-items:center;flex:none}
+.contact-item span{line-height:1.5}
+.toast{z-index:9999;max-width:min(92vw,420px);text-align:center;box-shadow:0 15px 40px rgba(20,35,27,.18)}
+.toast.show{animation:toastIn .25s ease}
+@keyframes toastIn{from{opacity:0;transform:translate(-50%,12px)}to{opacity:1;transform:translate(-50%,0)}}
+
+/* Cart */
+.cart-table{overflow:hidden;border:1px solid #e5e8e2;border-radius:20px;background:#fff;box-shadow:0 12px 35px rgba(20,35,27,.06)}
+.cart-row{display:grid;grid-template-columns:minmax(260px,2fr) .7fr 1fr .8fr 55px;gap:18px;align-items:center;padding:18px 20px;border-top:1px solid #edf0eb}
+.cart-row:first-child{border-top:0}
+.cart-head{background:#f6f8f4;color:#69726c;font-size:11px;font-weight:800;text-transform:uppercase;letter-spacing:.08em}
+.cart-product{display:flex;align-items:center;gap:14px;min-width:0}
+.cart-product img{width:64px;height:64px;object-fit:cover;border-radius:14px;flex:none}
+.cart-product b{display:block;margin-bottom:3px}
+.cart-product small{font-size:11px}
+.qty{display:inline-flex;align-items:center;border:1px solid #dfe3dc;border-radius:12px;overflow:hidden;background:#fff}
+.qty button{width:38px;height:38px;border:0;background:transparent;color:var(--ink);font-size:20px;cursor:pointer}
+.qty button:hover{background:#f2f5f0}
+.qty span{min-width:32px;text-align:center;font-weight:800}
+.cart-row .heart{width:36px;height:36px;border:1px solid #e2e6e0;border-radius:10px;background:#fff;color:#8c948e;cursor:pointer;font-size:18px}
+.cart-row .heart:hover{color:var(--danger);border-color:#e5b9b7;background:#fff7f7}
+.cart-summary{margin-left:auto}
+.cart-summary .card-row{display:flex;justify-content:space-between;gap:20px;padding:10px 0}
+.cart-summary hr{border:0;border-top:1px solid #e5e8e2;margin:8px 0}
+.cart-empty{text-align:center;padding:45px 25px;margin-top:0}
+.empty-icon{width:68px;height:68px;border-radius:20px;background:var(--coral3);color:var(--coral2);display:grid;place-items:center;font-size:24px;margin:0 auto 15px}
+.empty-icon + h3{margin-bottom:8px}
+
+/* Booking */
+.booking-success{border:1px solid #cfe4d6;background:#f5fbf7}
+.booking-success h3{color:var(--success);display:flex;align-items:center;gap:8px}
+.booking-summary{margin:16px 0;padding:14px 16px;border-radius:13px;background:#fff;border:1px solid #dce9e0;line-height:1.8}
+.booking-summary strong{color:var(--ink)}
+.booking-success .btn-outline{margin-top:5px;border:1px solid #cbd7ce;background:#fff;color:var(--ink);padding:10px 16px;border-radius:10px}
+.booking-success .btn-outline:hover{background:#f3f6f3}
+
+/* `.dashboard`, `.dash-side`, `.dash-content`, `.dash-main-card`, `.auth`
+   (login/register) and `.not-found` (404) had no CSS anywhere, so those
+   pages rendered as unstyled stacked text. Restoring them here. */
+.dashboard{display:grid;grid-template-columns:250px 1fr;gap:26px;align-items:start}
+.dash-side{background:#fff;border:1px solid var(--line);border-radius:22px;padding:22px;display:flex;flex-direction:column;gap:4px;position:sticky;top:100px}
+.dash-side a{display:block;padding:12px 14px;border-radius:12px;font-weight:700;font-size:14px;color:var(--muted);transition:.2s}
+.dash-side a:hover{background:var(--fs-cream-2,var(--coral3));color:var(--ink)}
+.dash-side a.active{background:var(--coral);color:#fff}
+.dash-content{display:grid;grid-template-columns:repeat(3,1fr);gap:18px}
+.dash-main-card{background:#fff;border:1px solid var(--line);border-radius:22px;padding:26px}
+.dash-main-card.wide{grid-column:1/-1}
+.dash-main-card .badge{background:var(--fs-sage-tint,var(--green3));color:var(--fs-sage-dark,var(--green));font-weight:800;font-size:11px;padding:6px 12px;border-radius:999px}
+@media(max-width:900px){.dashboard{grid-template-columns:1fr}.dash-side{position:static;flex-direction:row;overflow-x:auto}.dash-content{grid-template-columns:1fr 1fr}}
+@media(max-width:600px){.dash-content{grid-template-columns:1fr}}
+
+.login-wrap{display:flex;align-items:center;justify-content:center;min-height:calc(100vh - 400px)}
+.auth{width:min(440px,100%);background:#fff;border:1px solid var(--line);border-radius:26px;padding:44px;box-shadow:var(--shadow)}
+.auth h1{font-size:34px !important;margin:8px 0 6px}
+.auth .field{margin-bottom:16px}
+.auth .field label{display:block;font-weight:700;font-size:13px;margin-bottom:8px}
+.auth .field input{width:100%;min-height:48px;border:1px solid #dfe3dc;border-radius:13px;padding:12px 14px;background:#fff}
+.auth .field input:focus{border-color:var(--coral);box-shadow:0 0 0 4px var(--focus,rgba(240,128,91,.22));outline:none}
+
+.not-found{min-height:calc(100vh - 400px);display:flex;align-items:center;justify-content:center;text-align:center;padding:60px 0}
+.not-found strong{display:block;font-family:'Fraunces',serif;font-size:clamp(80px,12vw,150px);line-height:1;color:var(--fs-pink-tint,var(--coral3));font-weight:700}
+.not-found h1{margin:0 0 12px}
+.not-found p{color:var(--muted);margin-bottom:26px}
+
+/* `.faq`/`.faq-item`/`.faq-q`/`.faq-a` (service-details) had no CSS and no
+   toggle behavior — every answer was permanently visible as plain stacked
+   text with a static "+" that did nothing. */
+.faq{display:grid;gap:14px}
+.faq-item{background:#fff;border:1px solid var(--line);border-radius:18px;overflow:hidden}
+.faq-q{padding:20px 24px;font-weight:700;cursor:pointer;display:flex;justify-content:space-between;align-items:center;gap:16px}
+.faq-q span{flex:none;width:28px;height:28px;border-radius:50%;background:var(--coral3);color:var(--coral2);display:grid;place-items:center;font-size:16px;transition:transform .3s ease}
+.faq-item.open .faq-q span{transform:rotate(45deg)}
+.faq-a{max-height:0;overflow:hidden;padding:0 24px;color:var(--muted);transition:max-height .3s ease,padding .3s ease}
+.faq-item.open .faq-a{max-height:220px;padding:0 24px 20px}
+
+/* Small screens */
+@media (max-width:900px){
+ .cart-row{grid-template-columns:1fr 90px 120px 90px 42px;gap:10px;padding:14px}
+ .cart-head{font-size:10px}
+}
+@media (max-width:700px){
+ .cart-table{border-radius:16px;background:transparent;border:0;box-shadow:none}
+ .cart-head{display:none}
+ .cart-row{grid-template-columns:1fr auto;gap:12px;background:#fff;border:1px solid #e5e8e2;border-radius:16px;margin-bottom:12px;padding:15px;box-shadow:0 8px 22px rgba(20,35,27,.05)}
+ .cart-row>div:nth-child(2),.cart-row>div:nth-child(3),.cart-row>div:nth-child(4),.cart-row>div:nth-child(5){justify-self:end}
+ .cart-row>div:nth-child(2)::before{content:"Price ";font-size:10px;color:var(--muted);text-transform:uppercase;font-weight:800}
+ .cart-row>div:nth-child(3)::before{content:"Qty ";font-size:10px;color:var(--muted);text-transform:uppercase;font-weight:800;margin-right:6px}
+ .cart-row>div:nth-child(4)::before{content:"Total ";font-size:10px;color:var(--muted);text-transform:uppercase;font-weight:800;margin-right:6px}
+ .cart-product{grid-column:1/-1}
+ .cart-summary{width:100%!important}
+}
+@media (max-width:480px){
+ .cart-product img{width:56px;height:56px}
+ .qty button{width:34px;height:34px}
+ .qty span{min-width:28px}
+ .form-card{padding:20px!important}
+}

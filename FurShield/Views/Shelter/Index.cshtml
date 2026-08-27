@@ -1,0 +1,367 @@
+@model FurShield.Data.Shelter
+
+@{
+    ViewData["Title"] = "Shelter Dashboard";
+    Layout = "~/Views/Shared/_ShelterLayout.cshtml";
+}
+
+<style>
+    :root {
+        --fs-cream-bg: #FBF8F3;
+        --fs-ink: #211A16;
+        --fs-pink: #C76A8F;
+        --fs-pink-dark: #B35478;
+        --fs-pink-soft: #FDF0F5;
+        --fs-sage: #74987E;
+        --fs-sage-soft: #EFF6F1;
+        --fs-amber: #D98829;
+        --fs-amber-soft: #FFF9EE;
+        --fs-sky: #3587B8;
+        --fs-sky-soft: #F1F8FC;
+        --fs-border: #EFE4D6;
+    }
+
+    body, .dashboard-shell {
+        background-color: #FBF8F3 !important;
+        font-family: 'DM Sans', sans-serif;
+    }
+
+    /* ---- Home Hero Container ---- */
+    .home-theme-hero {
+        background: #FFFFFF;
+        border: 1.5px solid var(--fs-border);
+        border-radius: 28px;
+        padding: 2.3rem 2.6rem;
+        margin-bottom: 2rem;
+        position: relative;
+        box-shadow: 0 10px 30px rgba(33, 26, 22, 0.04);
+        overflow: hidden;
+    }
+    .home-theme-hero::before {
+        content: '';
+        position: absolute;
+        top: -40px; right: -40px;
+        width: 180px; height: 180px;
+        background: #EFF6F1;
+        border-radius: 50%;
+        z-index: 0;
+    }
+    .home-theme-hero::after {
+        content: '';
+        position: absolute;
+        bottom: -50px; right: 120px;
+        width: 140px; height: 140px;
+        background: #FDF0F5;
+        border-radius: 50%;
+        z-index: 0;
+    }
+
+    .fs-pill-tag {
+        display: inline-flex;
+        align-items: center;
+        gap: .5rem;
+        background: #EFF6F1;
+        border: 1.5px solid #D5E6DA;
+        color: #2D5838;
+        font-family: 'Baloo 2', sans-serif;
+        font-size: .82rem;
+        font-weight: 700;
+        letter-spacing: .08em;
+        text-transform: uppercase;
+        padding: .35rem 1.1rem;
+        border-radius: 50px;
+        margin-bottom: 1rem;
+    }
+
+    .fs-hero-title {
+        font-family: 'Baloo 2', sans-serif;
+        font-size: 2.3rem;
+        font-weight: 800;
+        color: #211A16;
+        line-height: 1.15;
+        margin-bottom: .6rem;
+    }
+    .fs-hero-title .highlight-pink {
+        color: #C76A8F;
+    }
+
+    .fs-hero-subtitle {
+        color: #6E665E;
+        font-size: 1.05rem;
+        max-width: 600px;
+        margin: 0;
+    }
+
+    /* ---- Stat Cards ---- */
+    .fs-stat-card {
+        background: #FFFFFF;
+        border-radius: 22px;
+        padding: 1.5rem 1.3rem;
+        transition: all .22s ease;
+        display: flex;
+        align-items: center;
+        gap: 1.1rem;
+        text-decoration: none;
+        box-shadow: 0 4px 16px rgba(33, 26, 22, 0.04);
+    }
+    .fs-stat-card:hover {
+        transform: translateY(-4px);
+        box-shadow: 0 14px 32px rgba(33, 26, 22, 0.08);
+    }
+    .fs-stat-icon-wrap {
+        width: 52px; height: 52px;
+        border-radius: 16px;
+        display: flex; align-items: center; justify-content: center;
+        font-size: 1.4rem;
+        flex-shrink: 0;
+    }
+    .fs-stat-num {
+        font-family: 'Baloo 2', sans-serif;
+        font-size: 2.1rem;
+        font-weight: 800;
+        line-height: 1;
+        margin-bottom: .2rem;
+    }
+    .fs-stat-title {
+        font-size: .82rem;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: .06em;
+    }
+
+    .card-pink   { background: #FFF5F9; border: 1.5px solid #F8D3E4; color: #8F325C; }
+    .card-pink .fs-stat-icon-wrap { background: #FFFFFF; color: #C76A8F; box-shadow: 0 4px 10px rgba(199,106,143,.15); }
+    .card-pink .fs-stat-num { color: #8F325C; }
+
+    .card-sage   { background: #F2F8F4; border: 1.5px solid #D7E8DC; color: #2B5738; }
+    .card-sage .fs-stat-icon-wrap { background: #FFFFFF; color: #74987E; box-shadow: 0 4px 10px rgba(116,152,126,.15); }
+    .card-sage .fs-stat-num { color: #2B5738; }
+
+    .card-sky    { background: #F1F8FC; border: 1.5px solid #D6EBF8; color: #1E5C82; }
+    .card-sky .fs-stat-icon-wrap { background: #FFFFFF; color: #3587B8; box-shadow: 0 4px 10px rgba(53,135,184,.15); }
+    .card-sky .fs-stat-num { color: #1E5C82; }
+
+    /* ---- Panel Card & Actions ---- */
+    .fs-panel-card {
+        background: #FFFFFF;
+        border: 1.5px solid #EFE4D6;
+        border-radius: 26px;
+        padding: 2rem;
+        box-shadow: 0 6px 24px rgba(33, 26, 22, 0.04);
+    }
+    .fs-panel-header {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        margin-bottom: 1.5rem;
+        padding-bottom: 1rem;
+        border-bottom: 1.5px solid #F5EDE0;
+    }
+    .fs-panel-title {
+        font-family: 'Baloo 2', sans-serif;
+        font-size: 1.35rem;
+        font-weight: 800;
+        color: #211A16;
+        margin: 0;
+        display: flex;
+        align-items: center;
+        gap: .6rem;
+    }
+
+    .fs-action-pill {
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+        padding: 1.2rem 1.4rem;
+        background: #FFFFFF;
+        border: 1.5px solid #EADFCF;
+        border-radius: 20px;
+        text-decoration: none;
+        color: #211A16;
+        font-weight: 700;
+        font-size: .95rem;
+        transition: all .2s ease;
+    }
+    .fs-action-pill:hover {
+        background: #211A16;
+        color: #FFFFFF !important;
+        border-color: #211A16;
+        transform: translateY(-3px);
+        box-shadow: 0 10px 24px rgba(33, 26, 22, 0.14);
+    }
+    .fs-action-pill:hover .action-pill-icon {
+        background: rgba(255,255,255,.2);
+        color: #FFFFFF;
+    }
+    .action-pill-icon {
+        width: 48px; height: 48px;
+        border-radius: 14px;
+        background: #EFF6F1;
+        color: #74987E;
+        display: flex; align-items: center; justify-content: center;
+        font-size: 1.3rem;
+        flex-shrink: 0;
+        transition: all .2s ease;
+    }
+
+    /* Pill Buttons */
+    .btn-fs-pink {
+        background: #C76A8F;
+        color: #FFFFFF !important;
+        border: none;
+        border-radius: 50px;
+        padding: 10px 26px;
+        font-weight: 700;
+        font-size: .92rem;
+        box-shadow: 0 4px 14px rgba(199, 106, 143, 0.3);
+        transition: all .2s;
+        text-decoration: none;
+        display: inline-flex;
+        align-items: center;
+        gap: .5rem;
+    }
+    .btn-fs-pink:hover {
+        background: #B35478;
+        color: #FFFFFF !important;
+        transform: translateY(-2px);
+    }
+
+    .btn-fs-dark {
+        background: #FFFFFF;
+        color: #211A16 !important;
+        border: 1.5px solid #EADFCF;
+        border-radius: 50px;
+        padding: 10px 24px;
+        font-weight: 700;
+        font-size: .92rem;
+        transition: all .2s;
+        text-decoration: none;
+        display: inline-flex;
+        align-items: center;
+        gap: .5rem;
+    }
+    .btn-fs-dark:hover {
+        background: #211A16;
+        color: #FFFFFF !important;
+        border-color: #211A16;
+        transform: translateY(-2px);
+    }
+
+    @@media (max-width: 768px) {
+        .home-theme-hero { padding: 1.6rem 1.4rem; }
+        .fs-hero-title { font-size: 1.75rem; }
+    }
+</style>
+
+<!-- Hero Section with Home Theme Styling -->
+<div class="home-theme-hero">
+    <div class="row align-items-center position-relative" style="z-index: 1;">
+        <div class="col-lg-8">
+            <div class="fs-pill-tag">
+                <i class="bi bi-house-heart-fill"></i> Animal Shelter Center
+            </div>
+            <h1 class="fs-hero-title">
+                @Model.ShelterName <span class="highlight-pink">Care Hub</span>
+            </h1>
+            <p class="fs-hero-subtitle">
+                <i class="bi bi-geo-alt-fill me-1 text-muted"></i> @Model.Address &nbsp;&middot;&nbsp; 
+                <i class="bi bi-person-fill me-1 text-muted"></i> @Model.ContactPerson (@Model.Phone)
+            </p>
+        </div>
+        <div class="col-lg-4 text-lg-end mt-3 mt-lg-0">
+            <a asp-action="Profile" class="btn-fs-dark">
+                <i class="bi bi-gear-fill"></i> Shelter Settings
+            </a>
+            <a asp-controller="Adoption" asp-action="Create" class="btn-fs-pink ms-2">
+                <i class="bi bi-plus-circle-fill"></i> Post Pet
+            </a>
+        </div>
+    </div>
+</div>
+
+<!-- 3 Stat Counters in Home Pastel Palette -->
+<div class="row g-3 mb-4">
+    <div class="col-md-4 col-sm-6 col-12">
+        <a asp-controller="Adoption" asp-action="Index" class="fs-stat-card card-sky">
+            <div class="fs-stat-icon-wrap"><i class="bi bi-card-list"></i></div>
+            <div>
+                <div class="fs-stat-num">@ViewBag.TotalListings</div>
+                <div class="fs-stat-title" title="Total Animals Listed">Total Animals Listed</div>
+            </div>
+        </a>
+    </div>
+
+    <div class="col-md-4 col-sm-6 col-12">
+        <a asp-controller="Adoption" asp-action="Index" class="fs-stat-card card-sage">
+            <div class="fs-stat-icon-wrap"><i class="bi bi-check-circle-fill"></i></div>
+            <div>
+                <div class="fs-stat-num">@ViewBag.ActiveListings</div>
+                <div class="fs-stat-title" title="Available for Adoption">Available for Adoption</div>
+            </div>
+        </a>
+    </div>
+
+    <div class="col-md-4 col-sm-6 col-12">
+        <div class="fs-stat-card card-pink">
+            <div class="fs-stat-icon-wrap"><i class="bi bi-heart-fill"></i></div>
+            <div>
+                <div class="fs-stat-num">@ViewBag.AdoptedCount</div>
+                <div class="fs-stat-title" title="Adopted Animals">Adopted Animals</div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Quick Action Panel Grid -->
+<div class="fs-panel-card">
+    <div class="fs-panel-header">
+        <h3 class="fs-panel-title">
+            <i class="bi bi-grid-fill" style="color:#74987E;"></i> Shelter Management Hub
+        </h3>
+        <span class="badge bg-light text-dark px-3 py-2 rounded-pill fw-semibold" style="border: 1.5px solid #EADFCF;">
+            Shelter Portal
+        </span>
+    </div>
+
+    <div class="row g-3">
+        <div class="col-md-6 col-12">
+            <a asp-controller="Adoption" asp-action="Index" class="fs-action-pill">
+                <div class="action-pill-icon"><i class="bi bi-list-stars"></i></div>
+                <div>
+                    <div>Manage All Adoption Profiles</div>
+                    <small class="text-muted fw-normal" style="font-size:.82rem;">Update listings, edit photos, mark adopted</small>
+                </div>
+            </a>
+        </div>
+
+        <div class="col-md-6 col-12">
+            <a asp-controller="Adoption" asp-action="Create" class="fs-action-pill">
+                <div class="action-pill-icon" style="background:#FFF5F9; color:#C76A8F;"><i class="bi bi-plus-circle-fill"></i></div>
+                <div>
+                    <div>Post New Animal for Adoption</div>
+                    <small class="text-muted fw-normal" style="font-size:.82rem;">Create a listing with breed, age &amp; story</small>
+                </div>
+            </a>
+        </div>
+
+        <div class="col-md-6 col-12">
+            <a asp-controller="ShelterProduct" asp-action="Index" class="fs-action-pill">
+                <div class="action-pill-icon" style="background:#FFF9EE; color:#D98829;"><i class="bi bi-box-seam-fill"></i></div>
+                <div>
+                    <div>Shelter Pet Shop Products</div>
+                    <small class="text-muted fw-normal" style="font-size:.82rem;">Sell shelter accessories, treats &amp; merchandise</small>
+                </div>
+            </a>
+        </div>
+
+        <div class="col-md-6 col-12">
+            <a asp-controller="Care" asp-action="Index" class="fs-action-pill">
+                <div class="action-pill-icon" style="background:#F1F8FC; color:#3587B8;"><i class="bi bi-journal-medical"></i></div>
+                <div>
+                    <div>Care Status &amp; Daily Logs</div>
+                    <small class="text-muted fw-normal" style="font-size:.82rem;">Log daily health and rehabilitation status</small>
+                </div>
+            </a>
+        </div>
+    </div>
+</div>

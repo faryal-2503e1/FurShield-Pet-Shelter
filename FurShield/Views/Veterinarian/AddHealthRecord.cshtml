@@ -1,0 +1,328 @@
+@model FurShield.Data.HealthRecord
+
+@{
+    ViewData["Title"] = "Add Health Record";
+    Layout = "~/Views/Shared/_VetLayout.cshtml";
+}
+
+<div class="container py-4">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <div class="card border-0 shadow-sm">
+                <div class="card-header bg-primary text-white py-3">
+                    <h5 class="mb-0 fw-bold"><i class="bi bi-file-earmark-medical me-2"></i>Medical Record for @ViewBag.PetName</h5>
+                </div>
+                <div class="card-body p-4">
+                    <form asp-action="AddHealthRecord" method="post">
+                        <input type="hidden" name="appointmentId" value="@ViewBag.AppointmentId" />
+
+                        <div class="row g-3">
+                            <div class="col-12">
+                                <h6 class="fw-bold text-primary border-bottom pb-2"><i class="bi bi-clipboard2-pulse me-1"></i> Symptoms</h6>
+                                <label asp-for="Symptoms" class="form-label fw-bold">Reported Symptoms</label>
+                                <textarea asp-for="Symptoms" class="form-control" rows="2" placeholder="e.g. Lethargy, loss of appetite, coughing..."></textarea>
+                                <span asp-validation-for="Symptoms" class="text-danger"></span>
+                            </div>
+
+                            <div class="col-12">
+                                <h6 class="fw-bold text-primary border-bottom pb-2 mt-2"><i class="bi bi-journal-medical me-1"></i> Diagnosis & Treatment</h6>
+                            </div>
+                            <div class="col-12">
+                                <label asp-for="Diagnosis" class="form-label fw-bold">Diagnosis / Medical Condition</label>
+                                <input asp-for="Diagnosis" id="diagnosisInput" class="form-control" placeholder="e.g. Skin Infection, High Fever" required />
+                                <span asp-validation-for="Diagnosis" class="text-danger"></span>
+
+                                <!-- Rule-based vaccination suggestion box: matches keywords typed in
+                                     Diagnosis against a fixed illness -> vaccine table (no AI/external
+                                     call involved) and lets the vet insert it into Vaccination with one click. -->
+                                <div id="vaccineSuggestionBox" class="alert alert-info mt-2 py-2 px-3 d-none" role="alert">
+                                    <i class="bi bi-lightbulb me-1"></i>
+                                    <strong>Suggested Vaccination:</strong>
+                                    <span id="vaccineSuggestionText"></span>
+                                    <button type="button" id="useVaccineSuggestionBtn" class="btn btn-sm btn-outline-primary ms-2 py-0">
+                                        Use this
+                                    </button>
+                                </div>
+                            </div>
+
+                            <div class="col-12">
+                                <label asp-for="Treatment" class="form-label fw-bold">Treatment Given</label>
+                                <textarea asp-for="Treatment" class="form-control" rows="3" placeholder="Enter treatment/procedures performed and care instructions..."></textarea>
+                                <span asp-validation-for="Treatment" class="text-danger"></span>
+                            </div>
+
+                            <div class="col-12">
+                                <h6 class="fw-bold text-primary border-bottom pb-2 mt-2"><i class="bi bi-capsule me-1"></i> Lab Results & Prescription</h6>
+                            </div>
+                            <div class="col-md-6">
+                                <label asp-for="LabResults" class="form-label fw-bold">Lab Results</label>
+                                <textarea asp-for="LabResults" class="form-control" rows="2" placeholder="e.g. Blood test, X-ray findings (Optional)"></textarea>
+                                <span asp-validation-for="LabResults" class="text-danger"></span>
+                            </div>
+                            <div class="col-md-6">
+                                <label asp-for="Prescription" class="form-label fw-bold">Prescription</label>
+                                <textarea asp-for="Prescription" class="form-control" rows="2" placeholder="e.g. Medicine name, dosage, duration (Optional)"></textarea>
+                                <span asp-validation-for="Prescription" class="text-danger"></span>
+                            </div>
+
+                            <div class="col-12">
+                                <label asp-for="Vaccination" class="form-label fw-bold d-flex justify-content-between align-items-center">
+                                    <span><i class="bi bi-shield-plus text-primary me-1"></i> Vaccination Administered</span>
+                                    <small class="text-muted fw-normal">Select from dropdown, check boxes, or type custom</small>
+                                </label>
+                                
+                                <!-- Common Vaccine Quick Selector Dropdown -->
+                                <div class="input-group mb-2">
+                                    <span class="input-group-text bg-light"><i class="bi bi-list-check text-primary"></i></span>
+                                    <select id="vaccineDropdown" class="form-select">
+                                        <option value="">-- Quick Select Suggested Vaccine --</option>
+                                        <optgroup label="Canine (Dog) Core & Lifestyle">
+                                            <option value="Rabies Vaccine">Rabies Vaccine</option>
+                                            <option value="DHPP (Distemper, Hepatitis, Parvovirus, Parainfluenza)">DHPP (5-in-1 Combo)</option>
+                                            <option value="Parvovirus Vaccine">Parvovirus Vaccine</option>
+                                            <option value="Bordetella (Kennel Cough)">Bordetella (Kennel Cough)</option>
+                                            <option value="Leptospirosis Vaccine">Leptospirosis Vaccine</option>
+                                            <option value="Canine Influenza">Canine Influenza</option>
+                                            <option value="Lyme Disease Vaccine">Lyme Disease Vaccine</option>
+                                        </optgroup>
+                                        <optgroup label="Feline (Cat) Core & Lifestyle">
+                                            <option value="FVRCP (Feline Viral Rhinotracheitis, Calicivirus, Panleukopenia)">FVRCP (Feline 3-in-1)</option>
+                                            <option value="FeLV (Feline Leukemia)">FeLV (Feline Leukemia)</option>
+                                            <option value="Rabies (Feline)">Rabies (Feline)</option>
+                                            <option value="Feline Bordetella">Feline Bordetella</option>
+                                        </optgroup>
+                                        <optgroup label="Preventative & Boosters">
+                                            <option value="Deworming (Broad Spectrum)">Deworming (Broad Spectrum)</option>
+                                            <option value="Annual Core Booster">Annual Core Booster</option>
+                                            <option value="Anti-Parasitic Treatment">Anti-Parasitic Treatment</option>
+                                        </optgroup>
+                                    </select>
+                                    <button type="button" id="addDropdownVaccineBtn" class="btn btn-outline-primary">
+                                        <i class="bi bi-plus-circle me-1"></i> Add Vaccine
+                                    </button>
+                                </div>
+
+                                <!-- Quick Checkboxes for Common Vaccines -->
+                                <div class="card bg-light border-0 p-3 mb-2">
+                                    <small class="text-muted d-block mb-2 fw-bold"><i class="bi bi-check2-square text-primary me-1"></i> Common Vaccines (Select one or multiple):</small>
+                                    <div class="row g-2">
+                                        <div class="col-6 col-sm-4">
+                                            <div class="form-check">
+                                                <input class="form-check-input vaccine-checkbox" type="checkbox" id="vacRabies" value="Rabies Vaccine">
+                                                <label class="form-check-label small fw-semibold" for="vacRabies">Rabies</label>
+                                            </div>
+                                        </div>
+                                        <div class="col-6 col-sm-4">
+                                            <div class="form-check">
+                                                <input class="form-check-input vaccine-checkbox" type="checkbox" id="vacParvo" value="Parvovirus Vaccine">
+                                                <label class="form-check-label small fw-semibold" for="vacParvo">Parvovirus</label>
+                                            </div>
+                                        </div>
+                                        <div class="col-6 col-sm-4">
+                                            <div class="form-check">
+                                                <input class="form-check-input vaccine-checkbox" type="checkbox" id="vacDHPP" value="DHPP Vaccine">
+                                                <label class="form-check-label small fw-semibold" for="vacDHPP">DHPP (5-in-1)</label>
+                                            </div>
+                                        </div>
+                                        <div class="col-6 col-sm-4">
+                                            <div class="form-check">
+                                                <input class="form-check-input vaccine-checkbox" type="checkbox" id="vacBordetella" value="Bordetella Vaccine">
+                                                <label class="form-check-label small fw-semibold" for="vacBordetella">Bordetella</label>
+                                            </div>
+                                        </div>
+                                        <div class="col-6 col-sm-4">
+                                            <div class="form-check">
+                                                <input class="form-check-input vaccine-checkbox" type="checkbox" id="vacFeLV" value="Feline Leukemia (FeLV)">
+                                                <label class="form-check-label small fw-semibold" for="vacFeLV">Feline Leukemia</label>
+                                            </div>
+                                        </div>
+                                        <div class="col-6 col-sm-4">
+                                            <div class="form-check">
+                                                <input class="form-check-input vaccine-checkbox" type="checkbox" id="vacFVRCP" value="FVRCP Vaccine">
+                                                <label class="form-check-label small fw-semibold" for="vacFVRCP">FVRCP (3-in-1)</label>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- Clickable Suggestion Chips -->
+                                <div class="mb-2">
+                                    <small class="text-muted d-block mb-1 fw-semibold">Quick suggestion tags (click to add):</small>
+                                    <div class="d-flex flex-wrap gap-1" id="vaccineChipsContainer">
+                                        <button type="button" class="btn btn-sm btn-light border py-0 px-2 vaccine-chip" data-vaccine="Rabies Vaccine">+ Rabies</button>
+                                        <button type="button" class="btn btn-sm btn-light border py-0 px-2 vaccine-chip" data-vaccine="DHPP Vaccine">+ DHPP</button>
+                                        <button type="button" class="btn btn-sm btn-light border py-0 px-2 vaccine-chip" data-vaccine="Parvovirus Vaccine">+ Parvo</button>
+                                        <button type="button" class="btn btn-sm btn-light border py-0 px-2 vaccine-chip" data-vaccine="Bordetella Vaccine">+ Bordetella</button>
+                                        <button type="button" class="btn btn-sm btn-light border py-0 px-2 vaccine-chip" data-vaccine="FVRCP Vaccine">+ FVRCP</button>
+                                        <button type="button" class="btn btn-sm btn-light border py-0 px-2 vaccine-chip" data-vaccine="Feline Leukemia (FeLV)">+ Feline Leukemia</button>
+                                        <button type="button" class="btn btn-sm btn-light border py-0 px-2 vaccine-chip" data-vaccine="Deworming">+ Deworming</button>
+                                        <button type="button" class="btn btn-sm btn-light border py-0 px-2 vaccine-chip" data-vaccine="Annual Booster">+ Booster</button>
+                                    </div>
+                                </div>
+
+                                <input asp-for="Vaccination" id="vaccinationInput" class="form-control" placeholder="e.g. Rabies Vaccine, DHPP (or type custom vaccines here)" />
+                                <span asp-validation-for="Vaccination" class="text-danger"></span>
+                            </div>
+
+                            <div class="col-12">
+                                <h6 class="fw-bold text-primary border-bottom pb-2 mt-2"><i class="bi bi-calendar-check me-1"></i> Follow-up</h6>
+                                <label asp-for="Notes" class="form-label fw-bold">Doctor Notes / Follow-up Actions</label>
+                                <textarea asp-for="Notes" class="form-control" rows="2" placeholder="Additional observations or follow-up recommendations..."></textarea>
+                                <span asp-validation-for="Notes" class="text-danger"></span>
+                            </div>
+
+                            <div class="col-12">
+                                <label asp-for="NextDueDate" class="form-label fw-bold">Next Vaccination / Follow-up Due Date</label>
+                                <input asp-for="NextDueDate" class="form-control" type="date" />
+                                <span asp-validation-for="NextDueDate" class="text-danger"></span>
+                                <div class="form-text text-success"><i class="bi bi-bell-fill me-1"></i> Setting this date will automatically notify the pet owner in their notification dashboard.</div>
+                            </div>
+
+                            <div class="col-12 d-flex justify-content-between mt-4">
+                                <a asp-action="Index" class="btn btn-outline-secondary">
+                                    <i class="bi bi-arrow-left me-1"></i> Cancel
+                                </a>
+                                <button type="submit" class="btn btn-primary fw-bold px-4">
+                                    <i class="bi bi-check-circle me-1"></i> Save Health Record
+                                </button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+    <script>
+        const vaccineSuggestionRules = [
+            { keywords: ["rabies", "animal bite", "bite wound"], vaccine: "Rabies Vaccine" },
+            { keywords: ["parvo", "bloody diarrhea", "bloody stool"], vaccine: "Parvovirus Vaccine (DHPP)" },
+            { keywords: ["distemper"], vaccine: "Canine Distemper Vaccine (DHPP)" },
+            { keywords: ["hepatitis", "liver infection"], vaccine: "Canine Hepatitis Vaccine (DHPP)" },
+            { keywords: ["kennel cough", "cough", "respiratory infection", "bordetella"], vaccine: "Bordetella (Kennel Cough) Vaccine" },
+            { keywords: ["leptospirosis", "lepto"], vaccine: "Leptospirosis Vaccine" },
+            { keywords: ["lyme", "tick", "tick-borne", "tick borne"], vaccine: "Lyme Disease Vaccine" },
+            { keywords: ["panleukopenia", "feline distemper"], vaccine: "FVRCP Vaccine (Feline Distemper Combo)" },
+            { keywords: ["cat flu", "feline flu", "sneezing", "rhinotracheitis", "calicivirus"], vaccine: "FVRCP Vaccine (Feline Respiratory Combo)" },
+            { keywords: ["feline leukemia", "felv"], vaccine: "FeLV (Feline Leukemia) Vaccine" }
+        ];
+
+        const diagnosisInput = document.getElementById("diagnosisInput");
+        const vaccinationInput = document.getElementById("vaccinationInput");
+        const suggestionBox = document.getElementById("vaccineSuggestionBox");
+        const suggestionText = document.getElementById("vaccineSuggestionText");
+        const useSuggestionBtn = document.getElementById("useVaccineSuggestionBtn");
+        const vaccineDropdown = document.getElementById("vaccineDropdown");
+        const addDropdownVaccineBtn = document.getElementById("addDropdownVaccineBtn");
+        const vaccineCheckboxes = document.querySelectorAll(".vaccine-checkbox");
+
+        function appendVaccine(vName) {
+            if (!vName) return;
+            const current = vaccinationInput.value.trim();
+            if (!current) {
+                vaccinationInput.value = vName;
+            } else if (!current.toLowerCase().includes(vName.toLowerCase())) {
+                vaccinationInput.value = current + ", " + vName;
+            }
+            syncCheckboxes();
+        }
+
+        function removeVaccine(vName) {
+            if (!vName) return;
+            let currentList = vaccinationInput.value.split(',').map(s => s.trim()).filter(s => s.length > 0);
+            currentList = currentList.filter(s => !s.toLowerCase().includes(vName.toLowerCase()) && !vName.toLowerCase().includes(s.toLowerCase()));
+            vaccinationInput.value = currentList.join(', ');
+            syncCheckboxes();
+        }
+
+        function syncCheckboxes() {
+            const val = vaccinationInput.value.toLowerCase();
+            vaccineCheckboxes.forEach(cb => {
+                const cbVal = cb.value.toLowerCase();
+                const shortVal = cb.id.replace('vac', '').toLowerCase();
+                cb.checked = val.includes(cbVal) || val.includes(shortVal);
+            });
+        }
+
+        // Checkbox toggle handler
+        vaccineCheckboxes.forEach(cb => {
+            cb.addEventListener("change", function() {
+                if (this.checked) {
+                    appendVaccine(this.value);
+                } else {
+                    removeVaccine(this.value);
+                }
+            });
+        });
+
+        // Add from dropdown
+        if (addDropdownVaccineBtn) {
+            addDropdownVaccineBtn.addEventListener("click", function() {
+                if (vaccineDropdown.value) {
+                    appendVaccine(vaccineDropdown.value);
+                }
+            });
+        }
+        if (vaccineDropdown) {
+            vaccineDropdown.addEventListener("change", function() {
+                if (this.value) {
+                    appendVaccine(this.value);
+                }
+            });
+        }
+
+        // Add from suggestion chips
+        document.querySelectorAll(".vaccine-chip").forEach(btn => {
+            btn.addEventListener("click", function() {
+                appendVaccine(this.dataset.vaccine);
+                this.classList.remove("btn-light");
+                this.classList.add("btn-primary", "text-white");
+            });
+        });
+
+        function findVaccineSuggestion(diagnosisText) {
+            const query = diagnosisText.toLowerCase();
+            for (const rule of vaccineSuggestionRules) {
+                if (rule.keywords.some(k => query.includes(k))) {
+                    return rule.vaccine;
+                }
+            }
+            return null;
+        }
+
+        function updateVaccineSuggestion() {
+            const suggestion = findVaccineSuggestion(diagnosisInput.value || "");
+            if (suggestion) {
+                suggestionText.textContent = suggestion;
+                suggestionBox.classList.remove("d-none");
+                useSuggestionBtn.dataset.vaccine = suggestion;
+            } else {
+                suggestionBox.classList.add("d-none");
+            }
+        }
+
+        if (diagnosisInput) {
+            diagnosisInput.addEventListener("input", updateVaccineSuggestion);
+            if (diagnosisInput.value) {
+                updateVaccineSuggestion();
+            }
+        }
+
+        if (useSuggestionBtn) {
+            useSuggestionBtn.addEventListener("click", function () {
+                const suggested = this.dataset.vaccine;
+                if (suggested) appendVaccine(suggested);
+            });
+        }
+
+        if (vaccinationInput) {
+            vaccinationInput.addEventListener("input", syncCheckboxes);
+            syncCheckboxes();
+        }
+    </script>
+}

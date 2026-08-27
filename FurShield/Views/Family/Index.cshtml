@@ -1,0 +1,100 @@
+@model FurShield.Data.ApplicationUser
+@{
+    ViewData["Title"] = "Family Sharing";
+    Layout = "~/Views/Shared/_PetOwnerLayout.cshtml";
+}
+
+<div class="container-fluid py-2">
+    <div class="mb-4">
+        <h2 class="fw-bold mb-1"><i class="bi bi-people-fill text-primary me-2"></i>Family Sharing</h2>
+        <p class="text-muted mb-0 small">Share your pet care account with the people in your household.</p>
+    </div>
+
+    @if (TempData["FamilySuccess"] != null)
+    {
+        <div class="alert alert-success"><i class="bi bi-check-circle me-1"></i> @TempData["FamilySuccess"]</div>
+    }
+    @if (TempData["FamilyError"] != null)
+    {
+        <div class="alert alert-danger"><i class="bi bi-exclamation-circle me-1"></i> @TempData["FamilyError"]</div>
+    }
+
+    @if (Model.FamilyAccount == null)
+    {
+        <div class="row g-4">
+            <div class="col-md-6">
+                <div class="card border-0 shadow-sm rounded-4 p-4 h-100">
+                    <h5 class="fw-bold mb-2"><i class="bi bi-house-add text-success me-2"></i>Start a Family</h5>
+                    <p class="text-muted small">Create a family group and get an invite code you can share with other members of your household.</p>
+                    <form asp-controller="Family" asp-action="Create" method="post" class="mt-2">
+                        <div class="mb-3">
+                            <label class="form-label fw-semibold">Family Name</label>
+                            <input type="text" name="familyName" class="form-control" placeholder="e.g. The Khan Family" required />
+                        </div>
+                        <button type="submit" class="btn btn-success"><i class="bi bi-plus-circle me-1"></i> Create Family</button>
+                    </form>
+                </div>
+            </div>
+
+            <div class="col-md-6">
+                <div class="card border-0 shadow-sm rounded-4 p-4 h-100">
+                    <h5 class="fw-bold mb-2"><i class="bi bi-box-arrow-in-right text-primary me-2"></i>Join a Family</h5>
+                    <p class="text-muted small">Already have an invite code from a family member? Enter it here to join their family.</p>
+                    <form asp-controller="Family" asp-action="Join" method="post" class="mt-2">
+                        <div class="mb-3">
+                            <label class="form-label fw-semibold">Invite Code</label>
+                            <input type="text" name="inviteCode" class="form-control text-uppercase" placeholder="e.g. A1B2C3D4" required />
+                        </div>
+                        <button type="submit" class="btn btn-primary"><i class="bi bi-box-arrow-in-right me-1"></i> Join Family</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    }
+    else
+    {
+        <div class="card border-0 shadow-sm rounded-4 p-4 mb-4">
+            <div class="d-flex flex-wrap justify-content-between align-items-center gap-3">
+                <div>
+                    <h5 class="fw-bold mb-1"><i class="bi bi-house-heart text-success me-2"></i>@Model.FamilyAccount.FamilyName</h5>
+                    <p class="text-muted small mb-0">Invite code: <span class="badge bg-light text-dark border fs-6">@Model.FamilyAccount.InviteCode</span></p>
+                </div>
+                <form asp-controller="Family" asp-action="Leave" method="post" onsubmit="return confirm('Are you sure you want to leave this family?');">
+                    <button type="submit" class="btn btn-outline-danger btn-sm"><i class="bi bi-box-arrow-right me-1"></i> Leave Family</button>
+                </form>
+            </div>
+        </div>
+
+        <div class="card border-0 shadow-sm rounded-4 p-4">
+            <h6 class="fw-bold mb-3"><i class="bi bi-people me-2"></i>Family Members (@Model.FamilyAccount.Members.Count)</h6>
+            <div class="table-responsive">
+                <table class="table align-middle">
+                    <thead>
+                        <tr>
+                            <th>Name</th>
+                            <th>Email</th>
+                            <th>Phone</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var member in Model.FamilyAccount.Members)
+                        {
+                            <tr>
+                                <td>
+                                    <i class="bi bi-person-circle text-secondary me-1"></i>
+                                    @(member.FullName ?? member.UserName)
+                                    @if (member.Id == Model.Id)
+                                    {
+                                        <span class="badge bg-primary ms-1">You</span>
+                                    }
+                                </td>
+                                <td>@member.Email</td>
+                                <td>@member.PhoneNumber</td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    }
+</div>

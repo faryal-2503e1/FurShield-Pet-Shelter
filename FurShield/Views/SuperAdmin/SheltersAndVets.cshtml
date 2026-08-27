@@ -1,0 +1,101 @@
+﻿@model IEnumerable<FurShield.Data.Shelter>
+@{
+    Layout = "_AdminLayout";
+    ViewData["Title"] = "Shelters & Veterinarians Details";
+    var vets = ViewBag.Vets as IEnumerable<FurShield.Data.Veterinarian>;
+}
+
+<div class="container-fluid py-4">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h3 class="fw-bold text-dark"><i class="bi bi-buildings me-2"></i> Registered Shelters & Veterinarians</h3>
+        <a asp-action="Index" class="btn btn-outline-secondary btn-sm rounded-pill">
+            <i class="bi bi-arrow-left me-1"></i> Back to Dashboard
+        </a>
+    </div>
+
+    <!-- 1. Registered Shelters Table -->
+    <div class="card border-0 shadow-sm rounded-4 overflow-hidden mb-5">
+        <div class="card-header bg-primary text-white py-3">
+            <h5 class="mb-0 fw-bold"><i class="bi bi-house-door me-2"></i> Shelters Details</h5>
+        </div>
+        <div class="table-responsive">
+            <table class="table table-hover align-middle mb-0">
+                <thead class="bg-light">
+                    <tr>
+                        <th class="ps-4">Shelter ID</th>
+                        <th>Shelter Name</th>
+                        <th>Contact Person</th>
+                        <th>Phone</th>
+                        <th class="pe-4">Address</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @if (Model == null || !Model.Any())
+                    {
+                        <tr>
+                            <td colspan="5" class="text-center py-4 text-muted">No shelters registered in the system yet.</td>
+                        </tr>
+                    }
+                    else
+                    {
+                        @foreach (var shelter in Model)
+                        {
+                            <tr>
+                                <td class="ps-4 fw-bold text-secondary">#@shelter.ShelterId</td>
+                                <td class="fw-bold text-dark">@shelter.ShelterName</td>
+                                <td>@shelter.ContactPerson</td>
+                                <td><i class="bi bi-telephone me-1 text-muted"></i>@shelter.Phone</td>
+                                <td class="pe-4"><i class="bi bi-geo-alt me-1 text-muted"></i>@shelter.Address</td>
+                            </tr>
+                        }
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <!-- 2. Registered Veterinarians Table -->
+    <div class="card border-0 shadow-sm rounded-4 overflow-hidden">
+        <div class="card-header bg-success text-white py-3">
+            <h5 class="mb-0 fw-bold"><i class="bi bi-hospital me-2"></i> Veterinarians Details</h5>
+        </div>
+        <div class="table-responsive">
+            <table class="table table-hover align-middle mb-0">
+                <thead class="bg-light">
+                    <tr>
+                        <th class="ps-4">Vet ID</th>
+                        <th>Doctor Name</th>
+                        <th>Specialization</th>
+                        <th>Experience</th>
+                        <th class="pe-4">Address</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @if (vets == null || !vets.Any())
+                    {
+                        <tr>
+                            <td colspan="5" class="text-center py-4 text-muted">No veterinarians registered in the system yet.</td>
+                        </tr>
+                    }
+                    else
+                    {
+                        @foreach (var vet in vets)
+                        {
+                            <tr>
+                                <td class="ps-4 fw-bold text-secondary">#@vet.VeterinarianId</td>
+                               
+                                    <td class="fw-bold text-dark">
+                                        @(vet.User != null ? vet.User.FullName : "N/A")
+                                    </td>
+                                
+                                <td><span class="badge bg-info text-dark">@vet.Specialization</span></td>
+                                <td>@vet.Experience Years</td>
+                                <td class="pe-4"><i class="bi bi-geo-alt me-1 text-muted"></i>@(string.IsNullOrEmpty(vet.Address) ? "N/A" : vet.Address)</td>
+                            </tr>
+                        }
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>

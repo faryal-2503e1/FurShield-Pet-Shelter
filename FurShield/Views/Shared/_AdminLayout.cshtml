@@ -1,0 +1,153 @@
+@using Microsoft.AspNetCore.Identity
+@using Microsoft.EntityFrameworkCore
+@using FurShield.Data
+@inject UserManager<ApplicationUser> UserManager
+@inject PetShelterContext DbContext
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] - FurShield Admin Panel</title>
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css" />
+    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/css/dashboard-sidebar.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/css/furshield/furshield-theme.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/css/furshield/bootstrap-compat-fix.css" asp-append-version="true" />
+    <!-- FurShield brand theme for the Admin portal only -->
+    <link rel="stylesheet" href="~/css/furshield/admin-dashboard-theme.css" asp-append-version="true" />
+    @await RenderSectionAsync("Styles", required: false)
+</head>
+<body class="bg-light">
+    <div class="dashboard-shell">
+        <!-- Sidebar -->
+        <aside class="dashboard-sidebar sidebar--admin" id="adminSidebar">
+            <div class="sidebar-brand">
+                <a asp-controller="SuperAdmin" asp-action="Index">
+                    <i class="bi bi-shield-lock-fill"></i> Admin Panel
+                </a>
+            </div>
+
+            <div class="sidebar-back">
+                <a asp-controller="Home" asp-action="Index">
+                    <i class="bi bi-arrow-left-circle"></i> Back to Main Website
+                </a>
+            </div>
+
+            @{
+                var currentAction = ViewContext.RouteData.Values["action"]?.ToString();
+                var currentController = ViewContext.RouteData.Values["controller"]?.ToString();
+                Func<string, string, string> navActive = (ctrl, action) =>
+                    (string.Equals(currentController, ctrl, StringComparison.OrdinalIgnoreCase) &&
+                     string.Equals(currentAction, action, StringComparison.OrdinalIgnoreCase)) ? "active" : "";
+
+                var unreadContactCount = await DbContext.ContactMessages.CountAsync(m => !m.IsRead);
+            }
+            <nav class="sidebar-nav">
+                <a class="sidebar-link @navActive("SuperAdmin", "Index")" asp-controller="SuperAdmin" asp-action="Index">
+                    <i class="bi bi-speedometer2"></i> Dashboard
+                </a>
+                <a class="sidebar-link @navActive("SuperAdmin", "Users")" asp-controller="SuperAdmin" asp-action="Users">
+                    <i class="bi bi-people"></i> Manage Users
+                </a>
+                <a class="sidebar-link @navActive("SuperAdmin", "ContactMessages")" asp-controller="SuperAdmin" asp-action="ContactMessages">
+                    <i class="bi bi-envelope-paper-heart"></i> Contact Inquiries
+                    @if (unreadContactCount > 0)
+                    {
+                        <span class="badge bg-danger rounded-pill ms-auto px-2 py-1">@unreadContactCount</span>
+                    }
+                </a>
+                <a class="sidebar-link @navActive("SuperAdmin", "SheltersAndVets")" asp-controller="SuperAdmin" asp-action="SheltersAndVets">
+                    <i class="bi bi-buildings"></i> Shelters & Vets
+                </a>
+                <a class="sidebar-link @navActive("SuperAdmin", "Adoptions")" asp-controller="SuperAdmin" asp-action="Adoptions">
+                    <i class="bi bi-heart-pulse"></i> Adoptions
+                </a>
+                <a class="sidebar-link @navActive("SuperAdmin", "Products")" asp-controller="SuperAdmin" asp-action="Products">
+                    <i class="bi bi-box-seam"></i> Products
+                </a>
+                <a class="sidebar-link @navActive("SuperAdmin", "Appointments")" asp-controller="SuperAdmin" asp-action="Appointments">
+                    <i class="bi bi-calendar-event"></i> Appointments
+                </a>
+                <a class="sidebar-link @navActive("SuperAdmin", "Orders")" asp-controller="SuperAdmin" asp-action="Orders">
+                    <i class="bi bi-bag-check"></i> Orders
+                </a>
+            </nav>
+
+            <div class="sidebar-footer">
+                <div class="sidebar-user">
+                    <span class="sidebar-user-avatar"><i class="bi bi-shield-lock"></i></span>
+                    @{
+                        var currentUser = await UserManager.GetUserAsync(User);
+                        var displayName = currentUser?.FullName ?? UserManager.GetUserName(User);
+                    }
+
+                    <span class="sidebar-user-name">@displayName</span>
+                </div>
+                <form class="sidebar-logout-form" asp-area="Identity" asp-page="/Account/Logout" asp-route-returnUrl="@Url.Action("Index", "Home")">
+                    <button type="submit">
+                        <i class="bi bi-box-arrow-right"></i> Logout
+                    </button>
+                </form>
+            </div>
+        </aside>
+
+        <div class="sidebar-backdrop" id="adminSidebarBackdrop"></div>
+
+        <!-- Main content -->
+        <div class="dashboard-content">
+            <div class="dashboard-topbar">
+                <button class="sidebar-toggle-btn" type="button" id="adminSidebarToggle" aria-label="Toggle menu">
+                    <i class="bi bi-list"></i>
+                </button>
+                <span class="fw-bold text-primary"><i class="bi bi-shield-lock-fill me-1"></i> Admin Panel</span>
+                <span></span>
+            </div>
+
+            <main role="main" class="dashboard-main">
+                @{
+                    var topbarUser = await UserManager.GetUserAsync(User);
+                    var topbarName = topbarUser?.FullName ?? UserManager.GetUserName(User);
+                }
+                <div class="admin-welcome">
+                    <div>
+                        <h2>Welcome back, @topbarName</h2>
+                        <p>@ViewData["Title"]</p>
+                    </div>
+                    <span class="admin-date-pill"><i class="bi bi-calendar3 me-1"></i> @DateTime.Now.ToString("dddd, dd MMM yyyy")</span>
+                </div>
+                @RenderBody()
+            </main>
+
+            <footer class="dashboard-footer">
+                &copy; 2026 - <strong>FurShield (Admin Panel)</strong>
+            </footer>
+        </div>
+    </div>
+
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="~/js/site.js" asp-append-version="true"></script>
+    <script>
+        (function () {
+            var sidebar = document.getElementById('adminSidebar');
+            var backdrop = document.getElementById('adminSidebarBackdrop');
+            var toggleBtn = document.getElementById('adminSidebarToggle');
+
+            function closeSidebar() {
+                sidebar.classList.remove('show');
+                backdrop.classList.remove('show');
+            }
+
+            toggleBtn?.addEventListener('click', function () {
+                sidebar.classList.toggle('show');
+                backdrop.classList.toggle('show');
+            });
+            backdrop?.addEventListener('click', closeSidebar);
+        })();
+    </script>
+    @await RenderSectionAsync("Scripts", required: false)
+</body>
+</html>

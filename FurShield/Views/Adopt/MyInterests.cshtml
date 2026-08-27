@@ -1,0 +1,56 @@
+@model IEnumerable<FurShield.Data.AdoptionInterest>
+@{
+    ViewData["Title"] = "My Adoption Requests";
+    Layout = "~/Views/Shared/_PetOwnerLayout.cshtml";
+}
+
+<h2 class="fw-bold mb-4"><i class="bi bi-clipboard-heart text-danger me-2"></i>My Adoption Requests</h2>
+
+<div class="card border-0 shadow-sm">
+    <div class="card-body p-0">
+        <table class="table table-hover align-middle mb-0">
+            <thead class="table-dark">
+                <tr>
+                    <th class="ps-3">Pet</th>
+                    <th>Shelter</th>
+                    <th>Submitted On</th>
+                    <th>Status</th>
+                    <th>Shelter Response</th>
+                </tr>
+            </thead>
+            <tbody>
+                @if (Model != null && Model.Any())
+                {
+                    @foreach (var interest in Model)
+                    {
+                        <tr>
+                            <td class="ps-3">
+                                <a asp-controller="Adopt" asp-action="Details" asp-route-id="@interest.AdoptionListingId" class="fw-bold text-decoration-none">
+                                    @interest.AdoptionListing?.PetName
+                                </a>
+                            </td>
+                            <td>@(interest.AdoptionListing?.Shelter?.ShelterName ?? "N/A")</td>
+                            <td>@interest.DateSubmitted.ToString("dd MMM yyyy")</td>
+                            <td>
+                                <span class="badge @(interest.Status == "Approved" ? "bg-success" : interest.Status == "Rejected" ? "bg-danger" : "bg-warning text-dark")">
+                                    @interest.Status
+                                </span>
+                            </td>
+                            <td>@(string.IsNullOrEmpty(interest.ShelterResponse) ? "—" : interest.ShelterResponse)</td>
+                        </tr>
+                    }
+                }
+                else
+                {
+                    <tr>
+                        <td colspan="5" class="text-center text-muted py-5">
+                            <i class="bi bi-heart display-5 text-secondary d-block mb-2"></i>
+                            You haven't requested to adopt any pets yet.
+                            <a asp-controller="Adopt" asp-action="Index" class="d-block mt-2">Browse adoptable pets &raquo;</a>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>

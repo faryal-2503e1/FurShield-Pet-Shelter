@@ -1,0 +1,96 @@
+﻿@model FurShield.Data.AdoptionListing
+
+@{
+    ViewData["Title"] = "Edit Listing";
+    Layout = "~/Views/Shared/_ShelterLayout.cshtml";
+}
+
+<div class="container py-4">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <div class="card border-0 shadow-sm">
+                <div class="card-header bg-primary text-white">
+                    <h5 class="mb-0 fw-bold"><i class="bi bi-pencil-square me-2"></i>Update Pet Details & Status</h5>
+                </div>
+                <div class="card-body p-4">
+                    <form asp-action="Edit" enctype="multipart/form-data" method="post">
+                        <input type="hidden" asp-for="AdoptionListingId" />
+                        <input type="hidden" asp-for="ShelterId" />
+                        <!-- Old ImageUrl Preserve Rakhne Ke Liye -->
+                        <input type="hidden" asp-for="ImageUrl" />
+
+                        <div class="row g-3">
+                            <div class="col-md-6">
+                                <label asp-for="PetName" class="form-label fw-bold"></label>
+                                <input asp-for="PetName" class="form-control" required />
+                            </div>
+                            <div class="col-md-6">
+                                <label asp-for="Species" class="form-label fw-bold"></label>
+                                <select asp-for="Species" class="form-select" required>
+                                    <option value="">-- Select Pet Type --</option>
+                                    <option value="Dog">🐶 Dog</option>
+                                    <option value="Cat">🐱 Cat</option>
+                                    <option value="Rabbit">🐰 Rabbit</option>
+                                    <option value="Bird">🐦 Bird</option>
+                                </select>
+                            </div>
+                            <div class="col-md-6">
+                                <label asp-for="Breed" class="form-label fw-bold"></label>
+                                <input asp-for="Breed" class="form-control" />
+                            </div>
+                            <div class="col-md-3">
+                                <label asp-for="Age" class="form-label fw-bold"></label>
+                                <input asp-for="Age" type="number" class="form-control" min="0" required />
+                            </div>
+                            <div class="col-md-3">
+                                <label asp-for="Gender" class="form-label fw-bold"></label>
+                                <select asp-for="Gender" class="form-select">
+                                    <option value="Male">Male</option>
+                                    <option value="Female">Female</option>
+                                </select>
+                            </div>
+                            <div class="col-md-6">
+                                <label asp-for="Status" class="form-label fw-bold">Adoption Status</label>
+                                <select asp-for="Status" class="form-select fw-bold">
+                                    <option value="Available">Available</option>
+                                    <option value="Adopted">Adopted</option>
+                                </select>
+                            </div>
+                            <div class="col-12">
+                                <label asp-for="HealthStatus" class="form-label fw-bold">Health Status / Care Notes</label>
+                                <textarea asp-for="HealthStatus" class="form-control" rows="2"></textarea>
+                            </div>
+
+                            <!-- Current Photo Display Section -->
+                            <div class="col-12">
+                                <label class="form-label fw-bold d-block">Current Pet Photo</label>
+                                @if (!string.IsNullOrEmpty(Model.ImageUrl))
+                                {
+                                    <img src="@Model.ImageUrl"
+                                         alt="@Model.PetName"
+                                         class="img-thumbnail rounded mb-2"
+                                         style="height: 140px; width: 140px; object-fit: cover;"
+                                         onerror="this.onerror=null; this.style.display='none';" />
+                                }
+                                else
+                                {
+                                    <p class="text-muted small">No photo uploaded yet.</p>
+                                }
+                            </div>
+
+                            <div class="col-12">
+                                <label class="form-label fw-bold">Change Pet Photo (Optional)</label>
+                                <input type="file" name="PetImage" class="form-control" accept="image/*" />
+                            </div>
+
+                            <div class="col-12 d-flex justify-content-between mt-4">
+                                <a asp-action="Index" class="btn btn-outline-secondary">Cancel</a>
+                                <button type="submit" class="btn btn-primary fw-bold px-4">Update Pet</button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

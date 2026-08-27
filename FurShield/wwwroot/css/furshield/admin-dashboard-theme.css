@@ -1,0 +1,211 @@
+/* =========================================================
+   FurShield — Admin Dashboard Theme
+   -----------------------------------------------------------
+   Loaded ONLY by _AdminLayout.cshtml. Mirrors the Vet / Shelter /
+   Pet Owner dashboard themes (same shell, same FurShield
+   palette/fonts) with its own neutral "control panel" accent so
+   the Admin portal feels like part of the same product while
+   staying visually distinct as the highest-privilege area.
+
+   Scoped so it cannot affect the public site or the other role
+   dashboards (Vet/Shelter/PetOwner), which don't load this file.
+   ========================================================= */
+
+@import url('https://fonts.googleapis.com/css2?family=Baloo+2:wght@500;600;700;800&family=DM+Sans:wght@400;500;600;700&display=swap');
+
+:root{
+  --adm-cream:#FBF1E2;
+  --adm-cream-2:#F6E9D6;
+  --adm-ink:#211A16;
+  --adm-charcoal:#1B1815;
+  --adm-charcoal-2:#141210;
+  --adm-slate:#5B6B79;
+  --adm-slate-dark:#3E4C58;
+  --adm-slate-tint:#E9EDF0;
+  --adm-pink:#E7A9C9;
+  --adm-pink-dark:#CE7CA6;
+  --adm-pink-tint:#F7E1EC;
+  --adm-muted:#7A7167;
+  --adm-line:#EADFCF;
+  --adm-shadow:0 16px 40px rgba(33,26,22,.08);
+}
+
+/* ---------- Base typography ---------- */
+.dashboard-content, .dashboard-sidebar.sidebar--admin{
+  font-family:'DM Sans',sans-serif;
+}
+.dashboard-content h1,.dashboard-content h2,.dashboard-content h3,
+.dashboard-content h4,.dashboard-content h5,.dashboard-content h6,
+.dashboard-content .card-header,.sidebar-brand a{
+  font-family:'Baloo 2','DM Sans',sans-serif;
+  letter-spacing:-.01em;
+}
+
+/* ---------- Sidebar: FurShield charcoal + slate accent ---------- */
+.dashboard-sidebar.sidebar--admin{
+  --accent:var(--adm-slate-dark);
+  --accent-soft:rgba(91,107,121,.18);
+  background:linear-gradient(180deg,var(--adm-charcoal) 0%,var(--adm-charcoal-2) 100%);
+}
+.dashboard-sidebar.sidebar--admin .sidebar-brand{
+  border-bottom-color:rgba(255,255,255,.07);
+}
+.dashboard-sidebar.sidebar--admin .sidebar-link.active{
+  background:var(--accent-soft);
+  box-shadow:inset 3px 0 0 var(--accent);
+}
+.dashboard-sidebar.sidebar--admin .sidebar-user-avatar{
+  background:var(--adm-slate-dark);
+  color:#fff;
+}
+
+/* ---------- Page background (matches the other portals' cream shell) ---------- */
+.dashboard-shell:has(.sidebar--admin){
+  background:var(--adm-cream);
+}
+
+/* ---------- Topbar / content background ---------- */
+.sidebar--admin ~ .dashboard-content .dashboard-topbar,
+.dashboard-content .dashboard-topbar{
+  background:#fff;
+}
+.dashboard-content .dashboard-topbar .text-primary{
+  color:var(--adm-ink) !important;
+}
+
+/* ---------- Welcome banner ---------- */
+.admin-welcome{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  flex-wrap:wrap;
+  gap:.75rem;
+  margin-bottom:1.5rem;
+}
+.admin-welcome h2{
+  margin:0;
+  font-size:1.5rem;
+  font-weight:700;
+  color:var(--adm-ink);
+}
+.admin-welcome p{
+  margin:.15rem 0 0;
+  color:var(--adm-muted);
+  font-size:.92rem;
+}
+.admin-welcome .admin-date-pill{
+  background:#fff;
+  border:1px solid var(--adm-line);
+  border-radius:999px;
+  padding:.5rem 1rem;
+  font-size:.82rem;
+  font-weight:600;
+  color:var(--adm-muted);
+  box-shadow:var(--adm-shadow);
+}
+
+/* ---------- Cards ---------- */
+.dashboard-content .card{
+  border:1px solid var(--adm-line);
+  border-radius:20px;
+  box-shadow:var(--adm-shadow);
+}
+.dashboard-content .card-header{
+  border-bottom:1px solid var(--adm-line);
+  border-radius:20px 20px 0 0 !important;
+  font-weight:700;
+  color:var(--adm-ink);
+}
+.dashboard-content .card-header.bg-primary{
+  background:var(--adm-slate-dark) !important;
+}
+
+/* Decorative analytics tiles (bg-primary/success/info/warning/secondary/dark
+   summary cards) keep their rounded, shadowed dashboard look without
+   overriding the semantic bg-* color itself. */
+.dashboard-content .card.bg-primary,
+.dashboard-content .card.bg-success,
+.dashboard-content .card.bg-info,
+.dashboard-content .card.bg-warning,
+.dashboard-content .card.bg-secondary,
+.dashboard-content .card.bg-dark{
+  border-radius:20px !important;
+  box-shadow:var(--adm-shadow);
+}
+
+/* ---------- Buttons ---------- */
+.dashboard-content .btn{
+  border-radius:12px;
+  font-weight:600;
+  transition:transform .15s ease,box-shadow .15s ease;
+}
+.dashboard-content .btn:hover{ transform:translateY(-1px); }
+.dashboard-content .btn-primary{
+  background:var(--adm-slate-dark);
+  border-color:var(--adm-slate-dark);
+}
+.dashboard-content .btn-primary:hover{
+  background:#2f3a44;
+  border-color:#2f3a44;
+}
+.dashboard-content .btn-outline-primary{
+  color:var(--adm-slate-dark);
+  border-color:var(--adm-slate-dark);
+}
+.dashboard-content .btn-outline-primary:hover{
+  background:var(--adm-slate-dark);
+  border-color:var(--adm-slate-dark);
+}
+.dashboard-content .nav-pills .nav-link.active{
+  background:var(--adm-slate-dark) !important;
+}
+
+/* ---------- Tables ---------- */
+.dashboard-content .table thead.table-light th{
+  background:var(--adm-slate-tint);
+  color:var(--adm-ink);
+  font-size:.76rem;
+  text-transform:uppercase;
+  letter-spacing:.04em;
+  font-weight:700;
+  border-bottom:0;
+}
+.dashboard-content .table-hover tbody tr:hover{
+  background:var(--adm-cream-2);
+}
+.dashboard-content .table td, .dashboard-content .table th{
+  vertical-align:middle;
+}
+
+/* ---------- Badges (status pills) ---------- */
+.dashboard-content .badge{
+  font-weight:700;
+  font-size:.72rem;
+  padding:.45em .75em;
+  border-radius:999px;
+  letter-spacing:.02em;
+}
+
+/* ---------- Forms ---------- */
+.dashboard-content .form-control,.dashboard-content .form-select{
+  border:1px solid var(--adm-line);
+  border-radius:12px;
+  padding:.55rem .85rem;
+}
+.dashboard-content .form-control:focus,.dashboard-content .form-select:focus{
+  border-color:var(--adm-slate-dark);
+  box-shadow:0 0 0 3px rgba(62,76,88,.15);
+}
+.dashboard-content .form-label{ color:var(--adm-ink); }
+
+/* ---------- Empty states ---------- */
+.dashboard-content .text-center.text-muted i.display-5,
+.dashboard-content .text-center.py-4.text-muted,
+.dashboard-content .text-center.py-5.text-muted{
+  color:var(--adm-slate-dark) !important;
+  opacity:.55;
+}
+
+/* ---------- Alerts ---------- */
+.dashboard-content .alert-success{ background:#E4F1EA; color:#2c5c46; border:1px solid #cfe6da; }
+.dashboard-content .alert-info{ background:var(--adm-pink-tint); color:#8a4a68; border:1px solid #f0d3e2; }

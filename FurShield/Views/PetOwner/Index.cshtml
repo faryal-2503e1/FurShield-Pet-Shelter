@@ -1,0 +1,474 @@
+@{
+    ViewData["Title"] = "Pet Owner Dashboard";
+    Layout = "~/Views/Shared/_PetOwnerLayout.cshtml";
+}
+
+<style>
+    :root {
+        --fs-cream-bg: #FBF8F3;
+        --fs-ink: #211A16;
+        --fs-pink: #C76A8F;
+        --fs-pink-dark: #B35478;
+        --fs-pink-soft: #FDF0F5;
+        --fs-pink-border: #F7D4E3;
+        --fs-sage: #74987E;
+        --fs-sage-soft: #EFF6F1;
+        --fs-sage-border: #D5E6DA;
+        --fs-amber-soft: #FEF7ED;
+        --fs-amber-border: #FCE5C5;
+        --fs-border: #EFE4D6;
+    }
+
+    body, .dashboard-shell {
+        background-color: #FBF8F3 !important;
+        font-family: 'DM Sans', sans-serif;
+    }
+
+    /* ---- Home Hero Container ---- */
+    .home-theme-hero {
+        background: #FFFFFF;
+        border: 1.5px solid var(--fs-border);
+        border-radius: 28px;
+        padding: 2.5rem 2.8rem;
+        margin-bottom: 2rem;
+        position: relative;
+        box-shadow: 0 10px 30px rgba(33, 26, 22, 0.04);
+        overflow: hidden;
+    }
+    .home-theme-hero::before {
+        content: '';
+        position: absolute;
+        top: -40px; right: -40px;
+        width: 180px; height: 180px;
+        background: #FDF0F5;
+        border-radius: 50%;
+        z-index: 0;
+    }
+    .home-theme-hero::after {
+        content: '';
+        position: absolute;
+        bottom: -50px; right: 120px;
+        width: 140px; height: 140px;
+        background: #EFF6F1;
+        border-radius: 50%;
+        z-index: 0;
+    }
+
+    .fs-pill-tag {
+        display: inline-flex;
+        align-items: center;
+        gap: .5rem;
+        background: #FFF5F8;
+        border: 1.5px solid #F3CFDD;
+        color: #C76A8F;
+        font-family: 'Baloo 2', sans-serif;
+        font-size: .82rem;
+        font-weight: 700;
+        letter-spacing: .08em;
+        text-transform: uppercase;
+        padding: .35rem 1.1rem;
+        border-radius: 50px;
+        margin-bottom: 1rem;
+    }
+
+    .fs-hero-title {
+        font-family: 'Baloo 2', sans-serif;
+        font-size: 2.4rem;
+        font-weight: 800;
+        color: #211A16;
+        line-height: 1.15;
+        margin-bottom: .6rem;
+    }
+    .fs-hero-title .highlight-pink {
+        color: #C76A8F;
+    }
+
+    .fs-hero-subtitle {
+        color: #6E665E;
+        font-size: 1.05rem;
+        max-width: 620px;
+        margin: 0;
+        line-height: 1.5;
+    }
+
+    /* Floating Status Card in Hero */
+    .hero-floating-card {
+        background: #FFFFFF;
+        border: 1.5px solid #EFE4D6;
+        border-radius: 20px;
+        padding: 1.1rem 1.4rem;
+        box-shadow: 0 12px 30px rgba(33, 26, 22, 0.08);
+        display: inline-flex;
+        align-items: center;
+        gap: 1rem;
+        position: relative;
+        z-index: 1;
+    }
+    .floating-card-icon {
+        width: 46px; height: 46px;
+        border-radius: 14px;
+        background: #FDF0F5;
+        color: #C76A8F;
+        display: flex; align-items: center; justify-content: center;
+        font-size: 1.25rem;
+    }
+
+    /* ---- Organic Stat Cards ---- */
+    .fs-stat-card {
+        background: #FFFFFF;
+        border-radius: 22px;
+        padding: 1.5rem 1.3rem;
+        transition: all .22s ease;
+        display: flex;
+        align-items: center;
+        gap: 1.1rem;
+        text-decoration: none;
+        box-shadow: 0 4px 16px rgba(33, 26, 22, 0.04);
+    }
+    .fs-stat-card:hover {
+        transform: translateY(-4px);
+        box-shadow: 0 14px 32px rgba(33, 26, 22, 0.08);
+    }
+    .fs-stat-icon-wrap {
+        width: 52px; height: 52px;
+        border-radius: 16px;
+        display: flex; align-items: center; justify-content: center;
+        font-size: 1.4rem;
+        flex-shrink: 0;
+    }
+    .fs-stat-num {
+        font-family: 'Baloo 2', sans-serif;
+        font-size: 2.1rem;
+        font-weight: 800;
+        line-height: 1;
+        margin-bottom: .2rem;
+    }
+    .fs-stat-title {
+        font-size: .82rem;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: .06em;
+    }
+
+    /* Color variations matching home palette */
+    .card-pink   { background: #FFF5F9; border: 1.5px solid #F8D3E4; color: #8F325C; }
+    .card-pink .fs-stat-icon-wrap { background: #FFFFFF; color: #C76A8F; box-shadow: 0 4px 10px rgba(199,106,143,.15); }
+    .card-pink .fs-stat-num { color: #8F325C; }
+
+    .card-sage   { background: #F2F8F4; border: 1.5px solid #D7E8DC; color: #2B5738; }
+    .card-sage .fs-stat-icon-wrap { background: #FFFFFF; color: #74987E; box-shadow: 0 4px 10px rgba(116,152,126,.15); }
+    .card-sage .fs-stat-num { color: #2B5738; }
+
+    .card-amber  { background: #FFF9EE; border: 1.5px solid #FDE7C4; color: #8C5B17; }
+    .card-amber .fs-stat-icon-wrap { background: #FFFFFF; color: #D98829; box-shadow: 0 4px 10px rgba(217,136,41,.15); }
+    .card-amber .fs-stat-num { color: #8C5B17; }
+
+    .card-lilac  { background: #F7F4FD; border: 1.5px solid #E7DCFA; color: #4B3A82; }
+    .card-lilac .fs-stat-icon-wrap { background: #FFFFFF; color: #7A5DB8; box-shadow: 0 4px 10px rgba(122,93,184,.15); }
+    .card-lilac .fs-stat-num { color: #4B3A82; }
+
+    .card-sky    { background: #F1F8FC; border: 1.5px solid #D6EBF8; color: #1E5C82; }
+    .card-sky .fs-stat-icon-wrap { background: #FFFFFF; color: #3587B8; box-shadow: 0 4px 10px rgba(53,135,184,.15); }
+    .card-sky .fs-stat-num { color: #1E5C82; }
+
+    .card-dark   { background: #211A16; border: 1.5px solid #211A16; color: #FFFFFF; }
+    .card-dark .fs-stat-icon-wrap { background: rgba(255,255,255,.15); color: #FFFFFF; }
+    .card-dark .fs-stat-num { color: #FFFFFF; }
+    .card-dark .fs-stat-title { color: rgba(255,255,255,.75); }
+
+    /* ---- Family Container ---- */
+    .fs-family-card {
+        background: linear-gradient(135deg, #FFFFFF 0%, #FAF5EE 100%);
+        border: 1.5px solid #EFE4D6;
+        border-radius: 26px;
+        padding: 1.8rem 2.2rem;
+        margin-bottom: 2rem;
+        box-shadow: 0 6px 24px rgba(33, 26, 22, 0.04);
+    }
+
+    /* ---- Panel Card & Actions ---- */
+    .fs-panel-card {
+        background: #FFFFFF;
+        border: 1.5px solid #EFE4D6;
+        border-radius: 26px;
+        padding: 2rem;
+        box-shadow: 0 6px 24px rgba(33, 26, 22, 0.04);
+    }
+    .fs-panel-header {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        margin-bottom: 1.5rem;
+        padding-bottom: 1rem;
+        border-bottom: 1.5px solid #F5EDE0;
+    }
+    .fs-panel-title {
+        font-family: 'Baloo 2', sans-serif;
+        font-size: 1.35rem;
+        font-weight: 800;
+        color: #211A16;
+        margin: 0;
+        display: flex;
+        align-items: center;
+        gap: .6rem;
+    }
+
+    /* Pill Action Buttons matching Home */
+    .btn-fs-pink {
+        background: #C76A8F;
+        color: #FFFFFF !important;
+        border: none;
+        border-radius: 50px;
+        padding: 11px 26px;
+        font-weight: 700;
+        font-size: .92rem;
+        box-shadow: 0 4px 14px rgba(199, 106, 143, 0.3);
+        transition: all .2s;
+        text-decoration: none;
+        display: inline-flex;
+        align-items: center;
+        gap: .5rem;
+    }
+    .btn-fs-pink:hover {
+        background: #B35478;
+        color: #FFFFFF !important;
+        transform: translateY(-2px);
+    }
+
+    .btn-fs-dark {
+        background: #FFFFFF;
+        color: #211A16 !important;
+        border: 1.5px solid #EADFCF;
+        border-radius: 50px;
+        padding: 11px 24px;
+        font-weight: 700;
+        font-size: .92rem;
+        transition: all .2s;
+        text-decoration: none;
+        display: inline-flex;
+        align-items: center;
+        gap: .5rem;
+    }
+    .btn-fs-dark:hover {
+        background: #211A16;
+        color: #FFFFFF !important;
+        border-color: #211A16;
+        transform: translateY(-2px);
+    }
+
+    .btn-fs-sage {
+        background: #F2F8F4;
+        color: #2B5738 !important;
+        border: 1.5px solid #D7E8DC;
+        border-radius: 50px;
+        padding: 11px 24px;
+        font-weight: 700;
+        font-size: .92rem;
+        transition: all .2s;
+        text-decoration: none;
+        display: inline-flex;
+        align-items: center;
+        gap: .5rem;
+    }
+    .btn-fs-sage:hover {
+        background: #74987E;
+        color: #FFFFFF !important;
+        border-color: #74987E;
+        transform: translateY(-2px);
+    }
+
+    .btn-fs-amber {
+        background: #FFF9EE;
+        color: #8C5B17 !important;
+        border: 1.5px solid #FDE7C4;
+        border-radius: 50px;
+        padding: 11px 24px;
+        font-weight: 700;
+        font-size: .92rem;
+        transition: all .2s;
+        text-decoration: none;
+        display: inline-flex;
+        align-items: center;
+        gap: .5rem;
+    }
+    .btn-fs-amber:hover {
+        background: #D98829;
+        color: #FFFFFF !important;
+        border-color: #D98829;
+        transform: translateY(-2px);
+    }
+
+    .btn-fs-sky {
+        background: #F1F8FC;
+        color: #1E5C82 !important;
+        border: 1.5px solid #D6EBF8;
+        border-radius: 50px;
+        padding: 11px 24px;
+        font-weight: 700;
+        font-size: .92rem;
+        transition: all .2s;
+        text-decoration: none;
+        display: inline-flex;
+        align-items: center;
+        gap: .5rem;
+    }
+    .btn-fs-sky:hover {
+        background: #3587B8;
+        color: #FFFFFF !important;
+        border-color: #3587B8;
+        transform: translateY(-2px);
+    }
+
+    @@media (max-width: 768px) {
+        .home-theme-hero { padding: 1.6rem 1.4rem; }
+        .fs-hero-title { font-size: 1.75rem; }
+    }
+</style>
+
+<!-- Hero Section with Home Theme Styling -->
+<div class="home-theme-hero">
+    <div class="row align-items-center position-relative" style="z-index: 1;">
+        <div class="col-lg-8">
+            <div class="fs-pill-tag">
+                <i class="bi bi-heart-fill"></i> FurShield Pet Parent Hub
+            </div>
+            <h1 class="fs-hero-title">
+                Every paw <span class="highlight-pink">deserves a shield</span> of love.
+            </h1>
+            <p class="fs-hero-subtitle">
+                Keep your furry companions happy, protected, and healthy &mdash; medical history, vet appointments, vaccination reminders, and nutrition all in one calm place.
+            </p>
+        </div>
+        <div class="col-lg-4 text-lg-end mt-3 mt-lg-0">
+            <div class="hero-floating-card text-start">
+                <div class="floating-card-icon">
+                    <i class="bi bi-heart-pulse-fill"></i>
+                </div>
+                <div>
+                    <small class="text-muted d-block fw-semibold" style="font-size:.75rem;">Always up to date</small>
+                    <strong style="font-size:1rem; color:#211A16;">Pet Health Records</strong>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- 6 Stat Counters in Home Pastel Palette -->
+<div class="row g-3 mb-4">
+    <div class="col-xxl-2 col-xl-4 col-md-4 col-sm-6 col-12">
+        <a asp-controller="Pet" asp-action="Index" class="fs-stat-card card-pink">
+            <div class="fs-stat-icon-wrap"><i class="bi bi-heart-fill"></i></div>
+            <div>
+                <div class="fs-stat-num">@ViewBag.PetCount</div>
+                <div class="fs-stat-title" title="My Pets">My Pets</div>
+            </div>
+        </a>
+    </div>
+
+    <div class="col-xxl-2 col-xl-4 col-md-4 col-sm-6 col-12">
+        <a asp-controller="Appointment" asp-action="Index" class="fs-stat-card card-sage">
+            <div class="fs-stat-icon-wrap"><i class="bi bi-calendar2-check-fill"></i></div>
+            <div>
+                <div class="fs-stat-num">@ViewBag.UpcomingAppointments</div>
+                <div class="fs-stat-title" title="Upcoming Visits">Upcoming Visits</div>
+            </div>
+        </a>
+    </div>
+
+    <div class="col-xxl-2 col-xl-4 col-md-4 col-sm-6 col-12">
+        <a asp-controller="HealthRecord" asp-action="Index" class="fs-stat-card card-amber">
+            <div class="fs-stat-icon-wrap"><i class="bi bi-file-earmark-medical-fill"></i></div>
+            <div>
+                <div class="fs-stat-num">@ViewBag.HealthRecordCount</div>
+                <div class="fs-stat-title" title="Health Logs">Health Logs</div>
+            </div>
+        </a>
+    </div>
+
+    <div class="col-xxl-2 col-xl-4 col-md-4 col-sm-6 col-12">
+        <a asp-controller="Notification" asp-action="Index" class="fs-stat-card card-lilac">
+            <div class="fs-stat-icon-wrap"><i class="bi bi-bell-fill"></i></div>
+            <div>
+                <div class="fs-stat-num">@ViewBag.UnreadNotifications</div>
+                <div class="fs-stat-title" title="Notifications">Notifications</div>
+            </div>
+        </a>
+    </div>
+
+    <div class="col-xxl-2 col-xl-4 col-md-4 col-sm-6 col-12">
+        <a asp-controller="Cart" asp-action="Index" class="fs-stat-card card-sky">
+            <div class="fs-stat-icon-wrap"><i class="bi bi-bag-heart-fill"></i></div>
+            <div>
+                <div class="fs-stat-num">@ViewBag.CartItemCount</div>
+                <div class="fs-stat-title" title="Cart Items">Cart Items</div>
+            </div>
+        </a>
+    </div>
+
+    <div class="col-xxl-2 col-xl-4 col-md-4 col-sm-6 col-12">
+        <a asp-controller="Order" asp-action="Index" class="fs-stat-card card-dark">
+            <div class="fs-stat-icon-wrap"><i class="bi bi-box2-heart-fill"></i></div>
+            <div>
+                <div class="fs-stat-num">@ViewBag.OrderCount</div>
+                <div class="fs-stat-title" title="My Orders">My Orders</div>
+            </div>
+        </a>
+    </div>
+</div>
+
+<!-- Family Sharing Container -->
+<div class="fs-family-card">
+    <div class="d-flex flex-wrap justify-content-between align-items-center gap-3">
+        <div class="d-flex align-items-center gap-3">
+            <div style="width:50px; height:50px; border-radius:16px; background:#FFF5F8; color:#C76A8F; display:flex; align-items:center; justify-content:center; font-size:1.4rem; flex-shrink:0;">
+                <i class="bi bi-people-fill"></i>
+            </div>
+            <div>
+                <h5 class="fw-bold mb-1" style="font-family:'Baloo 2',sans-serif; color:#211A16; font-size:1.25rem;">
+                    Family Pet Sharing
+                </h5>
+                @if (ViewBag.FamilyName != null)
+                {
+                    <p class="text-muted small mb-0">
+                        You're part of <strong>@ViewBag.FamilyName</strong> &middot; @ViewBag.FamilyMemberCount member(s) connected
+                    </p>
+                }
+                else
+                {
+                    <p class="text-muted small mb-0">Share pet care, health records and reminders with family members.</p>
+                }
+            </div>
+        </div>
+
+        <a asp-controller="Family" asp-action="Index" class="btn-fs-dark">
+            <i class="bi bi-arrow-right-circle"></i> Manage Family
+        </a>
+    </div>
+</div>
+
+<!-- Quick Action Pills matching Home Buttons -->
+<div class="fs-panel-card">
+    <div class="fs-panel-header">
+        <h3 class="fs-panel-title">
+            <i class="bi bi-lightning-charge-fill" style="color:#D98829;"></i> Quick Actions
+        </h3>
+    </div>
+
+    <div class="d-flex flex-wrap gap-3">
+        <a asp-controller="Pet" asp-action="Create" class="btn-fs-pink">
+            <i class="bi bi-plus-circle-fill"></i> Add a Pet
+        </a>
+        <a asp-controller="Appointment" asp-action="Create" class="btn-fs-dark">
+            <i class="bi bi-calendar-plus-fill"></i> Book Appointment
+        </a>
+        <a asp-controller="PetOwner" asp-action="AdoptPets" class="btn-fs-sage">
+            <i class="bi bi-heart-fill"></i> Adopt a Pet
+        </a>
+        <a asp-controller="Product" asp-action="Index" class="btn-fs-amber">
+            <i class="bi bi-shop-window"></i> Explore Shop
+        </a>
+        <a asp-controller="Care" asp-action="Index" class="btn-fs-sky">
+            <i class="bi bi-heart-pulse-fill"></i> Daily Care Tips
+        </a>
+    </div>
+</div>

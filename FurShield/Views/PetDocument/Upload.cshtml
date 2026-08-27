@@ -1,0 +1,51 @@
+﻿@{
+    ViewData["Title"] = "Upload Document";
+    Layout = "~/Views/Shared/_PetOwnerLayout.cshtml";
+}
+
+<div class="row justify-content-center">
+    <div class="col-md-8">
+        <div class="card border-0 shadow-sm">
+            <div class="card-header bg-primary text-white py-3">
+                <h4 class="mb-0 fw-bold"><i class="bi bi-cloud-upload me-2"></i>Upload Pet Document</h4>
+            </div>
+            <div class="card-body p-4">
+                <form asp-action="Upload" method="post" enctype="multipart/form-data">
+                    <div asp-validation-summary="ModelOnly" class="text-danger mb-3"></div>
+
+                    <div class="mb-3">
+                        <label class="form-label fw-semibold">Select Pet</label>
+                        <select name="petId" class="form-select" asp-items="ViewBag.PetId" required>
+                            <option value="">-- Choose a Pet --</option>
+                        </select>
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="form-label fw-semibold">Document Type</label>
+                        <select name="documentType" class="form-select" asp-items="ViewBag.DocumentTypes"></select>
+                        <div class="form-text">Choose "Insurance" for policy documents/claims so they show up in the pet's dedicated Insurance section.</div>
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="form-label fw-semibold">Document Title</label>
+                        <input name="title" class="form-control" placeholder="e.g., Vaccination Card, Blood Test Report, Policy Document" required />
+                    </div>
+
+                    <div class="mb-4">
+                        <label class="form-label fw-semibold">Select Document File</label>
+                        <input type="file" name="file" class="form-control" accept=".pdf,.jpg,.jpeg,.png" required />
+                    </div>
+
+                    <div class="d-flex justify-content-between align-items-center">
+                        <a asp-action="Index" class="btn btn-outline-secondary">
+                            <i class="bi bi-arrow-left"></i> Cancel
+                        </a>
+                        <button type="submit" class="btn btn-primary fw-bold px-4">
+                            <i class="bi bi-upload me-1"></i> Upload File
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
